@@ -4,13 +4,15 @@ button {
   cursor: url("./media/cursor.png"), auto !important;
   background-color: #05040e;
 }
-@media(max-height: 720px)  {
+
+@media(max-height: 720px) {
   html,
   input,
   button {
     font-size: 0.75em;
   }
 }
+
 .app {
   background-color: #05040e;
   color: #bea966;

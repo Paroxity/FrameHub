@@ -126,7 +126,7 @@ function MasteryChecklist(props) {
                 setXp(xp + missionsToXP(value - missions));
                 setMissions(value);
                 setChanged(true);
-            }} tooltip={<p>Steel Path missions: {totalMissions / 2}</p>}/>
+            }} tooltip={<p>Steel Path junctions: {totalMissions / 2}</p>}/>
             <NumberInput name="Junctions" min={0} max={totalJunctions} value={junctions.toString()} onChange={value => {
                 setXp(xp + junctionsToXP(value - junctions));
                 setJunctions(value);
