@@ -4,6 +4,7 @@ function Tooltip(props) {
     return (
         <div className="tooltip" style={{transform: "translate(" + props.x + "px," + props.y + "px)"}}>
             {props.title}
+            <br/>
             <div className="info">{props.children}</div>
         </div>
     )

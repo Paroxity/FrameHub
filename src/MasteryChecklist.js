@@ -126,18 +126,22 @@ function MasteryChecklist(props) {
                 setXp(xp + missionsToXP(value - missions));
                 setMissions(value);
                 setChanged(true);
-            }}/>
+            }} tooltip={<p>Steel Path missions: {totalMissions / 2}</p>}/>
             <NumberInput name="Junctions" min={0} max={totalJunctions} value={junctions.toString()} onChange={value => {
                 setXp(xp + junctionsToXP(value - junctions));
                 setJunctions(value);
                 setChanged(true);
-            }}/>
+            }}
+                         tooltip={<p>Steel Path missions: {totalJunctions / 2}</p>}/>
             <NumberInput name="Intrinsics" min={0} max={totalIntrinsics} value={intrinsics.toString()}
                          onChange={value => {
                              setXp(xp + intrinsicsToXP(value - intrinsics));
                              setIntrinsics(value);
                              setChanged(true);
-                         }}/>
+                         }}
+                         tooltip={
+                             <p>10 of each category.</p>
+                         }/>
             <Toggle name="hideMastered" label="Hide Mastered" selected={hideMastered} onToggle={() => {
                 setHideMastered(!hideMastered);
                 setChanged(true);

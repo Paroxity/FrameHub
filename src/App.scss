@@ -4,7 +4,13 @@ button {
   cursor: url("./media/cursor.png"), auto !important;
   background-color: #05040e;
 }
-
+@media(max-height: 720px)  {
+  html,
+  input,
+  button {
+    font-size: 0.75em;
+  }
+}
 .app {
   background-color: #05040e;
   color: #bea966;
@@ -648,7 +654,7 @@ input[type="range"]:hover::-ms-thumb {
   text-transform: uppercase;
   padding: 5px 10px;
   position: fixed;
-  z-index: 1;
+  z-index: 5;
   top: 0;
   left: 0;
 
