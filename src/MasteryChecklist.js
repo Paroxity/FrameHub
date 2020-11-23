@@ -31,7 +31,7 @@ function MasteryChecklist(props) {
     const [intrinsics, setIntrinsics] = useState(0);
     const [xp, setXp] = useState(0);
 
-    const [hideMastered, setHideMastered] = useState(true);
+    const [hideMastered, setHideMastered] = useState(false);
     const [hideFounders, setHideFounders] = useState(true);
     const [showComponents, setShowComponents] = useState(false);
     const [showSidebar, setShowSidebar] = useState(false);
