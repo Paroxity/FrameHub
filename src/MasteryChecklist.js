@@ -118,8 +118,10 @@ function MasteryChecklist(props) {
                 necessaryComponents[component] += itemComponents[component];
             });
         }
-        maximumXP += baseXPByType(item.type) * (item.maxLvl || 30);
-        if ((item.name !== "Excalibur Prime" && item.name !== "Skana Prime" && item.name !== "Lato Prime") || !hideFounders || item.mastered) maximumItems++;
+        if ((item.name !== "Excalibur Prime" && item.name !== "Skana Prime" && item.name !== "Lato Prime") || !hideFounders || item.mastered) {
+            maximumXP += baseXPByType(item.type) * (item.maxLvl || 30);
+            maximumItems++;
+        }
     });
 
     return <div className="app">
