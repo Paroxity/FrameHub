@@ -53,8 +53,8 @@ class Item extends React.Component {
                     </>
                 </Tooltip>}
                 <div className="button"
-                     onMouseOver={() => {
-                         this.setState({"showTooltip": true});
+                     onMouseOver={e => {
+                         this.setState({"x": e.clientX + 20, "y": e.clientY + 30, "showTooltip": true});
                      }}
                      onMouseOut={() => {
                          this.setState({"showTooltip": false});
