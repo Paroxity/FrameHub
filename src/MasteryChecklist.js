@@ -249,6 +249,8 @@ function MasteryChecklist(props) {
             <Toggle name="showComponents" label="Show All Components" selected={showComponents} onToggle={() => {
                 setShowComponents(!showComponents);
             }}/>
+            <Masonry columnClassName="masonry-grid_column" className="masonry-grid"
+                     breakpointCols={breakpointColumnsObj}>
             {showComponents && Object.keys(necessaryComponents).map(item => {
                 return <div key={item}>
                     <img className="component-image"
@@ -258,6 +260,7 @@ function MasteryChecklist(props) {
                     <br/>
                 </div>
             })}
+            </Masonry>
         </div>
         <img className="paroxity-logo" src={paroxity} alt="paroxity" width="50px" onDragStart={e => e.preventDefault()}
              onClick={() => {
