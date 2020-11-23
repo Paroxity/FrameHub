@@ -7,17 +7,16 @@ name: Deploy to Firebase Hosting on merge
     branches:
       - main
 jobs:
-  deploy:
+  build_and_deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
+      - uses: actions/checkout@v2
+      - run: npm ci && npm run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          node-version: 12
-      - run: npm ci
-      - run: npm run build
-      - uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only hosting
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FRAMEHUB_F9CFB }}'
+          channelId: live
+          projectId: framehub-f9cfb
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_FRAMEHUB_F9CFB }}
+          FIREBASE_CLI_PREVIEWS: hostingchannels
