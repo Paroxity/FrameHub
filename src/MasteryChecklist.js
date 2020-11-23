@@ -52,6 +52,7 @@ function MasteryChecklist(props) {
         } else {
             loadedItems = JSON.parse(localStorage.getItem("items"));
         }
+
         let data = (await firestore.collection("masteryData").doc(user[0].uid).get()).data();
         if (data) {
             let loadedXP = missionsToXP(data.missions) + junctionsToXP(data.junctions) + intrinsicsToXP(data.intrinsics);
