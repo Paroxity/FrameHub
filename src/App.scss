@@ -37,16 +37,30 @@ h6 {
   font-size: 1.1em;
 }
 
+.category {
+  flex: 1 0 auto;
+  overflow:hidden;
+}
+
 .mastery-rank {
   font-size: 1.5em;
 }
 
 .categoryInfo {
-  display: inline-block;
+  display: block;
 }
 
-/* Buttons */
-
+.masonry-grid {
+  display: -webkit-box; /* Not needed if autoprefixing */
+  display: -ms-flexbox; /* Not needed if autoprefixing */
+  display: flex;
+  margin-left: -10px; /* gutter size offset */
+  width: auto;
+}
+.masonry-grid_column {
+  padding-left: 30px; /* gutter size */
+  background-clip: padding-box;
+}
 /* Standard button */
 button {
   font-family: "Roboto", sans-serif;
@@ -508,9 +522,14 @@ input[type="range"]:hover::-ms-thumb {
   input {
     width: 4em;
   }
-
   transition: opacity 0.2s;
   opacity: 1;
+}
+
+.labeled-input {
+  span {
+    margin-right: 10px;
+  }
 }
 
 .hamburger {
@@ -523,7 +542,7 @@ input[type="range"]:hover::-ms-thumb {
   z-index: 2;
 }
 
-@media(max-width: 926px) {
+@media(max-width: 950px) {
   .sidebar {
     opacity: 0;
     pointer-events: none;
@@ -560,9 +579,6 @@ input[type="range"]:hover::-ms-thumb {
         margin-right: 10px;
       }
     }
-  }
-  .categoryInfo {
-    display: block;
   }
 
   .radio-checkbox {
@@ -612,10 +628,10 @@ input[type="range"]:hover::-ms-thumb {
     width: 0;
   }
 
-  width: fit-content;
   border: 2px solid #6c6046;
-  display: flex;
-  margin: 10px 0 10px 10px;
+  display: block;
+  margin: 10px auto !important;
+  width: fit-content;
 }
 
 .radio-checkbox:hover {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createRef, forwardRef, useRef, useState} from 'react';
 import Item from './Item.js';
 import {baseXPByType} from "../utils/xp.js"
 import Toggle from './Toggle.js';
@@ -16,56 +16,51 @@ const fancyCategoryNames = {
     "KDRIVE": "K-Drive"
 };
 
-class Category extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {"show": false};
-    }
+const Category = (props) => {
+    const [show, setShow] = useState(false);
+    let category = props.name;
 
-    render() {
-        let category = this.props.name;
+    let masteredCount = 0;
+    let masteredXP = 0;
+    let totalCount = 0;
+    let totalXP = 0;
+    Object.keys(props.items).forEach(itemName => {
+        let item = props.items[itemName];
+        if (item.mastered) {
+            masteredCount++;
+            masteredXP += baseXPByType(category) * (item.maxLvl || 30);
+        }
+        if ((itemName === "Excalibur Prime" || itemName === "Skana Prime" || itemName === "Lato Prime") && props.hideFounders && !item.mastered) return;
+        totalCount++;
+        totalXP += baseXPByType(category) * (item.maxLvl || 30);
+    });
 
-        let masteredCount = 0;
-        let masteredXP = 0;
-        let totalCount = 0;
-        let totalXP = 0;
-        Object.keys(this.props.items).forEach(itemName => {
-            let item = this.props.items[itemName];
-            if (item.mastered) {
-                masteredCount++;
-                masteredXP += baseXPByType(category) * (item.maxLvl || 30);
-            }
-            if ((itemName === "Excalibur Prime" || itemName === "Skana Prime" || itemName === "Lato Prime") && this.props.hideFounders && !item.mastered) return;
-            totalCount++;
-            totalXP += baseXPByType(category) * (item.maxLvl || 30);
-        });
-
-        if (masteredCount === totalCount && this.props.hideMastered) return <></>;
-
-        return <div className="category">
-            <div className="categoryInfo">
+    if (masteredCount === totalCount && props.hideMastered) return <></>;
+    return <div className="category" id={category}>
+        <div className="categoryInfo">
                 <span
                     className="category-name">{(fancyCategoryNames[category] || category.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ")) + " - " + masteredCount + "/" + totalCount}</span>
-                <span
-                    className="category-xp"> · {masteredXP.toLocaleString() + "/" + totalXP.toLocaleString() + " XP"}</span>
-            </div>
-            <div className="categoryInfo">
-                <Toggle name={category} selected={this.state.show} onToggle={() => {
-                    this.setState({"show": !this.state.show});
-                }}/>
-            </div>
-            {this.state.show && Object.keys(this.props.items).map(itemName => {
-                let item = this.props.items[itemName];
-                return <Item key={itemName} mr={this.props.mr} name={itemName} item={item}
-                             hideMastered={this.props.hideMastered} hideFounders={this.props.hideFounders}
-                             onClick={() => {
-                                 item.mastered = !item.mastered;
-                                 if (!item.mastered) delete item.mastered;
-                                 this.props.changeMasteredAndXP(item.mastered ? 1 : -1, baseXPByType(category) * (item.maxLvl || 30) * (item.mastered ? 1 : -1));
-                             }}/>
-            })}
+            <br/>
+            <span
+                className="category-xp">{masteredXP.toLocaleString()}/{totalXP.toLocaleString()} XP</span>
         </div>
-    }
+        <br/>
+        <div className="categoryInfo">
+            <Toggle name={category} selected={show} onToggle={() => {
+                setShow(!show)
+            }}/>
+        </div>
+        {show && Object.keys(props.items).map(itemName => {
+            let item = props.items[itemName];
+            return <Item key={itemName} mr={props.mr} name={itemName} item={item}
+                         hideMastered={props.hideMastered} hideFounders={props.hideFounders}
+                         onClick={() => {
+                             item.mastered = !item.mastered;
+                             if (!item.mastered) delete item.mastered;
+                             props.changeMasteredAndXP(item.mastered ? 1 : -1, baseXPByType(category) * (item.maxLvl || 30) * (item.mastered ? 1 : -1));
+                         }}/>
+        })}
+    </div>
 }
 
 export default Category;

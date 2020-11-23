@@ -29,7 +29,7 @@ class Item extends React.Component {
                                          src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + item.toLowerCase().split(" ").join("-") + ".png"}
                                          alt="" width="30px"/>
                                     <span
-                                        className="component-name">{components[item].toLocaleString() + "x " + item}</span>
+                                        className="component-name">{components[item].toLocaleString()}x {item}</span>
                                     <br/>
                                 </div>
                             })

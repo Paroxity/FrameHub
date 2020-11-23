@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {createRef, useCallback, useEffect, useRef, useState} from 'react';
 import Category from './components/Category.js';
 import NumberInput from './components/NumberInput.js';
 import LoadingScreen from './components/LoadingScreen.js';
@@ -21,6 +21,7 @@ import Axios from 'axios';
 import framehub from './media/framehub.svg';
 import paroxity from './media/paroxity.png';
 import placeholderIcon from './media/placeholderIcon.svg';
+import Masonry from "react-masonry-css";
 
 function MasteryChecklist(props) {
     const [items, setItems] = useState({});
@@ -38,9 +39,12 @@ function MasteryChecklist(props) {
 
     const [changed, setChanged] = useState(false);
 
+    const containerRef = useRef(null);
+
     const auth = props.auth;
     const firestore = props.firestore;
     const user = props.user;
+
 
     if (changed) {
         window.onbeforeunload = e => {
@@ -124,13 +128,20 @@ function MasteryChecklist(props) {
         }
     });
 
+    const breakpointColumnsObj = {
+        default: 4,
+        1533: 3,
+        1248: 2,
+        550: 1
+    };
+
     return <div className="app">
         <div className={"sidebar" + (showSidebar ? " toggled" : "")}>
             <img src="" alt="" width="100px"/>
             <br/>
             <span className="mastery-rank">{"Mastery Rank " + xpToMR(xp)}</span>
             <br/>
-            <span className="items-mastered">{mastered.toLocaleString() + "/" + maximumItems} Mastered</span>
+            <span className="items-mastered">{mastered.toLocaleString()}/{maximumItems.toLocaleString()} Mastered</span>
             <br/>
             <span className="xp">{xp.toLocaleString()}/{maximumXP.toLocaleString()} XP</span>
             <NumberInput name="Missions" min={0} max={totalMissions} value={missions.toString()} onChange={value => {
@@ -218,15 +229,25 @@ function MasteryChecklist(props) {
         </div>
         <div className="content">
             <img className="framehub-logo" src={framehub} alt="" onDragStart={e => e.preventDefault()}/>
-            {Object.keys(items).map(category => {
-                return <Category key={category} name={category} mr={xpToMR(xp)} hideMastered={hideMastered}
-                                 hideFounders={hideFounders} items={items[category]} changeMasteredAndXP={(m, x) => {
-                    setMastered(mastered + m);
-                    setXp(xp + x);
-                    setChanged(true);
-                }}/>
-            })}
-            <Toggle name="showComponents" label="Show Components" selected={showComponents} onToggle={() => {
+            <div className="categories" ref={containerRef}>
+                <Masonry columnClassName="masonry-grid_column" className="masonry-grid"
+                         breakpointCols={breakpointColumnsObj}>
+                    {
+                        Object.keys(items).map(category => {
+                            return <Category key={category} name={category} mr={xpToMR(xp)} hideMastered={hideMastered}
+                                             hideFounders={hideFounders} items={items[category]}
+                                             changeMasteredAndXP={(m, x) => {
+                                                 setMastered(mastered + m);
+                                                 setXp(xp + x);
+                                                 setChanged(true);
+                                             }}
+
+                            />
+                        })
+                    }
+                </Masonry>
+            </div>
+            <Toggle name="showComponents" label="Show All Components" selected={showComponents} onToggle={() => {
                 setShowComponents(!showComponents);
             }}/>
             {showComponents && Object.keys(necessaryComponents).map(item => {
@@ -234,7 +255,7 @@ function MasteryChecklist(props) {
                     <img className="component-image"
                          src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + item.toLowerCase().split(" ").join("-") + ".png"}
                          alt="" width="30px"/>
-                    <span className="component-name">{necessaryComponents[item].toLocaleString() + "x " + item}</span>
+                    <span className="component-name">{necessaryComponents[item].toLocaleString()}x {item}</span>
                     <br/>
                 </div>
             })}
