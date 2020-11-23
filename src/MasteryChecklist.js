@@ -1,19 +1,19 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Category from './components/Category.js';
 import NumberInput from './components/NumberInput.js';
 import LoadingScreen from './components/LoadingScreen.js';
 import Toggle from './components/Toggle.js';
-import {ingredientSuffixes, getItemComponents, complexToSimpleList} from './utils/item.js';
+import {complexToSimpleList, getItemComponents, ingredientSuffixes} from './utils/item.js';
 import {
     baseXPByType,
-    xpToMR,
-    missionsToXP,
-    junctionsToXP,
     intrinsicsToXP,
+    junctionsToXP,
+    missionsToXP,
+    totalIntrinsics,
+    totalJunctions,
     totalMissions,
     totalMissionXP,
-    totalJunctions,
-    totalIntrinsics
+    xpToMR
 } from './utils/xp.js';
 import 'firebase/auth';
 import 'firebase/firestore';
@@ -41,6 +41,15 @@ function MasteryChecklist(props) {
     const auth = props.auth;
     const firestore = props.firestore;
     const user = props.user;
+
+    if (changed) {
+        window.onbeforeunload = e => {
+            e.preventDefault();
+            e.returnValue = "";
+        };
+    } else {
+        window.onbeforeunload = undefined;
+    }
 
     const startUp = useCallback(async () => {
         let loadedItems = {};
