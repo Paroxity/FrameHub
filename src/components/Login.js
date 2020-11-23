@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import LoadingScreen from './LoadingScreen.js';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -48,23 +48,26 @@ function Login(props) {
         "auth/user-not-found": "No user matching that email address.",
         "auth/too-many-requests": "You've been sending too many requests! Try again in a few seconds."
     }
-    if (props.user[1] === true) return <LoadingScreen />
+    if (props.user[1] === true) return <LoadingScreen/>
 
     return <>
         <div className="login">
-            <img className="framehub-logo" src={logo} alt="" onDragStart={e => e.preventDefault()} />
-            <br />
+            <img className="framehub-logo" src={logo} alt="" onDragStart={e => e.preventDefault()}/>
+            <br/>
             <form onSubmit={handleSubmit}>
                 <div className="form-bg center">
-                    <div className="input"><input type="text" placeholder="EMAIL" onChange={e => setEmail(e.target.value)}></input></div>
+                    <div className="input"><input type="text" placeholder="EMAIL"
+                                                  onChange={e => setEmail(e.target.value)}/></div>
                 </div>
                 <div className="form-bg center">
-                    <div className="input"><input type="password" autoComplete="on" placeholder="PASSWORD" onChange={e => setPassword(e.target.value)}></input></div>
+                    <div className="input"><input type="password" autoComplete="on" placeholder="PASSWORD"
+                                                  onChange={e => setPassword(e.target.value)}/></div>
                 </div>
                 {
                     signup &&
                     <div className="form-bg center">
-                        <div className="input"><input type="password" autoComplete="on" placeholder="CONFIRM PASSWORD" onChange={e => setConfirm(e.target.value)}></input></div>
+                        <div className="input"><input type="password" autoComplete="on" placeholder="CONFIRM PASSWORD"
+                                                      onChange={e => setConfirm(e.target.value)}/></div>
                     </div>
                 }
                 <div className="button center">
@@ -75,24 +78,28 @@ function Login(props) {
                 <div className="button">
                     <button onClick={() => {
                         props.auth.sendPasswordResetEmail(email)
-                        .then(() => {
-                            setError("Email sent. Check your inbox.");
-                            setErrorAvailable(true);
-                        }).catch(e => {
+                            .then(() => {
+                                setError("Email sent. Check your inbox.");
+                                setErrorAvailable(true);
+                            }).catch(e => {
                             setError(e.code);
                             setErrorAvailable(true);
                         });
-                    }}>Forgot Password</button>
+                    }}>Forgot Password
+                    </button>
                 </div>
                 <div className="button">
-                    <button onClick={() => { setSignup(!signup) }}>{signup ? 'Login' : "Sign up"}</button>
+                    <button onClick={() => {
+                        setSignup(!signup)
+                    }}>{signup ? 'Login' : "Sign up"}</button>
                 </div>
             </div>
             <div className="alternative-login">
                 <div className="button">
                     <button onClick={() => {
                         props.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-                    }}>Login with Google</button>
+                    }}>Login with Google
+                    </button>
                 </div>
             </div>
         </div>
@@ -103,10 +110,12 @@ function Login(props) {
                 <div className="button center">
                     <button onClick={() => {
                         setErrorAvailable(false);
-                    }}>Ok</button>
+                    }}>Ok
+                    </button>
                 </div>
             </div>
         </div>
+        <div className="disclaimer">FrameHub is not affiliated with Digital Extremes or Warframe.</div>
     </>
 }
 

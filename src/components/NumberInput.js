@@ -2,7 +2,7 @@ import React from 'react';
 
 class NumberInput extends React.Component {
     render() {
-        return <div className="labled-input">
+        return <div className="labeled-input">
             <span>{this.props.name}</span>
             <div className="form-bg">
                 <div className="input">

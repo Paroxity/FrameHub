@@ -6,14 +6,14 @@ export function getItemComponents(item, itemName) {
         let count = component.split("x")[0];
         let componentName = component.slice(count.length + 2);
         count = parseInt(count);
-        if (ingredientSuffixes.includes(componentName)) componentName = itemName  + " " + componentName;
+        if (ingredientSuffixes.includes(componentName)) componentName = itemName + " " + componentName;
         if (!totalIngredients[componentName]) totalIngredients[componentName] = 0;
         totalIngredients[componentName] += count;
     });
     return totalIngredients;
 }
 
-export function complexToSimpleList(complex){
+export function complexToSimpleList(complex) {
     let simple = [];
     Object.keys(complex).forEach(category => {
         let categoryItems = complex[category];

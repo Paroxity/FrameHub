@@ -66,7 +66,7 @@ button::before {
   content: "";
   display: block;
   position: absolute;
-  height: 0px;
+  height: 0;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -98,7 +98,7 @@ button:hover::before {
   background-color: rgba(245, 227, 173, 0.25);
 }
 
-.button::after {
+.button::after, .input::after {
   content: "";
   display: block;
   position: absolute;
@@ -128,19 +128,24 @@ button:hover::before {
     visibility: visible;
     transform: scaleX(1);
   }
+
   .button:hover::after {
     visibility: hidden;
     transform: scaleX(0);
   }
+
   button::before {
     height: 100%;
   }
+
   button:hover::before {
-    height: 0%;
+    height: 0;
   }
+
   button {
     border: 1px solid rgba(245, 227, 173, 0.25);
   }
+
   button:hover {
     border: 1px solid rgba(245, 227, 173, 0);
   }
@@ -150,6 +155,7 @@ button:hover::before {
   .button {
     opacity: 0.5;
   }
+
   .button:hover {
     opacity: 1;
   }
@@ -171,11 +177,9 @@ input[type="text"],
 input[type="password"],
 input[type="number"] {
   background-color: rgba(245, 227, 173, 0.05);
-  border: none;
-  padding: 0.1em 0.75em;
   color: #f5e3ad;
   caret-color: #f5e3ad;
-  padding-top: 5px;
+  padding: 5px 0.75em 0.1em;
   font-size: 1.25em;
   border: 1px solid rgba(245, 227, 173, 0);
   transition: all 0.2s ease-out;
@@ -205,7 +209,7 @@ input::placeholder {
   content: "";
   display: block;
   position: absolute;
-  height: 0px;
+  height: 0;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -242,20 +246,6 @@ input:focus {
   left: 0;
   width: 100%;
   background-color: #161827;
-}
-
-.input::after {
-  content: "";
-  display: block;
-  position: absolute;
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: #f5e3ad;
-  visibility: hidden;
-  transform: scaleX(0);
-  transition: all 0.2s ease-out;
 }
 
 .input:hover::after {
@@ -328,6 +318,7 @@ input[type="range"]::-moz-range-track {
 input[type="range"]:focus::-webkit-slider-runnable-track {
   border: solid 1px #c9ba8f;
 }
+
 input[type="range"]:hover::-webkit-slider-runnable-track {
   border: solid 1px #c9ba8f;
 }
@@ -399,7 +390,7 @@ input[type="range"]:hover::-ms-thumb {
   user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
-  -ms-user-select: none;  
+  -ms-user-select: none;
 }
 
 @media (max-width: 620px) {
@@ -447,9 +438,11 @@ input[type="range"]:hover::-ms-thumb {
   background-color: rgba(8, 6, 21, 1);
   /*border: 1px solid rgba(245, 227, 173, 0.5);*/
   position: relative;
+
   .button {
     margin-top: 2em;
     width: auto;
+
     button {
       width: 100%;
       height: 100%;
@@ -465,21 +458,20 @@ input[type="range"]:hover::-ms-thumb {
   right: -1px;
   top: -1px;
   background: linear-gradient(60deg, #f5e3ad, #bea966, #f5e3ad, #f5e3ad, #bea966);
-  border-radius: calc(2 * var(2px));
   z-index: -1;
   animation: animatedgradient 3s ease alternate infinite;
   background-size: 300% 300%;
 }
 
-@keyframes animatedgradient {
+@keyframes animatedGradient {
   0% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
   50% {
     background-position: 100% 50%;
   }
   100% {
-    background-position: 0% 50%;
+    background-position: 0 50%;
   }
 }
 
@@ -487,6 +479,7 @@ input[type="range"]:hover::-ms-thumb {
 .content {
   margin-left: 21em;
   text-align: center;
+
   .framehub-logo {
     padding: 3em 0;
   }
@@ -500,13 +493,14 @@ input[type="range"]:hover::-ms-thumb {
   top: 0;
   height: 100%;
   width: 19em;
-  padding: 2em;
-  padding-top: 0;
+  padding: 0 2em 2em;
   border-right: 1px solid #bea966;
   color: #bea966;
+
   input {
     width: 4em;
   }
+
   transition: opacity 0.2s;
   opacity: 1;
 }
@@ -532,12 +526,14 @@ input[type="range"]:hover::-ms-thumb {
     position: fixed;
     z-index: 1;
     height: auto;
-    overflow-y:scroll;
-    overflow-x:hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
     .mastery-rank {
       padding-top: 3em;
     }
-    .labled-input {
+
+    .labeled-input {
       span {
         padding-right: 10px;
       }
@@ -551,7 +547,8 @@ input[type="range"]:hover::-ms-thumb {
   }
   .content {
     margin: 0;
-    .labled-input {
+
+    .labeled-input {
       span {
         margin-right: 10px;
       }
@@ -570,6 +567,7 @@ input[type="range"]:hover::-ms-thumb {
     display: block;
   }
 }
+
 .xp, .items-mastered {
   user-select: text !important;
   -moz-user-select: text !important;
@@ -577,17 +575,20 @@ input[type="range"]:hover::-ms-thumb {
   -ms-user-select: text !important;
 }
 
-.labled-input {
+.labeled-input {
   span {
     font-size: 1.25em;
     color: #bea966;
   }
+
   span::after {
     content: ":";
   }
+
   div {
     display: inline-block;
   }
+
   position: relative;
 }
 
@@ -597,17 +598,19 @@ input[type="range"]:hover::-ms-thumb {
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
-  margin: 10px 0;
+
   input[type="radio"] {
     opacity: 0;
     position: fixed;
     width: 0;
   }
+
   width: fit-content;
   border: 2px solid #6c6046;
   display: flex;
-  margin-left: 10px;
+  margin: 10px 0 10px 10px;
 }
+
 .radio-checkbox:hover {
   border-color: #96855e;
 }
@@ -617,11 +620,13 @@ input[type="range"]:hover::-ms-thumb {
   background-color: #18161b;
   padding: 5px 10px;
   cursor: url("./media/cursor.png"), auto !important;
+
   img {
     margin-bottom: -1px;
     width: 15px;
   }
 }
+
 // .radio-checkbox label:first-child {
 //   border-right: none;
 // }
@@ -647,8 +652,8 @@ input[type="range"]:hover::-ms-thumb {
   z-index: 1;
   top: 0;
   left: 0;
+
   .info {
-    margin-top: 10px;
     text-transform: unset;
     padding: 10px 0;
     color: white;
@@ -670,11 +675,13 @@ input[type="range"]:hover::-ms-thumb {
   -webkit-user-select: none;
   -ms-user-select: none;
 }
+
 @media(max-width: 580px) {
   .paroxity-logo {
     display: none;
   }
 }
+
 .danger {
   border: 1px solid #bea966;
   padding: 0.5em 1em;
@@ -686,4 +693,13 @@ input[type="range"]:hover::-ms-thumb {
   text-transform: uppercase;
   font-family: "Roboto", sans-serif;
   font-weight: 700;
+}
+
+.disclaimer {
+  position: absolute;
+  bottom: 2em;
+  font-size: 0.75em;
+  width: 100%;
+  text-align: center;
+  color: #bea966;
 }
