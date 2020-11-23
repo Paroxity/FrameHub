@@ -1,4 +1,4 @@
-import React, {createRef, forwardRef, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import Item from './Item.js';
 import {baseXPByType} from "../utils/xp.js"
 import Toggle from './Toggle.js';

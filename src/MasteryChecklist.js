@@ -1,4 +1,4 @@
-import React, {createRef, useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useState} from 'react';
 import Category from './components/Category.js';
 import NumberInput from './components/NumberInput.js';
 import LoadingScreen from './components/LoadingScreen.js';
@@ -44,7 +44,6 @@ function MasteryChecklist(props) {
     const auth = props.auth;
     const firestore = props.firestore;
     const user = props.user;
-
 
     if (changed) {
         window.onbeforeunload = e => {
