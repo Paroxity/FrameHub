@@ -211,7 +211,7 @@ function MasteryChecklist(props) {
                     setChanged(true);
                 }}/>
             })}
-            <Toggle name="showComponents" label="Show Compoenents" selected={showComponents} onToggle={() => {
+            <Toggle name="showComponents" label="Show Components" selected={showComponents} onToggle={() => {
                 setShowComponents(!showComponents);
             }}/>
             {showComponents && Object.keys(necessaryComponents).map(item => {
