@@ -133,8 +133,13 @@ function MasteryChecklist(props) {
     const debouncedSave = useDebounce((intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items) => saveData(intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items), 5000);
 
     useEffect(() => {
-        debouncedSave(intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items);
-    }, [intrinsics, junctions, missions, mastered, hideFounders, hideMastered, debouncedSave, items]);
+        if (changed) {
+            console.log("autosave");
+            debouncedSave(intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items);
+        } else {
+            console.log("not autosave");
+        }
+    }, [intrinsics, junctions, missions, mastered, hideFounders, hideMastered, debouncedSave, items, changed]);
     if (Object.keys(items).length === 0) return <LoadingScreen/>
 
     let necessaryComponents = {};
