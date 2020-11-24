@@ -407,6 +407,10 @@ input[type="range"]:hover::-ms-thumb {
     bottom: 20px;
     right: 20px;
     position: absolute;
+    .button {
+      display: inline-block;
+      margin: 10px 5px;
+    }
   }
 
   .alternative-login {

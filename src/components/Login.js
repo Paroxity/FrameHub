@@ -42,7 +42,9 @@ function Login(props) {
         "auth/invalid-email": "Login failed. Invalid email address format.",
         "auth/wrong-password": "Login failed. Check your info.",
         "auth/user-not-found": "No user matching that email address.",
-        "auth/too-many-requests": "You've been sending too many requests! Try again in a few seconds."
+        "auth/too-many-requests": "You've been sending too many requests! Try again in a few seconds.",
+        "auth/email-already-in-use": "There is already a registered user with this email.",
+        "auth/weak-password": "This password is too weak. Make sure it is at least 6 characters in length."
     }
     if (props.user[1] === true) return <LoadingScreen/>
 
