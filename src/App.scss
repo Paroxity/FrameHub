@@ -104,10 +104,11 @@ button:hover::before {
 .button {
   position: relative;
   width: fit-content;
-  margin: 10px;
-  display: inline-block;
+  margin: 10px auto;
+  display: block;
   transition: all 0.2s;
   opacity: 1;
+  z-index: 0;
 }
 
 .button::before {
@@ -673,10 +674,10 @@ input[type="range"]:hover::-ms-thumb {
   text-transform: uppercase;
   padding: 5px 10px;
   position: fixed;
-  z-index: 5;
+  z-index: 10;
   top: 0;
   left: 0;
-
+  pointer-events: none;
   .info {
     text-transform: unset;
     padding: 10px 0;
