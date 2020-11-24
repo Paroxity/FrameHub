@@ -13,7 +13,7 @@ function Tooltip(props) {
         if (!rendered) {
             setRendered(true);
         }
-    }, []);
+    }, [rendered]);
     if (width.current + props.x > document.documentElement.clientWidth) {
         x = document.documentElement.clientWidth - width.current;
     }
