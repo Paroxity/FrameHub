@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import Category from './components/Category.js';
 import NumberInput from './components/NumberInput.js';
 import LoadingScreen from './components/LoadingScreen.js';
@@ -23,6 +23,20 @@ import paroxity from './media/paroxity.png';
 import placeholderIcon from './media/placeholderIcon.svg';
 import Masonry from "react-masonry-css";
 import Button from "./components/Button";
+import debounce from 'lodash.debounce';
+
+function useDebounce(callback, delay) {
+    // Memoizing the callback because if it's an arrow function
+    // it would be different on each render
+    const memoizedCallback = useCallback(callback, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const debouncedFn = useRef(debounce(memoizedCallback, delay));
+
+    useEffect(() => {
+        debouncedFn.current = debounce(memoizedCallback, delay);
+    }, [memoizedCallback, debouncedFn, delay]);
+
+    return debouncedFn.current;
+}
 
 function MasteryChecklist(props) {
     const [items, setItems] = useState({});
@@ -56,10 +70,19 @@ function MasteryChecklist(props) {
     const startUp = useCallback(async () => {
         let loadedItems = {};
 
-        if (localStorage.getItem('lastSave') < Date.now()) {
+        let worldState;
+        try {
+            worldState = (await Axios.get("https://cors-proxy.aericio.workers.dev/?https://content.warframe.com/dynamic/worldState.php")).data
+        } catch (e) {
+            console.log("Error retrieving Warframe world state from WFCD");
+            console.log(e);
+        }
+
+        if (localStorage.getItem('lastSave') < Date.now() || (worldState && worldState.BuildLabel !== localStorage.getItem('lastWFBuild'))) {
             loadedItems = (await Axios.get("https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media")).data;
             localStorage.setItem("items", JSON.stringify(loadedItems));
-            localStorage.setItem("lastSave", (Date.now() + 43200000).toString());
+            localStorage.setItem("lastSave", (Date.now() + 7200000).toString());
+            localStorage.setItem("lastWFBuild", worldState.BuildLabel);
         } else {
             loadedItems = JSON.parse(localStorage.getItem("items"));
         }
@@ -90,7 +113,7 @@ function MasteryChecklist(props) {
         setItems(loadedItems);
     }, [firestore, user]);
 
-    const saveData = () => {
+    const saveData = (intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items) => {
         setChanged(false);
         firestore.collection("masteryData").doc(user[0].uid).set({
             mastered: complexToSimpleList(items).filter(item => item.mastered).map(item => item.name),
@@ -105,6 +128,13 @@ function MasteryChecklist(props) {
     useEffect(() => {
         startUp();
     }, [startUp]);
+
+
+    const debouncedSave = useDebounce((intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items) => saveData(intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items), 5000);
+
+    useEffect(() => {
+        debouncedSave(intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items);
+    }, [intrinsics, junctions, missions, mastered, hideFounders, hideMastered, debouncedSave, items]);
     if (Object.keys(items).length === 0) return <LoadingScreen/>
 
     let necessaryComponents = {};
@@ -170,11 +200,7 @@ function MasteryChecklist(props) {
                 setHideFounders(!hideFounders);
                 setChanged(true);
             }}/>
-            <Button centered disabled={!changed} onClick={() => {
-                if (changed) {
-                    saveData();
-                }
-            }}>Save</Button>
+            <div className="autosave-text">{changed ? "Your changes are unsaved." : "Changes autosaved."}</div>
 
             <span className="danger-text">Danger zone</span>
             <div className="danger">
@@ -209,9 +235,8 @@ function MasteryChecklist(props) {
             </div>
             <br/>
             <Button centered onClick={() => {
-                saveData();
                 auth.signOut();
-            }}>Logout</Button>
+            }} disabled={changed}>Logout</Button>
         </div>
         <div className="content">
             <img className="framehub-logo" src={framehub} alt="" onDragStart={e => e.preventDefault()}/>
@@ -238,15 +263,15 @@ function MasteryChecklist(props) {
             }}/>
             <Masonry columnClassName="masonry-grid_column" className="masonry-grid"
                      breakpointCols={breakpointColumnsObj}>
-            {showComponents && Object.keys(necessaryComponents).map(item => {
-                return <div key={item}>
-                    <img className="component-image"
-                         src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + item.toLowerCase().split(" ").join("-") + ".png"}
-                         alt="" width="30px"/>
-                    <span className="component-name">{necessaryComponents[item].toLocaleString()}x {item}</span>
-                    <br/>
-                </div>
-            })}
+                {showComponents && Object.keys(necessaryComponents).map(item => {
+                    return <div key={item}>
+                        <img className="component-image"
+                             src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + item.toLowerCase().split(" ").join("-") + ".png"}
+                             alt="" width="30px"/>
+                        <span className="component-name">{necessaryComponents[item].toLocaleString()}x {item}</span>
+                        <br/>
+                    </div>
+                })}
             </Masonry>
         </div>
         <img className="paroxity-logo" src={paroxity} alt="paroxity" width="50px" onDragStart={e => e.preventDefault()}
@@ -258,5 +283,4 @@ function MasteryChecklist(props) {
         }} alt="menu"/>
     </div>
 }
-
 export default MasteryChecklist;
