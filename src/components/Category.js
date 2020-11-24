@@ -45,7 +45,6 @@ function Category(props) {
             <span
                 className="category-xp">{masteredXP.toLocaleString()}/{totalXP.toLocaleString()} XP</span>
         </div>
-        <br/>
         <div className="categoryInfo">
             <Toggle name={category} selected={show} onToggle={() => {
                 setShow(!show)

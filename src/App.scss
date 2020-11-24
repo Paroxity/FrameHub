@@ -57,6 +57,7 @@ h6 {
   margin-left: -10px; /* gutter size offset */
   width: auto;
 }
+
 .masonry-grid_column {
   padding-left: 30px; /* gutter size */
   background-clip: padding-box;
@@ -725,4 +726,9 @@ input[type="range"]:hover::-ms-thumb {
   width: 100%;
   text-align: center;
   color: #bea966;
+}
+
+.checkmark {
+  width: 15px;
+  padding-left: 10px;
 }

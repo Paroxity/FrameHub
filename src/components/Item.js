@@ -3,6 +3,7 @@ import Tooltip from './Tooltip'
 import {foundersItems, getItemComponents} from '../utils/item.js';
 import credits from '../media/credits.png';
 import {detailedTime} from "../utils/time";
+import checkmark from '../media/checkmark.svg';
 
 function Item(props) {
     const [showTooltip, setShowTooltip] = useState(false);
@@ -66,7 +67,7 @@ function Item(props) {
                     } else {
                         props.onClick();
                     }
-                }}>{name + ((item.maxLvl || 30) !== 30 ? " [" + item.maxLvl +"]" : "")}</button>
+                }}>{name + ((item.maxLvl || 30) !== 30 ? " [" + item.maxLvl +"]" : "")}{item.mastered && <img src={checkmark} className="checkmark"/>}</button>
             </div>
         </div>
     );
