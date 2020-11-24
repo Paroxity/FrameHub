@@ -4,40 +4,36 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/storage';
 import logo from '../media/framehub.svg'
+import Button from "./Button";
 
 function Login(props) {
     const [signup, setSignup] = useState(false);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
-    const [error, setError] = useState('');
-    const [errorAvailable, setErrorAvailable] = useState(false);
-    const signUp = () => {
-        if (password === confirm) {
-            props.auth.createUserWithEmailAndPassword(email, password).then(() => {
-                setSignup(false);
-            }).catch(e => {
-                setError(e.code);
-                setErrorAvailable(true);
-            });
-        } else {
-            setError("Passwords do not match.");
-            setErrorAvailable(true);
-        }
-    }
 
-    const signIn = () => {
-        props.auth.signInWithEmailAndPassword(email, password).catch(e => {
-            setError(e.code);
-            setErrorAvailable(true);
-        });
-    }
+    const [error, setError] = useState("");
+    const [errorAvailable, setErrorAvailable] = useState(false);
 
     const handleSubmit = event => {
         if (signup) {
-            signUp();
+            if (password === confirm) {
+                props.auth.createUserWithEmailAndPassword(email, password).then(() => {
+                    setSignup(false);
+                }).catch(e => {
+                    setError(e.code);
+                    setErrorAvailable(true);
+                });
+            } else {
+                setError("Passwords do not match.");
+                setErrorAvailable(true);
+            }
         } else {
-            signIn();
+            props.auth.signInWithEmailAndPassword(email, password).catch(e => {
+                setError(e.code);
+                setErrorAvailable(true);
+            });
         }
         event.preventDefault();
     }
@@ -70,49 +66,37 @@ function Login(props) {
                                                       onChange={e => setConfirm(e.target.value)}/></div>
                     </div>
                 }
-                <div className="button center">
-                    <button type="submit">{signup ? 'Sign up' : 'Login'}</button>
-                </div>
+                <Button centered submit>{signup ? "Sign up" : "Login"}</Button>
             </form>
             <div className="actions">
-                <div className="button">
-                    <button onClick={() => {
-                        props.auth.sendPasswordResetEmail(email)
-                            .then(() => {
-                                setError("Email sent. Check your inbox.");
-                                setErrorAvailable(true);
-                            }).catch(e => {
-                            setError(e.code);
+                <Button onClick={() => {
+                    props.auth.sendPasswordResetEmail(email)
+                        .then(() => {
+                            setError("Email sent. Check your inbox.");
                             setErrorAvailable(true);
-                        });
-                    }}>Forgot Password
-                    </button>
-                </div>
-                <div className="button">
-                    <button onClick={() => {
-                        setSignup(!signup)
-                    }}>{signup ? 'Login' : "Sign up"}</button>
-                </div>
+                        }).catch(e => {
+                        setError(e.code);
+                        setErrorAvailable(true);
+                    });
+                }}>Forgot Password
+                </Button>
+                <Button onClick={() => {
+                    setSignup(!signup)
+                }}>{signup ? 'Login' : "Sign up"}</Button>
             </div>
             <div className="alternative-login">
-                <div className="button">
-                    <button onClick={() => {
-                        props.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-                    }}>Login with Google
-                    </button>
-                </div>
+                <Button onClick={() => {
+                    props.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+                }}>Login with Google</Button>
             </div>
         </div>
 
         <div className={errorAvailable ? "error show" : "error"}>
             <div className={"error-box"}>
-                {errorMessages[error] ? errorMessages[error] : error}
-                <div className="button center">
-                    <button onClick={() => {
-                        setErrorAvailable(false);
-                    }}>Ok
-                    </button>
-                </div>
+                {errorMessages[error] || error}
+                <Button centered onClick={() => {
+                    setErrorAvailable(false);
+                }}>Ok</Button>
             </div>
         </div>
         <div className="disclaimer">FrameHub is not affiliated with Digital Extremes or Warframe.</div>

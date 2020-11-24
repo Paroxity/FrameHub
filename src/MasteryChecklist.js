@@ -22,6 +22,7 @@ import framehub from './media/framehub.svg';
 import paroxity from './media/paroxity.png';
 import placeholderIcon from './media/placeholderIcon.svg';
 import Masonry from "react-masonry-css";
+import Button from "./components/Button";
 
 function MasteryChecklist(props) {
     const [items, setItems] = useState({});
@@ -169,60 +170,48 @@ function MasteryChecklist(props) {
                 setHideFounders(!hideFounders);
                 setChanged(true);
             }}/>
-            <div className={"button center" + (!changed ? ' disabled' : '')}>
-                <button onClick={() => {
-                    if (changed) {
-                        saveData();
-                    }
-                }}>Save
-                </button>
-            </div>
+            <Button centered disabled={!changed} onClick={() => {
+                if (changed) {
+                    saveData();
+                }
+            }}>Save</Button>
 
             <span className="danger-text">Danger zone</span>
             <div className="danger">
-                <div className="button center">
-                    <button onClick={() => {
-                        let additionalMastered = 0;
-                        let additionalXP = 0;
-                        Object.keys(items).forEach(category => {
-                            let categoryItems = items[category];
-                            Object.values(categoryItems).forEach(item => {
-                                if (!item.mastered && ((item.name !== "Excalibur Prime" && item.name !== "Skana Prime" && item.name !== "Lato Prime") || !hideFounders)) {
-                                    item.mastered = true;
-                                    additionalMastered++;
-                                    additionalXP += baseXPByType(category) * (item.maxLvl || 30);
-                                }
-                            });
+                <Button centered onClick={() => {
+                    let additionalMastered = 0;
+                    let additionalXP = 0;
+                    Object.keys(items).forEach(category => {
+                        let categoryItems = items[category];
+                        Object.values(categoryItems).forEach(item => {
+                            if (!item.mastered && ((item.name !== "Excalibur Prime" && item.name !== "Skana Prime" && item.name !== "Lato Prime") || !hideFounders)) {
+                                item.mastered = true;
+                                additionalMastered++;
+                                additionalXP += baseXPByType(category) * (item.maxLvl || 30);
+                            }
                         });
-                        setMastered(mastered + additionalMastered);
-                        setXp(xp + additionalXP);
-                        setChanged(true);
-                    }}>Mark All as Mastered
-                    </button>
-                </div>
+                    });
+                    setMastered(mastered + additionalMastered);
+                    setXp(xp + additionalXP);
+                    setChanged(true);
+                }}>Mark All as Mastered</Button>
 
-                <div className="button center">
-                    <button onClick={() => {
-                        Object.values(items).forEach(categoryItems => {
-                            Object.values(categoryItems).forEach(item => {
-                                item.mastered = false;
-                            });
+                <Button centered onClick={() => {
+                    Object.values(items).forEach(categoryItems => {
+                        Object.values(categoryItems).forEach(item => {
+                            item.mastered = false;
                         });
-                        setMastered(0);
-                        setXp(missionsToXP(missions) + junctionsToXP(junctions) + intrinsicsToXP(intrinsics));
-                        setChanged(true);
-                    }}>Reset
-                    </button>
-                </div>
+                    });
+                    setMastered(0);
+                    setXp(missionsToXP(missions) + junctionsToXP(junctions) + intrinsicsToXP(intrinsics));
+                    setChanged(true);
+                }}>Reset</Button>
             </div>
             <br/>
-            <div className="button center">
-                <button onClick={() => {
-                    saveData();
-                    auth.signOut();
-                }}>Logout
-                </button>
-            </div>
+            <Button centered onClick={() => {
+                saveData();
+                auth.signOut();
+            }}>Logout</Button>
         </div>
         <div className="content">
             <img className="framehub-logo" src={framehub} alt="" onDragStart={e => e.preventDefault()}/>
