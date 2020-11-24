@@ -65,6 +65,9 @@ function Item(props) {
                     if (e.ctrlKey) {
                         window.open(item.wiki || "https://warframe.fandom.com/wiki/" + props.name);
                     } else {
+                        if (props.hideMastered) {
+                            setShowTooltip(false);
+                        }
                         props.onClick();
                     }
                 }}>{name + ((item.maxLvl || 30) !== 30 ? " [" + item.maxLvl + "]" : "")}{item.mastered && <img src={checkmark} className="checkmark" alt=""/>}</button>
