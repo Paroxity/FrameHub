@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Item from './Item.js';
 import {baseXPByType} from "../utils/xp.js"
 import Toggle from './Toggle.js';
+import {foundersItems} from "../utils/item";
 
 const fancyCategoryNames = {
     "WF": "Warframe",
@@ -30,7 +31,7 @@ function Category(props) {
             masteredCount++;
             masteredXP += baseXPByType(category) * (item.maxLvl || 30);
         }
-        if ((itemName === "Excalibur Prime" || itemName === "Skana Prime" || itemName === "Lato Prime") && props.hideFounders && !item.mastered) return;
+        if (foundersItems.includes(itemName) && props.hideFounders && !item.mastered) return;
         totalCount++;
         totalXP += baseXPByType(category) * (item.maxLvl || 30);
     });

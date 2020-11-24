@@ -3,7 +3,7 @@ import Category from './components/Category.js';
 import NumberInput from './components/NumberInput.js';
 import LoadingScreen from './components/LoadingScreen.js';
 import Toggle from './components/Toggle.js';
-import {complexToSimpleList, getItemComponents, ingredientSuffixes} from './utils/item.js';
+import {complexToSimpleList, foundersItems, getItemComponents, ingredientSuffixes} from './utils/item.js';
 import {
     baseXPByType,
     intrinsicsToXP,
@@ -120,7 +120,7 @@ function MasteryChecklist(props) {
                 necessaryComponents[component] += itemComponents[component];
             });
         }
-        if ((item.name !== "Excalibur Prime" && item.name !== "Skana Prime" && item.name !== "Lato Prime") || !hideFounders || item.mastered) {
+        if (!foundersItems.includes(item.name) || !hideFounders || item.mastered) {
             maximumXP += baseXPByType(item.type) * (item.maxLvl || 30);
             maximumItems++;
         }
@@ -184,7 +184,7 @@ function MasteryChecklist(props) {
                     Object.keys(items).forEach(category => {
                         let categoryItems = items[category];
                         Object.values(categoryItems).forEach(item => {
-                            if (!item.mastered && ((item.name !== "Excalibur Prime" && item.name !== "Skana Prime" && item.name !== "Lato Prime") || !hideFounders)) {
+                            if (!item.mastered && (!foundersItems.includes(item.name) || !hideFounders)) {
                                 item.mastered = true;
                                 additionalMastered++;
                                 additionalXP += baseXPByType(category) * (item.maxLvl || 30);
