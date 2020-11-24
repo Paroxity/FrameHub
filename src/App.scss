@@ -37,8 +37,14 @@ h6 {
   font-size: 1.1em;
 }
 
+.category-name {
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
 .category {
   flex: 1 0 auto;
+  margin-top: 1em;
   overflow:hidden;
 }
 

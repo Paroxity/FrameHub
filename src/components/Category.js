@@ -40,7 +40,9 @@ function Category(props) {
     return <div className="category" id={category}>
         <div className="categoryInfo">
                 <span
-                    className="category-name">{(fancyCategoryNames[category] || category.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" "))} - {masteredCount}/{totalCount}</span>
+                    className="category-name">{(fancyCategoryNames[category] || category.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" "))}</span>
+            <br/>
+            <span>{masteredCount}/{totalCount}</span>
             <br/>
             <span
                 className="category-xp">{masteredXP.toLocaleString()}/{totalXP.toLocaleString()} XP</span>
