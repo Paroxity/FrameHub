@@ -67,7 +67,7 @@ function Item(props) {
                     } else {
                         props.onClick();
                     }
-                }}>{name + ((item.maxLvl || 30) !== 30 ? " [" + item.maxLvl +"]" : "")}{item.mastered && <img src={checkmark} className="checkmark"/>}</button>
+                }}>{name + ((item.maxLvl || 30) !== 30 ? " [" + item.maxLvl + "]" : "")}{item.mastered && <img src={checkmark} className="checkmark" alt=""/>}</button>
             </div>
         </div>
     );
