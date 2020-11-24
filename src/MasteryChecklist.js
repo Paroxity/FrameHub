@@ -157,10 +157,11 @@ function MasteryChecklist(props) {
     });
 
     const breakpointColumnsObj = {
-        default: 4,
-        1533: 3,
-        1248: 2,
-        550: 1
+        default: 5,
+        1533: 4,
+        1348: 3,
+        1152: 2,
+        640: 1
     };
 
     return <div className="app">
