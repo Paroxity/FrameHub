@@ -134,10 +134,7 @@ function MasteryChecklist(props) {
 
     useEffect(() => {
         if (changed) {
-            console.log("autosave");
             debouncedSave(intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items);
-        } else {
-            console.log("not autosave");
         }
     }, [intrinsics, junctions, missions, mastered, hideFounders, hideMastered, debouncedSave, items, changed]);
     if (Object.keys(items).length === 0) return <LoadingScreen/>
