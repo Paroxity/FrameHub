@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useState} from 'react';
 import Category from './components/Category.js';
 import NumberInput from './components/NumberInput.js';
 import LoadingScreen from './components/LoadingScreen.js';
@@ -38,8 +38,6 @@ function MasteryChecklist(props) {
     const [showSidebar, setShowSidebar] = useState(false);
 
     const [changed, setChanged] = useState(false);
-
-    const containerRef = useRef(null);
 
     const auth = props.auth;
     const firestore = props.firestore;
@@ -228,7 +226,7 @@ function MasteryChecklist(props) {
         </div>
         <div className="content">
             <img className="framehub-logo" src={framehub} alt="" onDragStart={e => e.preventDefault()}/>
-            <div className="categories" ref={containerRef}>
+            <div className="categories">
                 <Masonry columnClassName="masonry-grid_column" className="masonry-grid"
                          breakpointCols={breakpointColumnsObj}>
                     {

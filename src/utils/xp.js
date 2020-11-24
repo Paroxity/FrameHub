@@ -12,7 +12,7 @@ export function baseXPByType(type) {
         default:
             return 100;
     }
-};
+}
 
 export function xpToMR(xp) {
     let mr = Math.floor(Math.sqrt(xp / 2500));

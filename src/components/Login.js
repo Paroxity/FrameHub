@@ -12,7 +12,7 @@ function Login(props) {
     const [confirm, setConfirm] = useState('');
     const [error, setError] = useState('');
     const [errorAvailable, setErrorAvailable] = useState(false);
-    const signUp = async () => {
+    const signUp = () => {
         if (password === confirm) {
             props.auth.createUserWithEmailAndPassword(email, password).then(() => {
                 setSignup(false);
