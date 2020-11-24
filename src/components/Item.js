@@ -66,10 +66,10 @@ function Item(props) {
                     } else {
                         props.onClick();
                     }
-                }}>{name}</button>
+                }}>{name + ((item.maxLvl || 30) !== 30 ? " [" + item.maxLvl +"]" : "")}</button>
             </div>
         </div>
-    )
+    );
 }
 
 export default Item;
