@@ -1,15 +1,19 @@
-import React, {useEffect, useRef} from "react";
+import React, { useLayoutEffect, useRef, useState} from "react";
 
 function Tooltip(props) {
     const tooltip = useRef();
     let width = useRef(0);
     let height = useRef(0);
+    let [rendered, setRendered] = useState(false);
     let x = props.x;
     let y = props.y;
-    useEffect(() => {
-        width.current = tooltip.current.clientWidth;
-        height.current = tooltip.current.clientHeight;
-    }, [tooltip])
+    useLayoutEffect(() => {
+        width.current = parseFloat(tooltip.current.clientWidth);
+        height.current = parseFloat(tooltip.current.clientHeight);
+        if (!rendered) {
+            setRendered(true);
+        }
+    }, []);
     if (width.current + props.x > document.documentElement.clientWidth) {
         x = document.documentElement.clientWidth - width.current;
     }
@@ -17,7 +21,7 @@ function Tooltip(props) {
         y = document.documentElement.clientHeight - height.current;
     }
     return (
-        <div className="tooltip" style={{transform: "translate(" + x + "px," + y+ "px)"}} ref={tooltip}>
+        <div className={"tooltip"} style={{transform: "translate(" + x + "px," + y+ "px)"}} ref={tooltip}>
             {props.title}
             <br/>
             <div className="info">{props.children}</div>
