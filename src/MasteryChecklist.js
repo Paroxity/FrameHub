@@ -247,15 +247,20 @@ function MasteryChecklist(props) {
                 <Masonry columnClassName="masonry-grid_column" className="masonry-grid"
                          breakpointCols={breakpointColumnsObj}>
                     {
-                        Object.keys(items).map(category => {
+                        Object.keys(items).filter(category => {
+                           let categoryItems = items[category];
+                           return Object.keys(categoryItems).filter(itemName => {
+                               let item = categoryItems[itemName];
+                               return (!item.mastered || !hideMastered) && (!foundersItems.includes(itemName) || !hideFounders);
+                           }).length > 0;
+                        }).map(category => {
                             return <Category key={category} name={category} mr={xpToMR(xp)} hideMastered={hideMastered}
-                                             hideFounders={hideFounders} items={items[category]}
-                                             changeMasteredAndXP={(m, x) => {
-                                                 setMastered(mastered + m);
-                                                 setXp(xp + x);
-                                                 setChanged(true);
-                                             }}
-
+                                      hideFounders={hideFounders} items={items[category]}
+                                      changeMasteredAndXP={(m, x) => {
+                                          setMastered(mastered + m);
+                                          setXp(xp + x);
+                                          setChanged(true);
+                                      }}
                             />
                         })
                     }
