@@ -90,9 +90,6 @@ function Login(props) {
                 <Button onClick={() => {
                     props.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
                 }}>Sign in with Google</Button>
-                <Button onClick={() => {
-                    props.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-                }}>Sign in anonymously</Button>
             </div>
         </div>
 
