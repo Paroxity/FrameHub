@@ -5,6 +5,7 @@ import 'firebase/auth';
 import 'firebase/storage';
 import logo from '../media/framehub.svg'
 import Button from "./Button";
+import {useHistory} from "react-router-dom";
 
 function Login(props) {
     const [signup, setSignup] = useState(false);
@@ -15,6 +16,8 @@ function Login(props) {
 
     const [error, setError] = useState("");
     const [errorAvailable, setErrorAvailable] = useState(false);
+
+    const history = useHistory();
 
     const handleSubmit = event => {
         if (signup) {
@@ -90,6 +93,17 @@ function Login(props) {
                 <Button onClick={() => {
                     props.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
                 }}>Sign in with Google</Button>
+                <Button onClick={async () => {
+                    let doc = await firebase.app("secondary").firestore().collection("anonymousMasteryData").add({
+                        hideFounders: true,
+                        hideMastered: false,
+                        intrinsics: 0,
+                        junctions: 0,
+                        mastered: [],
+                        missions: 0
+                    });
+                    history.push('/user/' + doc.id);
+                }}>Sign in anonymously</Button>
             </div>
         </div>
 

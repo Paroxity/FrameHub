@@ -24,8 +24,8 @@ function App() {
 
     return <BrowserRouter>
         <Switch>
-            <Route path="/:uid" component={MasteryChecklist}/>
-            <Route path="/">
+            <Route path="/:action/:uid" component={MasteryChecklist}/>
+            <Route path="/" exact>
                 {user[0] ? <MasteryChecklist/> :
                     <Login auth={auth} user={user}/>}
             </Route>

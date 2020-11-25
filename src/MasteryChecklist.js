@@ -65,11 +65,11 @@ function MasteryChecklist() {
     const firestore = firebase.app("secondary").firestore();
     const user = useAuthState(auth);
 
-    const {uid} = useParams();
-
+    let {action, uid} = useParams();
     const history = useHistory();
-
-    console.log(uid);
+    const actions = ['user', 'share'];
+    action = action || '';
+    if (!actions.includes(action) && action !== '') history.push('/');
 
     if (changed) {
         window.onbeforeunload = e => {
@@ -102,8 +102,17 @@ function MasteryChecklist() {
         } else {
             loadedItems = JSON.parse(localStorage.getItem("items"));
         }
-
-        let data = (await firestore.collection("masteryData").doc(uid || user[0].uid).get()).data();
+        let data;
+        if (action !== 'user') {
+            data = (await firestore.collection("masteryData").doc(uid || user[0].uid).get()).data();
+        } else {
+            let doc = (await firestore.collection("anonymousMasteryData").doc(uid).get());
+            if (!doc.exists) {
+                history.push("/")
+            } else {
+                data = doc.data();
+            }
+        }
         if (data) {
             let loadedXP = missionsToXP(data.missions) + junctionsToXP(data.junctions) + intrinsicsToXP(data.intrinsics);
             let masteredCount = 0;
@@ -132,14 +141,25 @@ function MasteryChecklist() {
     const saveData = (intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items) => {
         if (user) {
             setChanged(false);
-            firestore.collection("masteryData").doc(user[0].uid).set({
-                mastered: complexToSimpleList(items).filter(item => item.mastered).map(item => item.name),
-                missions,
-                junctions,
-                intrinsics,
-                hideMastered,
-                hideFounders
-            })
+            if (action === '') {
+                firestore.collection("masteryData").doc(user[0].uid).set({
+                    mastered: complexToSimpleList(items).filter(item => item.mastered).map(item => item.name),
+                    missions,
+                    junctions,
+                    intrinsics,
+                    hideMastered,
+                    hideFounders
+                });
+            } else {
+                firestore.collection("anonymousMasteryData").doc(uid).set({
+                    mastered: complexToSimpleList(items).filter(item => item.mastered).map(item => item.name),
+                    missions,
+                    junctions,
+                    intrinsics,
+                    hideMastered,
+                    hideFounders
+                });
+            }
         }
     };
 
@@ -185,7 +205,7 @@ function MasteryChecklist() {
     };
 
     return <div className="app">
-        <div className={"sidebar" + (showSidebar ? " toggled" : "") + (!uid ? '' : ' read-only')}>
+        <div className={"sidebar" + (showSidebar ? " toggled" : "") + (action !== 'share' ? '' : ' read-only')}>
             <img src="" alt="" width="100px"/>
             <br/>
             <span className="mastery-rank">{"Mastery Rank " + xpToMR(xp)}</span>
@@ -196,12 +216,12 @@ function MasteryChecklist() {
             <NumberInput name="Missions" min={0} max={totalMissions} value={missions.toString()} onChange={value => {
                 setXp(xp + missionsToXP(value - missions));
                 setMissions(value);
-                if (!uid) setChanged(true);
+                if (action !== "share") setChanged(true);
             }} tooltip={<p>Steel Path missions: {totalMissions / 2}</p>}/>
             <NumberInput name="Junctions" min={0} max={totalJunctions} value={junctions.toString()} onChange={value => {
                 setXp(xp + junctionsToXP(value - junctions));
                 setJunctions(value);
-                if (!uid) setChanged(true);
+                if (action !== "share") setChanged(true);
             }}
                          tooltip={<p>Steel Path junctions: {totalJunctions / 2}</p>}/>
             <NumberInput name="Intrinsics" min={0} max={totalIntrinsics} value={intrinsics.toString()}
@@ -215,15 +235,18 @@ function MasteryChecklist() {
                          }/>
             <Toggle name="hideMastered" label="Hide Mastered" selected={hideMastered} onToggle={() => {
                 setHideMastered(!hideMastered);
-                if (!uid) setChanged(true);
+                if (action !== "share") setChanged(true);
             }}/>
             <Toggle name="hideFounders" label="Hide Founders" selected={hideFounders} onToggle={() => {
                 setHideFounders(!hideFounders);
-                if (!uid) setChanged(true);
+                if (action !== "share") setChanged(true);
             }}/>
-            {!uid &&
+            {action !== "share" &&
             <div className="autosave-text">{changed ? "Your changes are unsaved." : "Changes autosaved."}</div>}
-            {!uid &&
+            {action === "user" &&
+            <div>Remember to bookmark this URL.</div>
+            }
+            {action !== "share" &&
             <>
                 <span className="danger-text">Danger zone</span>
                 <div className="danger">
@@ -242,7 +265,7 @@ function MasteryChecklist() {
                         });
                         setMastered(mastered + additionalMastered);
                         setXp(xp + additionalXP);
-                        if (!uid) setChanged(true);
+                        if (action !== "share") setChanged(true);
                     }}>Mark All as Mastered</Button>
 
                     <Button centered onClick={() => {
@@ -253,30 +276,30 @@ function MasteryChecklist() {
                         });
                         setMastered(0);
                         setXp(missionsToXP(missions) + junctionsToXP(junctions) + intrinsicsToXP(intrinsics));
-                        if (!uid) setChanged(true);
+                        if (action !== "share") setChanged(true);
                     }}>Reset</Button>
                 </div>
             </>
             }
             <br/>
             {
-                !uid &&
+                !action &&
                 <Button centered onClick={() => {
                     setShowShare(true);
                 }
                 }>Share</Button>
             }
-            {auth && !uid && <Button centered onClick={() => {
+            {auth && !action && <Button centered onClick={() => {
                 auth.signOut();
             }} disabled={changed}>Logout</Button>}
-            {uid && <Button centered onClick={() => {
+            {action && <Button centered onClick={() => {
                 history.push('/')
             }
             }>Exit</Button>}
         </div>
         <div className="content">
             <img className="framehub-logo" src={framehub} alt="" onDragStart={e => e.preventDefault()}/>
-            <div className={"categories" + (!uid ? '' : ' read-only')}>
+            <div className={"categories" + (!uid || action === "user" ? '' : ' read-only')}>
                 <Masonry columnClassName="masonry-grid_column" className="masonry-grid"
                          breakpointCols={breakpointColumnsObj}>
                     {
@@ -292,7 +315,7 @@ function MasteryChecklist() {
                                              changeMasteredAndXP={(m, x) => {
                                                  setMastered(mastered + m);
                                                  setXp(xp + x);
-                                                 if (!uid) setChanged(true);
+                                                 if (action !== "share") setChanged(true);
                                              }}
                             />
                         })
@@ -322,11 +345,11 @@ function MasteryChecklist() {
         <img className="hamburger" src={placeholderIcon} onClick={() => {
             setShowSidebar(!showSidebar);
         }} alt="menu"/>
-        <div className={showShare ? "popup show" : "popup"}>
+        {!action && <div className={showShare ? "popup show" : "popup"}>
             <div className={"popup-box"}>
                 Here's your sharable link:
                 <div className="input"><input type="text"
-                                              readOnly value={"https://framehub.paroxity.net/" + user[0].uid}
+                                              readOnly value={"https://framehub.paroxity.net/share/" + user[0].uid}
                                               ref={textAreaRef}/></div>
 
                 {
@@ -340,7 +363,7 @@ function MasteryChecklist() {
                     setShowShare(false);
                 }}>Close</Button>
             </div>
-        </div>
+        </div>}
     </div>
 }
 
