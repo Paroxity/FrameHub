@@ -89,12 +89,15 @@ function Login(props) {
             <div className="alternative-login">
                 <Button onClick={() => {
                     props.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-                }}>Login with Google</Button>
+                }}>Sign in with Google</Button>
+                <Button onClick={() => {
+                    props.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+                }}>Sign in anonymously</Button>
             </div>
         </div>
 
-        <div className={errorAvailable ? "error show" : "error"}>
-            <div className={"error-box"}>
+        <div className={errorAvailable ? "popup show" : "popup"}>
+            <div className={"popup-box"}>
                 {errorMessages[error] || error}
                 <Button centered onClick={() => {
                     setErrorAvailable(false);

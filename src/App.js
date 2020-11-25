@@ -1,4 +1,5 @@
 import React from 'react';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import './App.scss';
 import firebase from 'firebase/app';
 import 'firebase/auth';
@@ -18,11 +19,18 @@ if (firebase.apps.length === 0) {
 }
 
 function App() {
-    const auth = firebase.app('secondary').auth();
-    const firestore = firebase.app('secondary').firestore();
+    const auth = firebase.app("secondary").auth();
     const user = useAuthState(auth);
-    return user[0] ? <MasteryChecklist user={user} auth={auth} firestore={firestore}/> :
-        <Login auth={auth} user={user}/>;
+
+    return <BrowserRouter>
+        <Switch>
+            <Route path="/:uid" component={MasteryChecklist}/>
+            <Route path="/">
+                {user[0] ? <MasteryChecklist/> :
+                    <Login auth={auth} user={user}/>}
+            </Route>
+        </Switch>
+    </BrowserRouter>
 }
 
 export default App;

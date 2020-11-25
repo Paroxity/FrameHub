@@ -1,4 +1,5 @@
 html,
+body,
 input,
 button {
   cursor: url("./media/cursor.png"), auto !important;
@@ -45,11 +46,13 @@ h6 {
 .category {
   flex: 1 0 auto;
   margin-top: 1em;
-  overflow:hidden;
+  overflow: hidden;
 }
 
 .mastery-rank {
   font-size: 1.5em;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
 .categoryInfo {
@@ -75,6 +78,7 @@ h6 {
     background-clip: padding-box;
   }
 }
+
 /* Standard button */
 button {
   font-family: "Roboto", sans-serif;
@@ -413,6 +417,7 @@ input[type="range"]:hover::-ms-thumb {
     bottom: 20px;
     right: 20px;
     position: absolute;
+
     .button {
       display: inline-block;
       margin: 10px 5px;
@@ -423,6 +428,11 @@ input[type="range"]:hover::-ms-thumb {
     bottom: 20px;
     left: 20px;
     position: absolute;
+
+    .button {
+      display: inline-block;
+      margin: 10px 5px;
+    }
   }
 }
 
@@ -447,10 +457,10 @@ input[type="range"]:hover::-ms-thumb {
   }
 }
 
-.error {
+.popup {
   height: 100%;
   width: 100%;
-  z-index: 1;
+  z-index: 100;
   left: 0;
   top: 0;
   position: fixed;
@@ -472,16 +482,18 @@ input[type="range"]:hover::-ms-thumb {
   pointer-events: all;
 }
 
-.error-box {
+.popup-box {
   color: white;
   font-size: 1.25em;
   padding: 3em 6em;
   background-color: rgba(8, 6, 21, 1);
   /*border: 1px solid rgba(245, 227, 173, 0.5);*/
   position: relative;
-
+  .input {
+    margin-top: 1em;
+  }
   .button {
-    margin-top: 2em;
+    margin-top: 1em;
     width: auto;
 
     button {
@@ -491,7 +503,7 @@ input[type="range"]:hover::-ms-thumb {
   }
 }
 
-.error-box::before {
+.popup-box::before {
   content: "";
   position: absolute;
   width: calc(100% + 2px);
@@ -539,9 +551,11 @@ input[type="range"]:hover::-ms-thumb {
   border-right: 1px solid #bea966;
   color: #bea966;
   z-index: 2;
+
   input {
     width: 4em;
   }
+
   transition: opacity 0.2s;
   opacity: 1;
 }
@@ -576,10 +590,6 @@ input[type="range"]:hover::-ms-thumb {
     overflow-y: scroll;
     overflow-x: hidden;
 
-    .mastery-rank {
-      padding-top: 3em;
-    }
-
     .labeled-input {
       span {
         padding-right: 10px;
@@ -593,6 +603,7 @@ input[type="range"]:hover::-ms-thumb {
   }
   .content {
     margin: 0 2em;
+
     .labeled-input {
       span {
         margin-right: 10px;
@@ -695,6 +706,7 @@ input[type="range"]:hover::-ms-thumb {
   top: 0;
   left: 0;
   pointer-events: none;
+
   .info {
     text-transform: unset;
     padding: 10px 0;
@@ -754,13 +766,31 @@ input[type="range"]:hover::-ms-thumb {
 .autosave-text {
   padding: 10px 0;
 }
+
 .item {
   .button {
     width: 100%;
+
     button {
       width: 100%;
       padding-left: 0;
       padding-right: 0;
     }
+  }
+}
+
+.categories.read-only {
+  .button {
+    button {
+      pointer-events: none;
+      tab-index: -1;
+    }
+  }
+}
+
+.sidebar.read-only {
+  .input {
+    pointer-events: none;
+    tab-index: -1;
   }
 }

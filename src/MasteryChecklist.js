@@ -1,4 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {useHistory} from "react-router-dom";
+import {useParams} from 'react-router-dom';
 import Category from './components/Category.js';
 import NumberInput from './components/NumberInput.js';
 import LoadingScreen from './components/LoadingScreen.js';
@@ -15,6 +17,7 @@ import {
     totalMissionXP,
     xpToMR
 } from './utils/xp.js';
+import firebase from "firebase/app";
 import 'firebase/auth';
 import 'firebase/firestore';
 import Axios from 'axios';
@@ -24,6 +27,7 @@ import placeholderIcon from './media/placeholderIcon.svg';
 import Masonry from "react-masonry-css";
 import Button from "./components/Button";
 import debounce from 'lodash.debounce';
+import {useAuthState} from "react-firebase-hooks/auth";
 
 function useDebounce(callback, delay) {
     // Memoizing the callback because if it's an arrow function
@@ -38,7 +42,7 @@ function useDebounce(callback, delay) {
     return debouncedFn.current;
 }
 
-function MasteryChecklist(props) {
+function MasteryChecklist() {
     const [items, setItems] = useState({});
 
     const [mastered, setMastered] = useState(0);
@@ -51,12 +55,21 @@ function MasteryChecklist(props) {
     const [hideFounders, setHideFounders] = useState(true);
     const [showComponents, setShowComponents] = useState(false);
     const [showSidebar, setShowSidebar] = useState(false);
+    const [showShare, setShowShare] = useState(false);
 
     const [changed, setChanged] = useState(false);
 
-    const auth = props.auth;
-    const firestore = props.firestore;
-    const user = props.user;
+    const textAreaRef = useRef(null);
+
+    const auth = firebase.app("secondary").auth();
+    const firestore = firebase.app("secondary").firestore();
+    const user = useAuthState(auth);
+
+    const {uid} = useParams();
+
+    const history = useHistory();
+
+    console.log(uid);
 
     if (changed) {
         window.onbeforeunload = e => {
@@ -66,7 +79,10 @@ function MasteryChecklist(props) {
     } else {
         window.onbeforeunload = undefined;
     }
-
+    const copyToClipboard = () => {
+        textAreaRef.current.select();
+        document.execCommand('copy');
+    };
     const startUp = useCallback(async () => {
         let loadedItems = {};
 
@@ -87,7 +103,7 @@ function MasteryChecklist(props) {
             loadedItems = JSON.parse(localStorage.getItem("items"));
         }
 
-        let data = (await firestore.collection("masteryData").doc(user[0].uid).get()).data();
+        let data = (await firestore.collection("masteryData").doc(uid || user[0].uid).get()).data();
         if (data) {
             let loadedXP = missionsToXP(data.missions) + junctionsToXP(data.junctions) + intrinsicsToXP(data.intrinsics);
             let masteredCount = 0;
@@ -111,18 +127,20 @@ function MasteryChecklist(props) {
             setHideFounders(data.hideFounders);
         }
         setItems(loadedItems);
-    }, [firestore, user]);
+    }, [uid]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const saveData = (intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items) => {
-        setChanged(false);
-        firestore.collection("masteryData").doc(user[0].uid).set({
-            mastered: complexToSimpleList(items).filter(item => item.mastered).map(item => item.name),
-            missions,
-            junctions,
-            intrinsics,
-            hideMastered,
-            hideFounders
-        })
+        if (user) {
+            setChanged(false);
+            firestore.collection("masteryData").doc(user[0].uid).set({
+                mastered: complexToSimpleList(items).filter(item => item.mastered).map(item => item.name),
+                missions,
+                junctions,
+                intrinsics,
+                hideMastered,
+                hideFounders
+            })
+        }
     };
 
     useEffect(() => {
@@ -167,7 +185,7 @@ function MasteryChecklist(props) {
     };
 
     return <div className="app">
-        <div className={"sidebar" + (showSidebar ? " toggled" : "")}>
+        <div className={"sidebar" + (showSidebar ? " toggled" : "") + (!uid ? '' : ' read-only')}>
             <img src="" alt="" width="100px"/>
             <br/>
             <span className="mastery-rank">{"Mastery Rank " + xpToMR(xp)}</span>
@@ -178,12 +196,12 @@ function MasteryChecklist(props) {
             <NumberInput name="Missions" min={0} max={totalMissions} value={missions.toString()} onChange={value => {
                 setXp(xp + missionsToXP(value - missions));
                 setMissions(value);
-                setChanged(true);
+                if (!uid) setChanged(true);
             }} tooltip={<p>Steel Path missions: {totalMissions / 2}</p>}/>
             <NumberInput name="Junctions" min={0} max={totalJunctions} value={junctions.toString()} onChange={value => {
                 setXp(xp + junctionsToXP(value - junctions));
                 setJunctions(value);
-                setChanged(true);
+                if (!uid) setChanged(true);
             }}
                          tooltip={<p>Steel Path junctions: {totalJunctions / 2}</p>}/>
             <NumberInput name="Intrinsics" min={0} max={totalIntrinsics} value={intrinsics.toString()}
@@ -197,70 +215,85 @@ function MasteryChecklist(props) {
                          }/>
             <Toggle name="hideMastered" label="Hide Mastered" selected={hideMastered} onToggle={() => {
                 setHideMastered(!hideMastered);
-                setChanged(true);
+                if (!uid) setChanged(true);
             }}/>
             <Toggle name="hideFounders" label="Hide Founders" selected={hideFounders} onToggle={() => {
                 setHideFounders(!hideFounders);
-                setChanged(true);
+                if (!uid) setChanged(true);
             }}/>
-            <div className="autosave-text">{changed ? "Your changes are unsaved." : "Changes autosaved."}</div>
-
-            <span className="danger-text">Danger zone</span>
-            <div className="danger">
-                <Button centered onClick={() => {
-                    let additionalMastered = 0;
-                    let additionalXP = 0;
-                    Object.keys(items).forEach(category => {
-                        let categoryItems = items[category];
-                        Object.values(categoryItems).forEach(item => {
-                            if (!item.mastered && (!foundersItems.includes(item.name) || !hideFounders)) {
-                                item.mastered = true;
-                                additionalMastered++;
-                                additionalXP += baseXPByType(category) * (item.maxLvl || 30);
-                            }
+            {!uid &&
+            <div className="autosave-text">{changed ? "Your changes are unsaved." : "Changes autosaved."}</div>}
+            {!uid &&
+            <>
+                <span className="danger-text">Danger zone</span>
+                <div className="danger">
+                    <Button centered onClick={() => {
+                        let additionalMastered = 0;
+                        let additionalXP = 0;
+                        Object.keys(items).forEach(category => {
+                            let categoryItems = items[category];
+                            Object.values(categoryItems).forEach(item => {
+                                if (!item.mastered && (!foundersItems.includes(item.name) || !hideFounders)) {
+                                    item.mastered = true;
+                                    additionalMastered++;
+                                    additionalXP += baseXPByType(category) * (item.maxLvl || 30);
+                                }
+                            });
                         });
-                    });
-                    setMastered(mastered + additionalMastered);
-                    setXp(xp + additionalXP);
-                    setChanged(true);
-                }}>Mark All as Mastered</Button>
+                        setMastered(mastered + additionalMastered);
+                        setXp(xp + additionalXP);
+                        if (!uid) setChanged(true);
+                    }}>Mark All as Mastered</Button>
 
-                <Button centered onClick={() => {
-                    Object.values(items).forEach(categoryItems => {
-                        Object.values(categoryItems).forEach(item => {
-                            item.mastered = false;
+                    <Button centered onClick={() => {
+                        Object.values(items).forEach(categoryItems => {
+                            Object.values(categoryItems).forEach(item => {
+                                item.mastered = false;
+                            });
                         });
-                    });
-                    setMastered(0);
-                    setXp(missionsToXP(missions) + junctionsToXP(junctions) + intrinsicsToXP(intrinsics));
-                    setChanged(true);
-                }}>Reset</Button>
-            </div>
+                        setMastered(0);
+                        setXp(missionsToXP(missions) + junctionsToXP(junctions) + intrinsicsToXP(intrinsics));
+                        if (!uid) setChanged(true);
+                    }}>Reset</Button>
+                </div>
+            </>
+            }
             <br/>
-            <Button centered onClick={() => {
+            {
+                !uid &&
+                <Button centered onClick={() => {
+                    setShowShare(true);
+                }
+                }>Share</Button>
+            }
+            {auth && !uid && <Button centered onClick={() => {
                 auth.signOut();
-            }} disabled={changed}>Logout</Button>
+            }} disabled={changed}>Logout</Button>}
+            {uid && <Button centered onClick={() => {
+                history.push('/')
+            }
+            }>Exit</Button>}
         </div>
         <div className="content">
             <img className="framehub-logo" src={framehub} alt="" onDragStart={e => e.preventDefault()}/>
-            <div className="categories">
+            <div className={"categories" + (!uid ? '' : ' read-only')}>
                 <Masonry columnClassName="masonry-grid_column" className="masonry-grid"
                          breakpointCols={breakpointColumnsObj}>
                     {
                         Object.keys(items).filter(category => {
-                           let categoryItems = items[category];
-                           return Object.keys(categoryItems).filter(itemName => {
-                               let item = categoryItems[itemName];
-                               return (!item.mastered || !hideMastered) && (!foundersItems.includes(itemName) || !hideFounders);
-                           }).length > 0;
+                            let categoryItems = items[category];
+                            return Object.keys(categoryItems).filter(itemName => {
+                                let item = categoryItems[itemName];
+                                return (!item.mastered || !hideMastered) && (!foundersItems.includes(itemName) || !hideFounders);
+                            }).length > 0;
                         }).map(category => {
                             return <Category key={category} name={category} mr={xpToMR(xp)} hideMastered={hideMastered}
-                                      hideFounders={hideFounders} items={items[category]}
-                                      changeMasteredAndXP={(m, x) => {
-                                          setMastered(mastered + m);
-                                          setXp(xp + x);
-                                          setChanged(true);
-                                      }}
+                                             hideFounders={hideFounders} items={items[category]}
+                                             changeMasteredAndXP={(m, x) => {
+                                                 setMastered(mastered + m);
+                                                 setXp(xp + x);
+                                                 if (!uid) setChanged(true);
+                                             }}
                             />
                         })
                     }
@@ -289,6 +322,26 @@ function MasteryChecklist(props) {
         <img className="hamburger" src={placeholderIcon} onClick={() => {
             setShowSidebar(!showSidebar);
         }} alt="menu"/>
+        <div className={showShare ? "popup show" : "popup"}>
+            <div className={"popup-box"}>
+                Here's your sharable link:
+                <div className="input"><input type="text"
+                                              readOnly value={"https://framehub.paroxity.net/" + user[0].uid}
+                                              ref={textAreaRef}/></div>
+
+                {
+                    document.queryCommandSupported('copy') &&
+                    <Button centered onClick={e => {
+                        copyToClipboard(e);
+                        setShowShare(false);
+                    }}>Copy</Button>
+                }
+                <Button centered onClick={() => {
+                    setShowShare(false);
+                }}>Close</Button>
+            </div>
+        </div>
     </div>
 }
+
 export default MasteryChecklist;

@@ -15,6 +15,7 @@
     "react-firebase-hooks": "^2.2.0",
     "react-masonry-component": "^6.2.1",
     "react-masonry-css": "^1.0.14",
+    "react-router": "^5.2.0",
     "react-scripts": "4.0.1",
     "web-vitals": "^1.0.1"
   },
@@ -43,6 +44,7 @@
     ]
   },
   "devDependencies": {
-    "lodash.debounce": "^4.0.8"
+    "lodash.debounce": "^4.0.8",
+    "react-router-dom": "^5.2.0"
   }
 }
