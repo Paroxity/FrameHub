@@ -18,8 +18,11 @@ const fancyCategoryNames = {
 };
 
 function Category(props) {
-    const [show, setShow] = useState(false);
     let category = props.name;
+
+    let shouldShow = false;
+    if (localStorage.getItem("categoryShown")) shouldShow = JSON.parse(localStorage.getItem("categoryShown"))[category];
+    const [show, setShow] = useState(shouldShow);
 
     let masteredCount = 0;
     let masteredXP = 0;
@@ -49,7 +52,10 @@ function Category(props) {
         </div>
         <div className="categoryInfo">
             <Toggle name={category} selected={show} onToggle={() => {
-                setShow(!show)
+                let value = JSON.parse(localStorage.getItem("categoryShown") || "{}");
+                value[category] = !show;
+                localStorage.setItem("categoryShown", JSON.stringify(value));
+                setShow(!show);
             }}/>
         </div>
         {show && Object.keys(props.items).map(itemName => {
