@@ -489,9 +489,11 @@ input[type="range"]:hover::-ms-thumb {
   background-color: rgba(8, 6, 21, 1);
   /*border: 1px solid rgba(245, 227, 173, 0.5);*/
   position: relative;
+
   .input {
     margin-top: 1em;
   }
+
   .button {
     margin-top: 1em;
     width: auto;
@@ -537,6 +539,13 @@ input[type="range"]:hover::-ms-thumb {
   .framehub-logo {
     padding: 3em 0;
   }
+}
+
+.component-image, .credits {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 /* Sidebar */

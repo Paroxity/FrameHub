@@ -40,7 +40,7 @@ function Item(props) {
                 <br/>
                 {(item.buildTime && item.buildTime > 60) &&
                 <>
-                        <span className="build-time">{detailedTime(item.buildTime)} - <img src={credits} alt=""
+                        <span className="build-time">{detailedTime(item.buildTime)} - <img className="credits" src={credits} alt=""
                                                                                            width="15px"/> {item.buildPrice.toLocaleString()}{item.minMR ? " - Mastery Rank " + item.minMR : ""}</span>
                     <br/>
                 </>

@@ -182,8 +182,7 @@ function MasteryChecklist() {
     complexToSimpleList(items).forEach(item => {
         if (!item.mastered) {
             if (item.components) Object.keys(item.components).forEach(name => {
-                let hasSuffix = ingredientSuffixes.map(suffix => name === item.name + " " + suffix).filter(v => v === true).length;
-                if (hasSuffix) return;
+                if (ingredientSuffixes.includes(name)) return;
                 if (!necessaryComponents[name]) necessaryComponents[name] = 0;
                 necessaryComponents[name] += item.components[name].count || 1;
             });
@@ -325,11 +324,17 @@ function MasteryChecklist() {
             }}/>
             <Masonry columnClassName="masonry-grid_column" className="masonry-grid"
                      breakpointCols={breakpointColumnsObj}>
-                {showComponents && Object.keys(necessaryComponents).map(item => {
+                {showComponents && Object.keys(necessaryComponents).sort((a, b) => {
+                    let countA = necessaryComponents[a];
+                    let countB = necessaryComponents[b];
+                    if (countA > countB) return -1;
+                    if (countA < countB) return 1;
+                    return a.localeCompare(b);
+                }).map(item => {
                     return <div key={item}>
                         <img className="component-image"
                              src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + item.toLowerCase().split(" ").join("-") + ".png"}
-                             alt="" width="30px"/>
+                             alt="" width="30px" onDragStart={e => e.preventDefault()}/>
                         <span className="component-name">{necessaryComponents[item].toLocaleString()}x {item}</span>
                         <br/>
                     </div>
@@ -349,7 +354,6 @@ function MasteryChecklist() {
                 <div className="input"><input type="text"
                                               readOnly value={"https://framehub.paroxity.net/share/" + user[0].uid}
                                               ref={textAreaRef}/></div>
-
                 {
                     document.queryCommandSupported('copy') &&
                     <Button centered onClick={e => {
