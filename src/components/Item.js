@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Tooltip from './Tooltip'
-import {foundersItems, getItemComponents} from '../utils/item.js';
+import {foundersItems} from '../utils/item.js';
 import credits from '../media/credits.png';
 import {detailedTime} from "../utils/time";
 import checkmark from '../media/checkmark.svg';
@@ -22,17 +22,17 @@ function Item(props) {
             {showTooltip && <Tooltip title="Information" x={x} y={y}>
                 {item.vaulted && <><span className="vaulted-item">VAULTED</span><br/><br/></>}
                 {(() => {
-                    let components = getItemComponents(item, name);
-                    if (Object.keys(components).length === 0) return <span
+                    if (Object.keys(item.components).length === 0) return <span
                         className="item-uncraftable">UNCRAFTABLE</span>;
 
-                    return Object.keys(components).map(item => {
-                        return <div key={item}>
+                    return Object.keys(item.components).map(name => {
+                        let component = item.components[name];
+                        return <div key={name}>
                             <img className="component-image"
-                                 src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + item.toLowerCase().split(" ").join("-") + ".png"}
+                                 src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + (component.img || item.toLowerCase().split(" ").join("-")) + ".png"}
                                  alt="" width="30px"/>
                             <span
-                                className="component-name">{components[item].toLocaleString()}x {item}</span>
+                                className="component-name">{(component.count || 1).toLocaleString()}x {name}</span>
                             <br/>
                         </div>
                     })

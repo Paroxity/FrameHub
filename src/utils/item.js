@@ -2,19 +2,6 @@ export const ingredientSuffixes = ["Aegis", "Barrel", "Barrels", "Blade", "Blade
 
 export const foundersItems = ["Excalibur Prime", "Skana Prime", "Lato Prime"];
 
-export function getItemComponents(item, itemName) {
-    let totalIngredients = {};
-    if (item.components) item.components.forEach(component => {
-        let count = component.split("x")[0];
-        let componentName = component.slice(count.length + 2);
-        count = parseInt(count);
-        if (ingredientSuffixes.includes(componentName)) componentName = itemName + " " + componentName;
-        if (!totalIngredients[componentName]) totalIngredients[componentName] = 0;
-        totalIngredients[componentName] += count;
-    });
-    return totalIngredients;
-}
-
 export function complexToSimpleList(complex) {
     let simple = [];
     Object.keys(complex).forEach(category => {

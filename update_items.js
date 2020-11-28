@@ -6,7 +6,6 @@ let itemBlacklist = ["Prisma Machete"];
 
 (async () => {
     let items = {"WF": {}, "PRIMARY": {}, "SECONDARY": {}, "KITGUN": {}, "MELEE": {}, "ZAW": {}, "SENTINEL": {}, "SENTINEL_WEAPON": {}, "AMP": {}, "AW": {}, "AW_GUN": {}, "AW_MELEE": {}, "DOG": {}, "CAT": {}, "MOA": {}, "KDRIVE": {}, "MECH": {}};
-    let itemCount = 0;
     for (let endpoint of endpoints) {
         try {
             let data = (await Axios.get("https://raw.githubusercontent.com/WFCD/warframe-items/development/data/json/" + endpoint + ".json")).data;
@@ -49,18 +48,20 @@ let itemBlacklist = ["Prisma Machete"];
                 if (type) {
                     if (!items[type]) items[type] = {};
                     if (!items[type][entry.name]) {
-                        itemCount++;
                         items[type][entry.name] = {}
                         if (entry.maxLevelCap) items[type][entry.name].maxLvl = entry.maxLevelCap;
                         if (entry.masteryReq) items[type][entry.name].minMR = entry.masteryReq;
                         if (entry.wikiaUrl && entry.wikiaUrl !== "http://warframe.fandom.com/wiki/" + entry.name.split(" ").join("_")) items[type][entry.name].wiki = entry.wikiaUrl;
                         if (entry.components) {
-                            let components = entry.components.filter(component => {
+                            let components = {};
+                            entry.components.filter(component => {
                                 return component.name !== "Blueprint";
-                            }).map(component => {
-                                return component.itemCount + "x " + component.name;
+                            }).forEach(component => {
+                                components[component.name] = {};
+                                if (component.itemCount !== 1) components[component.name]["count"] = component.itemCount;
+                                if (component.name.toLowerCase().split(" ").join("-") + ".png" !== component.imageName) components[component.name]["img"] = component.imageName.slice(0, -4);
                             });
-                            if (components.length > 0) items[type][entry.name].components = components;
+                            if (Object.keys(components).length > 0) items[type][entry.name].components = components;
                         }
                         if (entry.buildTime) items[type][entry.name].buildTime = entry.buildTime;
                         if (entry.buildPrice) items[type][entry.name].buildPrice = entry.buildPrice;
@@ -77,7 +78,7 @@ let itemBlacklist = ["Prisma Machete"];
 
     //TODO: Remove hacks
     items["MECH"]["Voidrig Necramech"].maxLvl = 40;
-    items["MECH"]["Bonewidow Necramech"] = {"maxLvl": 40, "components": ["1x Bonewidow Capsule", "1x Bonewidow Casing", "1x Bonewidow Engine", "1x Bonewidow Weapon Pod"], "buildTime": 259200, "buildPrice": 25000}
+    items["MECH"]["Bonewidow Necramech"] = {"maxLvl": 40, "components": {"Bonewidow Capsule": {}, "Bonewidow Casing": {}, "Bonewidow Engine": {}, "Bonewidow Weapon Pod": {}}, "buildTime": 259200, "buildPrice": 25000, "wiki": "http://warframe.fandom.com/wiki/Bonewidow"}
     try {
         fs.writeFileSync('items.json', JSON.stringify(items));
     } catch (err) {

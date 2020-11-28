@@ -5,7 +5,7 @@ import Category from './components/Category.js';
 import NumberInput from './components/NumberInput.js';
 import LoadingScreen from './components/LoadingScreen.js';
 import Toggle from './components/Toggle.js';
-import {complexToSimpleList, foundersItems, getItemComponents, ingredientSuffixes} from './utils/item.js';
+import {complexToSimpleList, foundersItems, ingredientSuffixes} from './utils/item.js';
 import {
     baseXPByType,
     intrinsicsToXP,
@@ -182,12 +182,11 @@ function MasteryChecklist() {
     let maximumItems = 0;
     complexToSimpleList(items).forEach(item => {
         if (!item.mastered) {
-            let itemComponents = getItemComponents(item, item.name);
-            Object.keys(itemComponents).forEach(component => {
-                let hasSuffix = ingredientSuffixes.map(suffix => component === item.name + " " + suffix).filter(v => v === true).length;
+            Object.keys(item.components).forEach(name => {
+                let hasSuffix = ingredientSuffixes.map(suffix => name === item.name + " " + suffix).filter(v => v === true).length;
                 if (hasSuffix) return;
-                if (!necessaryComponents[component]) necessaryComponents[component] = 0;
-                necessaryComponents[component] += itemComponents[component];
+                if (!necessaryComponents[name]) necessaryComponents[name] = 0;
+                necessaryComponents[name] += item.components[name].count || 1;
             });
         }
         if (!foundersItems.includes(item.name) || !hideFounders || item.mastered) {
