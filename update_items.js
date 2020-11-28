@@ -120,7 +120,7 @@ let itemBlacklist = ["Prisma Machete"];
         "buildTime": 259200,
         "buildPrice": 25000,
         "wiki": "http://warframe.fandom.com/wiki/Bonewidow"
-    }
+    };
     try {
         fs.writeFileSync('items.json', JSON.stringify(items));
     } catch (err) {
