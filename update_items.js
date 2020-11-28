@@ -5,7 +5,25 @@ let endpoints = ["Warframes", "Primary", "Secondary", "Melee", "Sentinels", "Sen
 let itemBlacklist = ["Prisma Machete"];
 
 (async () => {
-    let items = {"WF": {}, "PRIMARY": {}, "SECONDARY": {}, "KITGUN": {}, "MELEE": {}, "ZAW": {}, "SENTINEL": {}, "SENTINEL_WEAPON": {}, "AMP": {}, "AW": {}, "AW_GUN": {}, "AW_MELEE": {}, "DOG": {}, "CAT": {}, "MOA": {}, "KDRIVE": {}, "MECH": {}};
+    let items = {
+        "WF": {},
+        "PRIMARY": {},
+        "SECONDARY": {},
+        "KITGUN": {},
+        "MELEE": {},
+        "ZAW": {},
+        "SENTINEL": {},
+        "SENTINEL_WEAPON": {},
+        "AMP": {},
+        "AW": {},
+        "AW_GUN": {},
+        "AW_MELEE": {},
+        "DOG": {},
+        "CAT": {},
+        "MOA": {},
+        "KDRIVE": {},
+        "MECH": {}
+    };
     for (let endpoint of endpoints) {
         try {
             let data = (await Axios.get("https://raw.githubusercontent.com/WFCD/warframe-items/development/data/json/" + endpoint + ".json")).data;
@@ -42,7 +60,17 @@ let itemBlacklist = ["Prisma Machete"];
                         type = entry.uniqueName.includes("Catbrow") ? "CAT" : "DOG";
                         break;
                     default:
-                        type = { "SpaceMelee": "AW_MELEE", "SpaceGuns": "AW_GUN", "SpaceSuits": "AW", "Suits": "WF", "MechSuits": "MECH", "LongGuns": "PRIMARY", "Melee": "MELEE", "Sentinels": "SENTINEL", "SentinelWeapons": "SENTINEL_WEAPON" }[entry.productCategory];
+                        type = {
+                            "SpaceMelee": "AW_MELEE",
+                            "SpaceGuns": "AW_GUN",
+                            "SpaceSuits": "AW",
+                            "Suits": "WF",
+                            "MechSuits": "MECH",
+                            "LongGuns": "PRIMARY",
+                            "Melee": "MELEE",
+                            "Sentinels": "SENTINEL",
+                            "SentinelWeapons": "SENTINEL_WEAPON"
+                        }[entry.productCategory];
                         break;
                 }
                 if (type) {
@@ -57,9 +85,12 @@ let itemBlacklist = ["Prisma Machete"];
                             entry.components.filter(component => {
                                 return component.name !== "Blueprint";
                             }).forEach(component => {
-                                components[component.name] = {};
-                                if (component.itemCount !== 1) components[component.name]["count"] = component.itemCount;
+                                if (!components[component.name]) components[component.name] = {"count": 0};
+                                components[component.name]["count"] += component.itemCount;
                                 if (component.name.toLowerCase().split(" ").join("-") + ".png" !== component.imageName) components[component.name]["img"] = component.imageName.slice(0, -4);
+                            });
+                            Object.values(components).forEach(value => {
+                                if (value.count === 1) delete value.count;
                             });
                             if (Object.keys(components).length > 0) items[type][entry.name].components = components;
                         }
@@ -78,7 +109,18 @@ let itemBlacklist = ["Prisma Machete"];
 
     //TODO: Remove hacks
     items["MECH"]["Voidrig Necramech"].maxLvl = 40;
-    items["MECH"]["Bonewidow Necramech"] = {"maxLvl": 40, "components": {"Bonewidow Capsule": {}, "Bonewidow Casing": {}, "Bonewidow Engine": {}, "Bonewidow Weapon Pod": {}}, "buildTime": 259200, "buildPrice": 25000, "wiki": "http://warframe.fandom.com/wiki/Bonewidow"}
+    items["MECH"]["Bonewidow Necramech"] = {
+        "maxLvl": 40,
+        "components": {
+            "Bonewidow Capsule": {},
+            "Bonewidow Casing": {},
+            "Bonewidow Engine": {},
+            "Bonewidow Weapon Pod": {}
+        },
+        "buildTime": 259200,
+        "buildPrice": 25000,
+        "wiki": "http://warframe.fandom.com/wiki/Bonewidow"
+    }
     try {
         fs.writeFileSync('items.json', JSON.stringify(items));
     } catch (err) {
