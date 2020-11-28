@@ -22,7 +22,7 @@ function Item(props) {
             {showTooltip && <Tooltip title="Information" x={x} y={y}>
                 {item.vaulted && <><span className="vaulted-item">VAULTED</span><br/><br/></>}
                 {(() => {
-                    if (Object.keys(item.components).length === 0) return <span
+                    if (!item.components) return <span
                         className="item-uncraftable">UNCRAFTABLE</span>;
 
                     return Object.keys(item.components).map(name => {

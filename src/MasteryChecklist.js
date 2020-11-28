@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {useHistory} from "react-router-dom";
-import {useParams} from 'react-router-dom';
+import {useHistory, useParams} from "react-router-dom";
 import Category from './components/Category.js';
 import NumberInput from './components/NumberInput.js';
 import LoadingScreen from './components/LoadingScreen.js';
@@ -182,7 +181,7 @@ function MasteryChecklist() {
     let maximumItems = 0;
     complexToSimpleList(items).forEach(item => {
         if (!item.mastered) {
-            Object.keys(item.components).forEach(name => {
+            if (item.components) Object.keys(item.components).forEach(name => {
                 let hasSuffix = ingredientSuffixes.map(suffix => name === item.name + " " + suffix).filter(v => v === true).length;
                 if (hasSuffix) return;
                 if (!necessaryComponents[name]) necessaryComponents[name] = 0;
