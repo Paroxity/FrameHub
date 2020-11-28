@@ -29,7 +29,7 @@ function Item(props) {
                         let component = item.components[name];
                         return <div key={name}>
                             <img className="component-image"
-                                 src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + (component.img || item.toLowerCase().split(" ").join("-")) + ".png"}
+                                 src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + (component.img || name.toLowerCase().split(" ").join("-")) + ".png"}
                                  alt="" width="30px"/>
                             <span
                                 className="component-name">{(component.count || 1).toLocaleString()}x {name}</span>
