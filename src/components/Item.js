@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Tooltip from './Tooltip'
-import {foundersItems} from '../utils/item.js';
+import {foundersItems, ingredientSuffixes} from '../utils/item.js';
 import credits from '../media/credits.png';
 import {detailedTime} from "../utils/time";
 import checkmark from '../media/checkmark.svg';
@@ -25,14 +25,14 @@ function Item(props) {
                     if (!item.components) return <span
                         className="item-uncraftable">UNCRAFTABLE</span>;
 
-                    return Object.keys(item.components).map(name => {
-                        let component = item.components[name];
-                        return <div key={name}>
+                    return Object.keys(item.components).map(componentName => {
+                        let component = item.components[componentName];
+                        return <div key={componentName}>
                             <img className="component-image"
-                                 src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + (component.img || name.toLowerCase().split(" ").join("-")) + ".png"}
+                                 src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + (component.img || componentName.toLowerCase().split(" ").join("-")) + ".png"}
                                  alt="" width="30px"/>
                             <span
-                                className="component-name">{(component.count || 1).toLocaleString()}x {name}</span>
+                                className="component-name">{(component.count || 1).toLocaleString()}x {ingredientSuffixes.includes(componentName) ? name + " " + componentName : componentName}</span>
                             <br/>
                         </div>
                     })
