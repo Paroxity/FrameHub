@@ -1,5 +1,5 @@
 # FrameHub
-FrameHub is a mastery checklist for [Warframe](https://warframe.com/).
+[FrameHub](https://framehub.paroxity.net/) is a mastery checklist for [Warframe](https://warframe.com/).
 
 ## Features
 - Calculates Mastery Rank & XP
