@@ -22,7 +22,8 @@ function Button(props) {
         >
             <button onClick={props.onClick} type={props.submit ? "submit" : "button"}>{props.children}</button>
         </div>
-        {showTooltip && props.tooltipTitle && <Tooltip title={props.tooltipTitle} x={x} y={y}>{props.tooltipBody}</Tooltip>}
+        {showTooltip && props.tooltipTitle &&
+        <Tooltip title={props.tooltipTitle} x={x} y={y}>{props.tooltipBody}</Tooltip>}
     </>
 }
 

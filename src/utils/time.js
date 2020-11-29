@@ -12,7 +12,7 @@ export function detailedTime(seconds) {
     ["Days", "Hours", "Minutes", "Seconds"].forEach(interval => {
         let amount = duration[interval.toLowerCase()];
         if (amount > 0) {
-           formattedString += amount + " " + interval.slice(0, amount > 1 ? interval.length : -1);
+            formattedString += amount + " " + interval.slice(0, amount > 1 ? interval.length : -1);
         }
     });
     return formattedString;

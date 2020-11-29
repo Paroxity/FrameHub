@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState} from "react";
+import React, {useLayoutEffect, useRef, useState} from "react";
 
 function Tooltip(props) {
     const tooltip = useRef();
@@ -21,7 +21,7 @@ function Tooltip(props) {
         y = document.documentElement.clientHeight - height.current;
     }
     return (
-        <div className={"tooltip"} style={{transform: "translate(" + x + "px," + y+ "px)"}} ref={tooltip}>
+        <div className={"tooltip"} style={{transform: "translate(" + x + "px," + y + "px)"}} ref={tooltip}>
             {props.title}
             <br/>
             <div className="info">{props.children}</div>

@@ -28,11 +28,11 @@ function NumberInput(props) {
                 }}/>
             </div>
         </div>
-        { showTooltip &&
-            <Tooltip x={x} y={y} title={props.name}>
-                <p>Maximum value: {props.max}</p>
-                {props.tooltip}
-            </Tooltip>
+        {showTooltip &&
+        <Tooltip x={x} y={y} title={props.name}>
+            <p>Maximum value: {props.max}</p>
+            {props.tooltip}
+        </Tooltip>
         }
     </div>
 }

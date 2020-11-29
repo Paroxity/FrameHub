@@ -38,9 +38,10 @@ function Item(props) {
                     })
                 })()}
                 <br/>
-                {(item.buildTime && item.buildTime > 60) &&
+                {item.components &&
                 <>
-                        <span className="build-time">{detailedTime(item.buildTime)} - <img className="credits" src={credits} alt=""
+                        <span className="build-time">{detailedTime(item.buildTime)} - <img className="credits"
+                                                                                           src={credits} alt=""
                                                                                            width="15px"/> {item.buildPrice.toLocaleString()}{item.minMR ? " - Mastery Rank " + item.minMR : ""}</span>
                     <br/>
                 </>
@@ -70,7 +71,8 @@ function Item(props) {
                         }
                         props.onClick();
                     }
-                }}>{name + ((item.maxLvl || 30) !== 30 ? " [" + item.maxLvl + "]" : "")}{item.mastered && <img src={checkmark} className="checkmark" alt=""/>}</button>
+                }}>{name + ((item.maxLvl || 30) !== 30 ? " [" + item.maxLvl + "]" : "")}{item.mastered &&
+                <img src={checkmark} className="checkmark" alt=""/>}</button>
             </div>
         </div>
     );
