@@ -44,7 +44,7 @@ let itemBlacklist = ["Prisma Machete"];
                                 if (entry.uniqueName.includes("Barrel")) type = "KITGUN";
                                 break;
                             case "Melee":
-                                if (entry.uniqueName.includes("Tip")) type = "ZAW";
+                                if (entry.uniqueName.includes("Tip") && !entry.uniqueName.includes("PvPVariant")) type = "ZAW";
                                 break;
                             case "Amp":
                                 if (entry.uniqueName.includes("Barrel")) type = "AMP";
