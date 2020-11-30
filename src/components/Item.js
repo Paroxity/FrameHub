@@ -22,8 +22,7 @@ function Item(props) {
             {showTooltip && <Tooltip title="Information" x={x} y={y}>
                 {item.vaulted && <><span className="vaulted-item">VAULTED</span><br/><br/></>}
                 {(() => {
-                    if (!item.components) return <span
-                        className="item-uncraftable">UNCRAFTABLE</span>;
+                    if (!item.components) return <><span className="item-uncraftable">UNCRAFTABLE</span><br/></>;
 
                     return Object.keys(item.components).map(componentName => {
                         let component = item.components[componentName];
@@ -34,20 +33,22 @@ function Item(props) {
                                  alt="" width="30px"/>
                             <span
                                 className="component-name">{(component.count || 1).toLocaleString()}x {ingredientSuffixes.includes(componentName) ? name + " " + componentName : componentName}</span>
-                            <br/>
                         </div>
                     })
                 })()}
                 <br/>
-                {item.components &&
-                <>
-                    <span className="build-time">{detailedTime(item.buildTime)} - <img className="credits" src={credits}
-                                                                                       alt=""
-                                                                                       width="15px"/> {item.buildPrice.toLocaleString()}{item.mr ? " - Mastery Rank " + item.mr : ""}</span>
-                    <br/>
-                </>
-                }
-                <br/>
+                {((item.buildTime && item.buildTime !== 60) || item.buildPrice || item.mr) && <><span className="item-info">
+                        {
+                            (() => {
+                                let info = [];
+                                if (item.buildTime && item.buildTime !== 60) info.push(detailedTime(item.buildTime));
+                                if (item.buildPrice) info.push(<><img className="credits" src={credits} alt=""
+                                                                      width="15px"/> {item.buildPrice.toLocaleString()}</>);
+                                if (item.mr) info.push("Mastery Rank " + item.mr)
+                                return info.reduce((a, b) => [a, " - ", b]);
+                            })()
+                        }
+                </span><br/><br/></>}
                 <span>Ctrl + Left Click for Wiki</span>
             </Tooltip>}
             <div className="button"
