@@ -1,0 +1,31 @@
+name: Update & Upload items.json to Firebase
+on:
+  push:
+    branches:
+      - main
+      - action
+  schedule:
+    - cron: "0 * * * *"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+      - name: Install Dependencies
+        run: npm install -D
+      - name: Update items.json
+        run: node update_items.js
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: items.json
+          path: items.json
+      - name: Upload items.json to Firebase
+        uses: GoogleCloudPlatform/github-actions/upload-cloud-storage@master
+        with:
+          credentials: ${{ secrets.GCP_CREDENTIALS }}
+          path: items.json
+          destination: framehub-f9cfb.appspot.com

@@ -6,7 +6,7 @@ let endpoints = ["Warframes", "Primary", "Secondary", "Melee", "Sentinels", "Sen
 let itemBlacklist = ["Prisma Machete"];
 
 (async () => {
-    let oldData = fs.existsSync("items.json") ? JSON.parse(fs.readFileSync("items.json", "utf8")) : {};
+    let oldData = fs.existsSync("items.json") ? JSON.parse(fs.readFileSync("items.json", "utf8")) : (await Axios.get("https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media")).data;
 
     let items = {
         "WF": {},
@@ -112,7 +112,16 @@ let itemBlacklist = ["Prisma Machete"];
         })();
     }));
 
-    items["AMP"]["Mote Prism"] = {};
+    items["AMP"]["Mote Prism"] = {
+        "components": {
+            "Cetus Wisp": 1,
+            "Tear Azurite": 20,
+            "Pyrotic Alloy": 10,
+            "Fish Oil": 30
+        },
+        "buildTime": 600,
+        "buildPrice": 1000
+    };
     items["CAT"]["Venari"] = {};
 
     //TODO: Remove hacks
