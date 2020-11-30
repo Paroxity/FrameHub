@@ -3,11 +3,11 @@ on:
   push:
     branches:
       - main
-      - action
   schedule:
     - cron: "0 * * * *"
 jobs:
-  build:
+  update_and_upload:
+    if: github.event_name != 'push' || github.actor != 'dependabot-preview'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
