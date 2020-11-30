@@ -18,7 +18,7 @@ function Item(props) {
 
     return (
         <div
-            className={"item" + (item.mastered ? " item-mastered" : "") + ((item.minMR || 0) > props.mr ? " item-locked" : "")}>
+            className={"item" + (item.mastered ? " item-mastered" : "") + ((item.mr || 0) > props.mr ? " item-locked" : "")}>
             {showTooltip && <Tooltip title="Information" x={x} y={y}>
                 {item.vaulted && <><span className="vaulted-item">VAULTED</span><br/><br/></>}
                 {(() => {
@@ -27,6 +27,7 @@ function Item(props) {
 
                     return Object.keys(item.components).map(componentName => {
                         let component = item.components[componentName];
+                        if (!isNaN(component)) component = {"count": component};
                         return <div key={componentName}>
                             <img className="component-image"
                                  src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + (component.img || componentName.toLowerCase().split(" ").join("-")) + ".png"}
@@ -40,9 +41,9 @@ function Item(props) {
                 <br/>
                 {item.components &&
                 <>
-                        <span className="build-time">{detailedTime(item.buildTime)} - <img className="credits"
-                                                                                           src={credits} alt=""
-                                                                                           width="15px"/> {item.buildPrice.toLocaleString()}{item.minMR ? " - Mastery Rank " + item.minMR : ""}</span>
+                    <span className="build-time">{detailedTime(item.buildTime)} - <img className="credits" src={credits}
+                                                                                       alt=""
+                                                                                       width="15px"/> {item.buildPrice.toLocaleString()}{item.mr ? " - Mastery Rank " + item.mr : ""}</span>
                     <br/>
                 </>
                 }

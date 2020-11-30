@@ -184,7 +184,7 @@ function MasteryChecklist() {
             if (item.components) Object.keys(item.components).forEach(name => {
                 if (ingredientSuffixes.includes(name)) return;
                 if (!necessaryComponents[name]) necessaryComponents[name] = 0;
-                necessaryComponents[name] += item.components[name].count || 1;
+                necessaryComponents[name] += isNaN(item.components[name]) ? (item.components[name].count || 1) : item.components[name];
             });
         }
         if (!foundersItems.includes(item.name) || !hideFounders || item.mastered) {
