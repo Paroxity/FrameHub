@@ -14,7 +14,14 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup Node.js
         uses: actions/setup-node@v1
+      - name: Cache Node Modules
+        id: node-modules-cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
       - name: Install Dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: npm install -D
       - name: Update items.json
         run: node update_items.js
