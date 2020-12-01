@@ -80,7 +80,7 @@ let itemBlacklist = ["Prisma Machete"];
                 }
                 if (type) {
                     if (!items[type]) items[type] = {};
-                    if (!items[type][entry.name]) {
+                    if (!items[type][entry.name] || entry.category === "Arch-Gun") { //TODO: Remove Arch-Gun hack
                         items[type][entry.name] = {}
                         if (entry.maxLevelCap) items[type][entry.name].maxLvl = entry.maxLevelCap;
                         if (entry.masteryReq) items[type][entry.name].mr = entry.masteryReq;
@@ -178,7 +178,6 @@ let itemBlacklist = ["Prisma Machete"];
         items[category] = ordered;
     });
 
-    let encodedItems = JSON.stringify(items);
     if (differences.length > 0) {
         if (process.env.DISCORD_WEBHOOK && process.env.DISCORD_ADMIN_IDS) {
             let requests = [];
@@ -196,8 +195,8 @@ let itemBlacklist = ["Prisma Machete"];
             requests.forEach(request => Axios.post(process.env.DISCORD_WEBHOOK, request));
         }
 
-        fs.writeFileSync('items.json', encodedItems);
-        console.log("Updated items.json in " + ((Date.now() - startTime) / 1000) + " seconds with size of " + (Buffer.byteLength(encodedItems, "utf8") / 1000) + "KB");
+        fs.writeFileSync('items.json', JSON.stringify(items));
+        console.log("Updated items.json in " + ((Date.now() - startTime) / 1000) + " seconds with size of " + (fs.statSync("items.json").size / 1024).toFixed(3) + "KB");
         console.log("\nChanges:\n");
         console.log(differences.map(change => "- " + change).join("\n"));
         process.stdout.write("::set-output name=updated::true");
