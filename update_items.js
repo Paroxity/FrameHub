@@ -112,6 +112,9 @@ let itemBlacklist = ["Prisma Machete"];
         })();
     }));
 
+    items["WF"]["Excalibur Prime"].vaulted = true;
+    items["SECONDARY"]["Lato Prime"].vaulted = true;
+    items["MELEE"]["Skana Prime"].vaulted = true;
     items["AMP"]["Mote Prism"] = {
         "components": {
             "Cetus Wisp": 1,
@@ -139,43 +142,67 @@ let itemBlacklist = ["Prisma Machete"];
         "wiki": "http://warframe.fandom.com/wiki/Bonewidow"
     };
 
+    let differences = [];
     Object.keys(oldData).forEach(category => {
         Object.keys(oldData[category]).forEach(key => {
             if (!items[category][key]) {
-                console.log("- Removed item \"" + key + "\"");
+                differences.push("Removed item \"" + key + "\"");
             }
         });
     });
-
     Object.keys(items).forEach(category => {
         let ordered = {};
         Object.keys(items[category]).sort().forEach(item => {
             ordered[item] = items[category][item];
 
-            if (oldData[category]) {
-                if (oldData[category][item]) {
-                    Object.keys(items[category][item]).forEach(key => {
-                        let oldValue = oldData[category][item][key];
-                        let newValue = items[category][item][key];
-                        if (oldValue !== undefined) {
-                            if (!util.isDeepStrictEqual(oldValue, newValue)) {
-                                console.log("- Property \"" + key + "\" changed in item \"" + item + "\" (" + JSON.stringify(oldValue) + " -> " + JSON.stringify(newValue) + ")");
-                            }
-                        } else {
-                            console.log("- New property \"" + key + "\" added with value \"" + JSON.stringify(newValue) + "\" in item \"" + item + "\"");
-                        }
-                    });
-                } else {
-                    console.log("- New item \"" + item + "\" added with properties " + JSON.stringify(items[category][item]));
-                }
-            } else {
-                console.log("- New item \"" + item + "\" added in new category with properties " + JSON.stringify(items[category][item]));
+            if (!oldData[category]) {
+                differences.push("New item \"" + item + "\" added in new category with properties " + JSON.stringify(items[category][item]));
+                return;
             }
+            if (!oldData[category][item]) {
+                differences.push("New item \"" + item + "\" added with properties " + JSON.stringify(items[category][item]));
+                return;
+            }
+            Object.keys(items[category][item]).forEach(key => {
+                let oldValue = oldData[category][item][key];
+                let newValue = items[category][item][key];
+                if (oldValue !== undefined) {
+                    if (!util.isDeepStrictEqual(oldValue, newValue)) {
+                        differences.push("Property \"" + key + "\" changed in item \"" + item + "\" (" + JSON.stringify(oldValue) + " -> " + JSON.stringify(newValue) + ")");
+                    }
+                } else {
+                    differences.push("New property \"" + key + "\" added with value " + JSON.stringify(newValue) + " in item \"" + item + "\"");
+                }
+            });
         });
         items[category] = ordered;
     });
 
     let encodedItems = JSON.stringify(items);
-    fs.writeFileSync('items.json', encodedItems);
-    console.log("Updated items.json in " + ((Date.now() - startTime) / 1000) + " seconds with size of " + (Buffer.byteLength(encodedItems, "utf8") / 1000) + "KB");
+    if (differences.length > 0) {
+        if (process.env.DISCORD_WEBHOOK && process.env.DISCORD_ADMIN_IDS) {
+            let requests = [];
+            let baseMessage = process.env.DISCORD_ADMIN_IDS.split(",").map(id => "<@" + id + ">").join(" ") + " items.json updated! Changes:";
+            differences.forEach(difference => {
+                let newMessage = baseMessage + "\n- " + difference;
+                if (newMessage.length <= 2000) {
+                    baseMessage = newMessage;
+                } else {
+                    requests.push({"content": baseMessage});
+                    baseMessage = difference;
+                }
+            });
+            requests.push({"content": baseMessage});
+            requests.forEach(request => Axios.post(process.env.DISCORD_WEBHOOK, request));
+        }
+
+        fs.writeFileSync('items.json', encodedItems);
+        console.log("Updated items.json in " + ((Date.now() - startTime) / 1000) + " seconds with size of " + (Buffer.byteLength(encodedItems, "utf8") / 1000) + "KB");
+        console.log("\nChanges:\n");
+        console.log(differences.map(change => "- " + change).join("\n"));
+        process.stdout.write("::set-output name=updated::true");
+        return;
+    }
+    console.log("No differences detected");
+    process.stdout.write("::set-output name=updated::false");
 })();

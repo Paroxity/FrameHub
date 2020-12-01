@@ -24,14 +24,20 @@ jobs:
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: npm install -D
       - name: Update items.json
+        id: update_items
         run: node update_items.js
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_ADMIN_IDS: ${{ secrets.DISCORD_ADMIN_IDS }}
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
+        if: steps.update_items.updated == 'true'
         with:
           name: items.json
           path: items.json
       - name: Upload items.json to Firebase
-        uses: GoogleCloudPlatform/github-actions/upload-cloud-storage@master
+        uses: google-github-actions/upload-cloud-storage@main
+        if: steps.update_items.updated == 'true'
         with:
           credentials: ${{ secrets.GCP_CREDENTIALS }}
           path: items.json
