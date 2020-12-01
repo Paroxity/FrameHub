@@ -31,13 +31,13 @@ jobs:
           DISCORD_ADMIN_IDS: ${{ secrets.DISCORD_ADMIN_IDS }}
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
-        if: steps.update_items.updated == 'true'
+        if: steps.update_items.outputs.updated == 'true'
         with:
           name: items.json
           path: items.json
       - name: Upload items.json to Firebase
         uses: google-github-actions/upload-cloud-storage@main
-        if: steps.update_items.updated == 'true'
+        if: steps.update_items.outputs.updated == 'true'
         with:
           credentials: ${{ secrets.GCP_CREDENTIALS }}
           path: items.json
