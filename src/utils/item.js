@@ -3,15 +3,15 @@ export const ingredientSuffixes = ["Aegis", "Barrel", "Barrels", "Blade", "Blade
 export const foundersItems = ["Excalibur Prime", "Skana Prime", "Lato Prime"];
 
 export function complexToSimpleList(complex) {
-    let simple = [];
-    Object.keys(complex).forEach(category => {
-        let categoryItems = complex[category];
-        Object.keys(categoryItems).forEach(itemName => {
-            let item = categoryItems[itemName];
-            item.name = itemName;
-            item.type = category;
-            simple.push(item);
-        });
-    });
-    return simple;
+	let simple = [];
+	Object.keys(complex).forEach(category => {
+		let categoryItems = complex[category];
+		Object.keys(categoryItems).forEach(itemName => {
+			let item = categoryItems[itemName];
+			item.name = itemName;
+			item.type = category;
+			simple.push(item);
+		});
+	});
+	return simple;
 }
