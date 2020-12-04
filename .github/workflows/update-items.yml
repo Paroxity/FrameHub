@@ -7,7 +7,7 @@ on:
     - cron: "0 * * * *"
 jobs:
   update_and_upload:
-    if: github.event_name != 'push' || github.actor != 'dependabot-preview'
+    if: (github.event_name != 'push' || !contains(github.event.head_commit.message, 'dependabot')) && !contains(github.event.head_commit.message, 'ci skip'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -29,12 +29,6 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           DISCORD_ADMIN_IDS: ${{ secrets.DISCORD_ADMIN_IDS }}
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        if: steps.update_items.outputs.updated == 'true'
-        with:
-          name: items.json
-          path: items.json
       - name: Upload items.json to Firebase
         uses: google-github-actions/upload-cloud-storage@main
         if: steps.update_items.outputs.updated == 'true'
@@ -42,3 +36,8 @@ jobs:
           credentials: ${{ secrets.GCP_CREDENTIALS }}
           path: items.json
           destination: framehub-f9cfb.appspot.com
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: items.json
+          path: items.json
