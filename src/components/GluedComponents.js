@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 function GluedComponents(props) {
 	let children = props.children.filter(child => child !== undefined);
@@ -7,5 +8,11 @@ function GluedComponents(props) {
 		return <React.Fragment key={i}>{i === 0 ? "" : props.separator}{child}</React.Fragment>;
 	})}</span>{props.appendAfter}</>;
 }
+
+GluedComponents.propTypes = {
+	separator: PropTypes.string.isRequired,
+	appendAfter: PropTypes.node,
+	children: PropTypes.node
+};
 
 export default GluedComponents;

@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import PropTypes from "prop-types";
 import Tooltip from "./Tooltip";
 
 function Button(props) {
@@ -12,9 +13,7 @@ function Button(props) {
 				setY(e.clientY + 30);
 				setShowTooltip(true);
 			}}
-			onMouseOut={() => {
-				setShowTooltip(false);
-			}}
+			onMouseOut={() => setShowTooltip(false)}
 			onMouseMove={e => {
 				setX(e.clientX + 20);
 				setY(e.clientY + 30);
@@ -26,5 +25,15 @@ function Button(props) {
 		<Tooltip title={props.tooltipTitle} x={x} y={y}>{props.tooltipBody}</Tooltip>}
 	</>;
 }
+
+Button.propTypes = {
+	centered: PropTypes.bool,
+	disabled: PropTypes.bool,
+	submit: PropTypes.bool,
+	onClick: PropTypes.func,
+	tooltipTitle: PropTypes.string,
+	tooltipBody: PropTypes.node,
+	children: PropTypes.node
+};
 
 export default Button;

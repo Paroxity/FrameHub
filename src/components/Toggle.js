@@ -2,6 +2,7 @@ import React from "react";
 import xIcon from "../media/x-icon.svg";
 import checkmark from "../media/checkmark.svg";
 import placeholderIcon from "../media/placeholderIcon.svg";
+import * as PropTypes from "prop-types";
 
 class Toggle extends React.Component {
 	render() {
@@ -31,5 +32,12 @@ class Toggle extends React.Component {
 
 	}
 }
+
+Toggle.propTypes = {
+	name: PropTypes.string.isRequired,
+	selected: PropTypes.bool,
+	label: PropTypes.string,
+	onToggle: PropTypes.func
+};
 
 export default Toggle;

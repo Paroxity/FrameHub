@@ -3,6 +3,7 @@ import Item from "./Item.js";
 import {baseXPByType} from "../utils/xp.js";
 import Toggle from "./Toggle.js";
 import {foundersItems} from "../utils/item";
+import PropTypes from "prop-types";
 
 const fancyCategoryNames = {
 	"WF": "Warframe",
@@ -70,5 +71,14 @@ function Category(props) {
 		})}
 	</div>;
 }
+
+Category.propTypes = {
+	name: PropTypes.string.isRequired,
+	items: PropTypes.object.isRequired,
+	mr: PropTypes.number.isRequired,
+	hideMastered: PropTypes.bool.isRequired,
+	hideFounders: PropTypes.bool.isRequired,
+	changeMasteredAndXP: PropTypes.func.isRequired
+};
 
 export default Category;

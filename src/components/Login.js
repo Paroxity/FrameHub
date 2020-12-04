@@ -6,6 +6,7 @@ import "firebase/storage";
 import logo from "../media/framehub.svg";
 import Button from "./Button";
 import {useHistory} from "react-router-dom";
+import PropTypes from "prop-types";
 
 function Login(props) {
 	const [signup, setSignup] = useState(false);
@@ -118,5 +119,10 @@ function Login(props) {
 		<div className="disclaimer">FrameHub is not affiliated with Digital Extremes or Warframe.</div>
 	</>;
 }
+
+Login.propTypes = {
+	auth: PropTypes.object,
+	user: PropTypes.array
+};
 
 export default Login;

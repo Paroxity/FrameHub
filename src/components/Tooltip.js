@@ -1,4 +1,5 @@
 import React, {useLayoutEffect, useRef, useState} from "react";
+import PropTypes from "prop-types";
 
 function Tooltip(props) {
 	const tooltip = useRef();
@@ -29,5 +30,12 @@ function Tooltip(props) {
 	);
 
 }
+
+Tooltip.propTypes = {
+	x: PropTypes.number.isRequired,
+	y: PropTypes.number.isRequired,
+	title: PropTypes.string.isRequired,
+	children: PropTypes.node.isRequired
+};
 
 export default Tooltip;

@@ -5,6 +5,7 @@ import credits from "../media/credits.png";
 import {detailedTime} from "../utils/time";
 import checkmark from "../media/checkmark.svg";
 import GluedComponents from "./GluedComponents";
+import PropTypes from "prop-types";
 
 function Item(props) {
 	const [showTooltip, setShowTooltip] = useState(false);
@@ -66,7 +67,7 @@ function Item(props) {
 						if (props.hideMastered) {
 							setShowTooltip(false);
 						}
-						props.onClick();
+						if (props.onClick) props.onClick();
 					}
 				}}>{name + ((item.maxLvl || 30) !== 30 ? " [" + item.maxLvl + "]" : "")}{item.mastered &&
 				<img src={checkmark} className="checkmark" alt=""/>}</button>
@@ -74,5 +75,29 @@ function Item(props) {
 		</div>
 	);
 }
+
+Item.propTypes = {
+	name: PropTypes.string.isRequired,
+	item: PropTypes.shape({
+		wiki: PropTypes.string,
+		mr: PropTypes.number,
+		mastered: PropTypes.bool,
+		vaulted: PropTypes.bool,
+		buildTime: PropTypes.number,
+		buildPrice: PropTypes.number,
+		components: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.shape({
+				img: PropTypes.string,
+				count: PropTypes.number
+			})
+		]),
+		maxLvl: PropTypes.number
+	}).isRequired,
+	mr: PropTypes.number.isRequired,
+	hideMastered: PropTypes.bool,
+	hideFounders: PropTypes.bool,
+	onClick: PropTypes.func
+};
 
 export default Item;

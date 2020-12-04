@@ -7,7 +7,7 @@ on:
     - cron: "0 * * * *"
 jobs:
   update_and_upload:
-    if: (github.event_name != 'push' || !contains(github.event.head_commit.message, 'dependabot')) && !contains(github.event.head_commit.message, 'ci skip'
+    if: (github.event_name != 'push' || !contains(github.event.head_commit.message, 'dependabot')) && !contains(github.event.head_commit.message, 'ci skip')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
