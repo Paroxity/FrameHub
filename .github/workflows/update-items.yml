@@ -38,6 +38,7 @@ jobs:
           destination: framehub-f9cfb.appspot.com
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
+        if: steps.update_items.outputs.updated == 'true'
         with:
           name: items.json
           path: items.json
