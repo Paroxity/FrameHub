@@ -29,7 +29,7 @@ import debounce from "lodash.debounce";
 import {useAuthState} from "react-firebase-hooks/auth";
 
 function useDebounce(callback, delay) {
-	// Memoizing the callback because if it"s an arrow function
+	// Memoize the callback because if it's an arrow function
 	// it would be different on each render
 	const memoizedCallback = useCallback(callback, []); // eslint-disable-line react-hooks/exhaustive-deps
 	const debouncedFn = useRef(debounce(memoizedCallback, delay));
@@ -84,19 +84,10 @@ function MasteryChecklist() {
 	const startUp = useCallback(async () => {
 		let loadedItems = {};
 
-		let worldState;
-		try {
-			worldState = (await Axios.get("https://cors-proxy.aericio.workers.dev/?https://content.warframe.com/dynamic/worldState.php")).data;
-		} catch (e) {
-			console.log("Error retrieving Warframe world state from worldstate API");
-			console.log(e);
-		}
-
-		if (localStorage.getItem("lastSave") < Date.now() || (worldState && worldState.BuildLabel !== localStorage.getItem("lastWFBuild"))) {
+		if (localStorage.getItem("lastSave") < Date.now()) {
 			loadedItems = (await Axios.get("https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media")).data;
 			localStorage.setItem("items", JSON.stringify(loadedItems));
 			localStorage.setItem("lastSave", (Date.now() + 7200000).toString());
-			localStorage.setItem("lastWFBuild", worldState.BuildLabel);
 		} else {
 			loadedItems = JSON.parse(localStorage.getItem("items"));
 		}

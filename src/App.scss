@@ -6,7 +6,7 @@ button {
 	background-color: #05040e;
 }
 
-@media(max-height: 720px) {
+@media (max-height: 720px) {
 	html,
 	input,
 	button {
@@ -71,7 +71,7 @@ h6 {
 	background-clip: padding-box;
 }
 
-@media(max-width: 550px) {
+@media (max-width: 550px) {
 	.masonry-grid_column {
 		padding-left: 0;
 		padding-right: 0;
@@ -139,7 +139,8 @@ button:hover::before {
 	background-color: rgba(245, 227, 173, 0.25);
 }
 
-.button::after, .input::after {
+.button::after,
+.input::after {
 	content: "";
 	display: block;
 	position: absolute;
@@ -189,6 +190,28 @@ button:hover::before {
 
 	button:hover {
 		border: 1px solid rgba(245, 227, 173, 0);
+	}
+}
+
+.popup-box.button {
+	margin-top: 1em;
+	width: auto;
+
+	button {
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.item {
+	.button {
+		width: 100%;
+
+		button {
+			width: 100%;
+			padding-left: 0;
+			padding-right: 0;
+		}
 	}
 }
 
@@ -449,9 +472,11 @@ input[type="range"]:hover::-ms-thumb {
 		margin: 5px auto;
 		display: block;
 	}
+
 	.actions {
 		margin: -5px;
 	}
+
 	.framehub-logo {
 		width: 60%;
 	}
@@ -487,21 +512,10 @@ input[type="range"]:hover::-ms-thumb {
 	font-size: 1.25em;
 	padding: 3em 6em;
 	background-color: rgba(8, 6, 21, 1);
-	/*border: 1px solid rgba(245, 227, 173, 0.5);*/
 	position: relative;
 
 	.input {
 		margin-top: 1em;
-	}
-
-	.button {
-		margin-top: 1em;
-		width: auto;
-
-		button {
-			width: 100%;
-			height: 100%;
-		}
 	}
 }
 
@@ -522,9 +536,11 @@ input[type="range"]:hover::-ms-thumb {
 	0% {
 		background-position: 0 50%;
 	}
+
 	50% {
 		background-position: 100% 50%;
 	}
+
 	100% {
 		background-position: 0 50%;
 	}
@@ -541,7 +557,8 @@ input[type="range"]:hover::-ms-thumb {
 	}
 }
 
-.component-image, .credits {
+.component-image,
+.credits {
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
@@ -572,7 +589,19 @@ input[type="range"]:hover::-ms-thumb {
 .labeled-input {
 	span {
 		margin-right: 10px;
+		font-size: 1.25em;
+		color: #bea966;
 	}
+
+	span::after {
+		content: ":";
+	}
+
+	div {
+		display: inline-block;
+	}
+
+	position: relative;
 }
 
 .hamburger {
@@ -585,7 +614,7 @@ input[type="range"]:hover::-ms-thumb {
 	z-index: 2;
 }
 
-@media(max-width: 950px) {
+@media (max-width: 950px) {
 	.sidebar {
 		opacity: 0;
 		pointer-events: none;
@@ -610,6 +639,7 @@ input[type="range"]:hover::-ms-thumb {
 		opacity: 1;
 		pointer-events: all;
 	}
+
 	.content {
 		margin: 0 2em;
 
@@ -625,33 +655,18 @@ input[type="range"]:hover::-ms-thumb {
 		margin: 10px auto !important;
 		width: 100%;
 	}
+
 	.hamburger {
 		display: block;
 	}
 }
 
-.xp, .items-mastered {
+.xp,
+.items-mastered {
 	user-select: text !important;
 	-moz-user-select: text !important;
 	-webkit-user-select: text !important;
 	-ms-user-select: text !important;
-}
-
-.labeled-input {
-	span {
-		font-size: 1.25em;
-		color: #bea966;
-	}
-
-	span::after {
-		content: ":";
-	}
-
-	div {
-		display: inline-block;
-	}
-
-	position: relative;
 }
 
 /* Radio checkbox */
@@ -739,7 +754,7 @@ input[type="range"]:hover::-ms-thumb {
 	-ms-user-select: none;
 }
 
-@media(max-width: 580px) {
+@media (max-width: 580px) {
 	.paroxity-logo {
 		display: none;
 	}
@@ -776,23 +791,10 @@ input[type="range"]:hover::-ms-thumb {
 	padding: 10px 0;
 }
 
-.item {
-	.button {
-		width: 100%;
-
-		button {
-			width: 100%;
-			padding-left: 0;
-			padding-right: 0;
-		}
-	}
-}
-
 .categories.read-only {
 	.button {
 		button {
 			pointer-events: none;
-			tab-index: -1;
 		}
 	}
 }
@@ -800,6 +802,5 @@ input[type="range"]:hover::-ms-thumb {
 .sidebar.read-only {
 	.input {
 		pointer-events: none;
-		tab-index: -1;
 	}
 }
