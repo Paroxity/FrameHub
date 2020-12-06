@@ -171,7 +171,7 @@ const itemBlacklist = ["Prisma Machete"];
 
 						ingredients[ingredientName].count += ingredient.ItemCount;
 						if (originalIngredientName !== ingredientName) {
-							if (category === "AW") ingredients[ingredientName].img = originalIngredientName.toLowerCase().split(" ").join("-");
+							if (category.startsWith("AW")) ingredients[ingredientName].img = originalIngredientName.toLowerCase().split(" ").join("-");
 							if (item.endsWith(" Prime")) ingredients[ingredientName].img = "prime-" + (ingredients[ingredientName].img || ingredientName.toLowerCase().split(" ").join("-"));
 						}
 					});

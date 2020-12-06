@@ -17,9 +17,9 @@ jobs:
         if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: npm install
       - name: ESLint
-        run: eslint src update_items.js
+        run: node_modules/.bin/eslint src update_items.js
       - name: stylelint
-        run: stylelint "**/*.{css,scss,sass}"
+        run: node_modules/.bin/stylelint "**/*.{css,scss,sass}"
       - name: Update Items
         run: node update_items.js
       - name: Build
