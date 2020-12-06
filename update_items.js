@@ -1,14 +1,21 @@
 const Axios = require("axios");
+const lzma = require("lzma");
 const fs = require("fs");
 const util = require("util");
 
-let endpoints = ["Warframes", "Primary", "Secondary", "Melee", "Sentinels", "SentinelWeapons", "Archwing", "Arch-Gun", "Arch-Melee", "Pets", "Misc"];
-let itemBlacklist = ["Prisma Machete"];
+const API_URL = "https://content.warframe.com/";
+const WIKI_URL = "https://warframe.fandom.com/wiki/";
+const VAULTED_DATA_URL = "https://oggtechnologies.com/api/ducatsorplat/v2/MainItemData.json";
+
+const requiredEndpoints = ["Warframes", "Weapons", "Sentinels", "Recipes", "Resources"];
+const itemBlacklist = ["Prisma Machete"];
 
 (async () => {
-	let oldData = fs.existsSync("items.json") ? JSON.parse(fs.readFileSync("items.json", "utf8")) : (await Axios.get("https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media")).data;
+	let data = (await Axios.get(API_URL + "PublicExport/index_en.txt.lzma", {responseType: "arraybuffer"})).data;
+	let endpoints = lzma.decompress(data).split("\n");
 
-	let items = {
+	let oldItems = fs.existsSync("items.json") ? JSON.parse(fs.readFileSync("items.json", "utf8")) : (await Axios.get("https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media")).data;
+	let newItems = {
 		"WF": {},
 		"PRIMARY": {},
 		"SECONDARY": {},
@@ -27,42 +34,70 @@ let itemBlacklist = ["Prisma Machete"];
 		"KDRIVE": {},
 		"MECH": {}
 	};
+	let recipes = {};
+	let itemNames = {};
+
 	let startTime = Date.now();
 
-	await Promise.all(endpoints.map(endpoint => {
+	let vaulted = [];
+	(await Axios.get(VAULTED_DATA_URL)).data.data.forEach(vaultedItem => {
+		if (vaultedItem.Vaulted) vaulted.push(vaultedItem.Name);
+	});
+
+	await Promise.all(endpoints.filter(endpoint => requiredEndpoints.includes(filterEndpointName(endpoint))).map(endpoint => {
 		return (async () => {
-			let data = (await Axios.get("https://raw.githubusercontent.com/WFCD/warframe-items/development/data/json/" + endpoint + ".json")).data;
-			data.forEach(entry => {
-				if (itemBlacklist.includes(entry.name)) return;
+			let baseCategory = filterEndpointName(endpoint);
+
+			let data = (await Axios.get(API_URL + "PublicExport/Manifest/" + endpoint)).data;
+			if (typeof data !== "object") data = JSON.parse(data.replace(/\\r|\r?\n/g, ""));
+			data = data["Export" + baseCategory];
+
+			Object.values(data).forEach(baseItem => {
+				if (baseCategory === "Recipes") {
+					let invalidBPs = [
+						"/Lotus/Types/Recipes/Weapons/CorpusHandcannonBlueprint",
+						"/Lotus/Types/Recipes/Weapons/GrineerCombatKnifeBlueprint"
+					];
+					if (invalidBPs.includes(baseItem.uniqueName)) return;
+					if (!recipes[baseItem.resultType]) recipes[baseItem.resultType] = baseItem;
+					return;
+				}
+
+				let uniqueName = baseItem.uniqueName;
+
+				baseItem.name = baseItem.name.replace("<ARCHWING> ", "").toLowerCase().split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ").split("-").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join("-");
+				if (baseItem.name.startsWith("Mk1-")) baseItem.name = baseItem.name.slice(0, 4) + baseItem.name.charAt(4).toUpperCase() + baseItem.name.slice(5);
+				itemNames[uniqueName] = baseItem.name;
+
+				if (filterEndpointName(endpoint) === "Resources") return;
 
 				let type;
-
-				switch (entry.productCategory) {
+				switch (baseItem.productCategory) {
 					case "Pistols":
-						switch (entry.type) {
-							case "Kitgun Component":
-								if (entry.uniqueName.includes("Barrel")) type = "KITGUN";
-								break;
-							case "Melee":
-								if (entry.uniqueName.includes("Tip") && !entry.uniqueName.includes("PvPVariant")) type = "ZAW";
-								break;
-							case "Amp":
-								if (entry.uniqueName.includes("Barrel")) type = "AMP";
-								break;
-							case "K-Drive Component":
-								if (entry.uniqueName.includes("Deck")) type = "KDRIVE";
-								break;
-							case "Pets":
-								if (entry.uniqueName.startsWith("/Lotus/Types/Friendly/Pets/MoaPets/MoaPetParts/MoaPetHead")) type = "MOA";
-								break;
-							default:
-								if (endpoint === "Secondary") type = "SECONDARY";
-								else if (endpoint === "Misc" && entry.type === "Pistol" && entry.uniqueName.includes("Barrel")) type = "KITGUN";
-								break;
+						if (uniqueName.includes("ModularMelee")) {
+							if (uniqueName.includes("Tip") && !uniqueName.includes("PvPVariant")) type = "ZAW";
+							break;
 						}
+						if (uniqueName.includes("ModularPrimary") || uniqueName.includes("ModularSecondary") || uniqueName.includes("InfKitGun")) {
+							if (uniqueName.includes("Barrel")) type = "KITGUN";
+							break;
+						}
+						if (uniqueName.includes("OperatorAmplifiers")) {
+							if (uniqueName.includes("Barrel")) type = "AMP";
+							break;
+						}
+						if (uniqueName.includes("Hoverboard")) {
+							if (uniqueName.includes("Deck")) type = "KDRIVE";
+							break;
+						}
+						if (uniqueName.includes("MoaPets")) {
+							if (uniqueName.includes("MoaPetHead")) type = "MOA";
+							break;
+						}
+						if (baseItem.slot === 0) type = "SECONDARY";
 						break;
 					case "KubrowPets":
-						type = entry.uniqueName.includes("Catbrow") ? "CAT" : "DOG";
+						type = uniqueName.includes("Catbrow") ? "CAT" : "DOG";
 						break;
 					default:
 						type = {
@@ -75,47 +110,26 @@ let itemBlacklist = ["Prisma Machete"];
 							"Melee": "MELEE",
 							"Sentinels": "SENTINEL",
 							"SentinelWeapons": "SENTINEL_WEAPON"
-						}[entry.productCategory];
-						break;
+						}[baseItem.productCategory];
 				}
-				if (type) {
-					if (!items[type]) items[type] = {};
-					if (!items[type][entry.name] || entry.category === "Arch-Gun") { //TODO: Remove Arch-Gun hack
-						items[type][entry.name] = {};
-						if (entry.maxLevelCap) items[type][entry.name].maxLvl = entry.maxLevelCap;
-						if (entry.masteryReq) items[type][entry.name].mr = entry.masteryReq;
-						if (entry.wikiaUrl && entry.wikiaUrl !== "http://warframe.fandom.com/wiki/" + entry.name.split(" ").join("_")) items[type][entry.name].wiki = entry.wikiaUrl;
-						if (entry.components) {
-							let components = {};
-							entry.components.filter(component => {
-								return component.name !== "Blueprint";
-							}).forEach(component => {
-								if (!components[component.name]) components[component.name] = {"count": 0};
-								components[component.name]["count"] += component.itemCount;
-								if (component.name.toLowerCase().split(" ").join("-") + ".png" !== component.imageName) components[component.name]["img"] = component.imageName.slice(0, -4);
-							});
-							Object.keys(components).forEach(key => {
-								if (Object.keys(components[key]).length <= 1 && components[key].count) {
-									components[key] = components[key].count;
-								} else if (components[key].count === 1) {
-									delete components[key].count;
-								}
-							});
-							if (Object.keys(components).length > 0) items[type][entry.name].components = components;
-						}
-						if (entry.buildTime) items[type][entry.name].buildTime = entry.buildTime;
-						if (entry.buildPrice) items[type][entry.name].buildPrice = entry.buildPrice;
-						if (entry.vaulted) items[type][entry.name].vaulted = entry.vaulted;
-					}
+
+				if (type && !itemBlacklist.includes(baseItem.name)) {
+					if (!newItems[type]) newItems[type] = {};
+					if (!newItems[type][baseItem.name]) newItems[type][baseItem.name] = {};
+
+					let newItem = {"uniqueName": baseItem.uniqueName};
+					newItems[type][baseItem.name] = newItem;
+
+					if (baseItem.maxLevelCap) newItem.maxLvl = baseItem.maxLevelCap;
+					if (baseItem.masteryReq) newItem.mr = baseItem.masteryReq;
+					if (baseItem.name.includes("Mk1-")) newItem.wiki = WIKI_URL + baseItem.name.replace("Mk1-", "MK1-");
+					if (vaulted.includes(baseItem.name)) newItem.vaulted = true;
 				}
 			});
 		})();
 	}));
 
-	items["WF"]["Excalibur Prime"].vaulted = true;
-	items["SECONDARY"]["Lato Prime"].vaulted = true;
-	items["MELEE"]["Skana Prime"].vaulted = true;
-	items["AMP"]["Mote Prism"] = {
+	newItems["AMP"]["Mote Prism"] = {
 		"components": {
 			"Cetus Wisp": 1,
 			"Tear Azurite": 20,
@@ -125,47 +139,67 @@ let itemBlacklist = ["Prisma Machete"];
 		"buildTime": 600,
 		"buildPrice": 1000
 	};
-	items["CAT"]["Venari"] = {};
+	newItems["CAT"]["Venari"] = {};
 
 	//TODO: Remove hacks
-	items["MECH"]["Voidrig Necramech"].maxLvl = 40;
-	items["MECH"]["Bonewidow Necramech"] = {
-		"maxLvl": 40,
-		"components": {
-			"Bonewidow Capsule": 1,
-			"Bonewidow Casing": 1,
-			"Bonewidow Engine": 1,
-			"Bonewidow Weapon Pod": 1
-		},
-		"buildTime": 259200,
-		"buildPrice": 25000,
-		"wiki": "http://warframe.fandom.com/wiki/Bonewidow"
-	};
+	newItems["MECH"]["Voidrig Necramech"].maxLvl = 40;
+	newItems["MECH"]["Bonewidow Necramech"] = newItems["MECH"]["Bonewidow"];
+	newItems["MECH"]["Bonewidow Necramech"].maxLvl = 40;
+	newItems["MECH"]["Bonewidow Necramech"].wiki = WIKI_URL + "Bonewidow";
+	delete newItems["MECH"]["Bonewidow"];
 
 	let differences = [];
-	Object.keys(oldData).forEach(category => {
-		Object.keys(oldData[category]).forEach(key => {
-			if (!items[category][key]) {
+	Object.keys(oldItems).forEach(category => {
+		Object.keys(oldItems[category]).forEach(key => {
+			if (!newItems[category][key]) {
 				differences.push("Removed item \"" + key + "\"");
 			}
 		});
 	});
-	Object.keys(items).forEach(category => {
+	Object.keys(newItems).forEach(category => {
 		let ordered = {};
-		Object.keys(items[category]).sort().forEach(item => {
-			ordered[item] = items[category][item];
+		Object.keys(newItems[category]).sort().forEach(item => {
+			let finalItem = newItems[category][item];
+			if (recipes[finalItem.uniqueName]) {
+				let recipe = recipes[finalItem.uniqueName];
+				if (recipe.ingredients) {
+					let ingredients = {};
+					recipe.ingredients.forEach(ingredient => {
+						let originalIngredientName = itemNames[ingredient.ItemType];
+						let ingredientName = ingredient.ItemType.includes("/Recipes/") ? originalIngredientName.replace(item + " ", "") : originalIngredientName;
+						if (!ingredients[ingredientName]) ingredients[ingredientName] = {"count": 0};
 
-			if (!oldData[category]) {
-				differences.push("New item \"" + item + "\" added in new category with properties " + JSON.stringify(items[category][item]));
+						ingredients[ingredientName].count += ingredient.ItemCount;
+						if (originalIngredientName !== ingredientName) {
+							if (category === "AW") ingredients[ingredientName].img = originalIngredientName.toLowerCase().split(" ").join("-");
+							if (item.endsWith(" Prime")) ingredients[ingredientName].img = "prime-" + (ingredients[ingredientName].img || ingredientName.toLowerCase().split(" ").join("-"));
+						}
+					});
+					Object.keys(ingredients).forEach(key => {
+						if (Object.keys(ingredients[key]).length <= 1 && ingredients[key].count) {
+							ingredients[key] = ingredients[key].count;
+						} else if (ingredients[key].count === 1) {
+							delete ingredients[key].count;
+						}
+					});
+					if (Object.keys(ingredients).length > 0) finalItem.components = ingredients;
+				}
+				if (recipe.buildTime) finalItem.buildTime = recipe.buildTime;
+				if (recipe.buildPrice) finalItem.buildPrice = recipe.buildPrice;
+			}
+			delete finalItem.uniqueName;
+
+			if (!oldItems[category]) {
+				differences.push("New item \"" + item + "\" added in new category with properties " + JSON.stringify(finalItem));
 				return;
 			}
-			if (!oldData[category][item]) {
-				differences.push("New item \"" + item + "\" added with properties " + JSON.stringify(items[category][item]));
+			if (!oldItems[category][item]) {
+				differences.push("New item \"" + item + "\" added with properties " + JSON.stringify(finalItem));
 				return;
 			}
-			Object.keys(items[category][item]).forEach(key => {
-				let oldValue = oldData[category][item][key];
-				let newValue = items[category][item][key];
+			Object.keys(finalItem).forEach(key => {
+				let oldValue = oldItems[category][item][key];
+				let newValue = finalItem[key];
 				if (oldValue !== undefined) {
 					if (!util.isDeepStrictEqual(oldValue, newValue)) {
 						differences.push("Property \"" + key + "\" changed in item \"" + item + "\" (" + JSON.stringify(oldValue) + " -> " + JSON.stringify(newValue) + ")");
@@ -174,8 +208,10 @@ let itemBlacklist = ["Prisma Machete"];
 					differences.push("New property \"" + key + "\" added with value " + JSON.stringify(newValue) + " in item \"" + item + "\"");
 				}
 			});
+
+			ordered[item] = finalItem;
 		});
-		items[category] = ordered;
+		newItems[category] = ordered;
 	});
 
 	if (differences.length > 0) {
@@ -195,7 +231,7 @@ let itemBlacklist = ["Prisma Machete"];
 			requests.forEach(request => Axios.post(process.env.DISCORD_WEBHOOK, request));
 		}
 
-		fs.writeFileSync("items.json", JSON.stringify(items));
+		fs.writeFileSync("items.json", JSON.stringify(newItems));
 		console.log("Updated items.json in " + ((Date.now() - startTime) / 1000) + " seconds with size of " + (fs.statSync("items.json").size / 1024).toFixed(3) + "KB");
 		console.log("\nChanges:\n");
 		console.log(differences.map(change => "- " + change).join("\n"));
@@ -205,3 +241,7 @@ let itemBlacklist = ["Prisma Machete"];
 	console.log("No differences detected");
 	process.stdout.write("::set-output name=updated::false");
 })();
+
+function filterEndpointName(endpoint) {
+	return endpoint.replace("Export", "").replace(/_[a-z]{2}\.json.*/, "").replace(/\.json.*/, "").trim();
+}

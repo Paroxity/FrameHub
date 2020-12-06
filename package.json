@@ -6,6 +6,7 @@
     "axios": "^0.21.0",
     "firebase": "^8.1.1",
     "lodash.debounce": "^4.0.8",
+    "lzma": "^2.3.2",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
@@ -32,12 +33,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
