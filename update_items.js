@@ -143,16 +143,18 @@ const itemBlacklist = ["Prisma Machete"];
 
 	//TODO: Remove hacks
 	newItems["MECH"]["Voidrig Necramech"].maxLvl = 40;
-	newItems["MECH"]["Bonewidow Necramech"] = newItems["MECH"]["Bonewidow"];
-	newItems["MECH"]["Bonewidow Necramech"].maxLvl = 40;
-	newItems["MECH"]["Bonewidow Necramech"].wiki = WIKI_URL + "Bonewidow";
+	newItems["MECH"]["Bonewidow Necramech"] = {
+		...newItems["MECH"]["Bonewidow"],
+		"maxLvl": 40,
+		"wiki": WIKI_URL + "Bonewidow"
+	};
 	delete newItems["MECH"]["Bonewidow"];
 
 	let differences = [];
 	Object.keys(oldItems).forEach(category => {
 		Object.keys(oldItems[category]).forEach(key => {
 			if (!newItems[category][key]) {
-				differences.push("Removed item \"" + key + "\"");
+				differences.push("Removed item `" + key + "`");
 			}
 		});
 	});
@@ -190,11 +192,11 @@ const itemBlacklist = ["Prisma Machete"];
 			delete finalItem.uniqueName;
 
 			if (!oldItems[category]) {
-				differences.push("New item \"" + item + "\" added in new category with properties " + JSON.stringify(finalItem));
+				differences.push("New item `" + item + "` added in new category with properties `" + JSON.stringify(finalItem) + "`");
 				return;
 			}
 			if (!oldItems[category][item]) {
-				differences.push("New item \"" + item + "\" added with properties " + JSON.stringify(finalItem));
+				differences.push("New item `" + item + "` added with properties `" + JSON.stringify(finalItem) + "`");
 				return;
 			}
 			Object.keys(finalItem).forEach(key => {
@@ -202,10 +204,10 @@ const itemBlacklist = ["Prisma Machete"];
 				let newValue = finalItem[key];
 				if (oldValue !== undefined) {
 					if (!util.isDeepStrictEqual(oldValue, newValue)) {
-						differences.push("Property \"" + key + "\" changed in item \"" + item + "\" (" + JSON.stringify(oldValue) + " -> " + JSON.stringify(newValue) + ")");
+						differences.push("Property `" + key + "` changed in item `" + item + "` (`" + JSON.stringify(oldValue) + "` -> `" + JSON.stringify(newValue) + "`)");
 					}
 				} else {
-					differences.push("New property \"" + key + "\" added with value " + JSON.stringify(newValue) + " in item \"" + item + "\"");
+					differences.push("New property `" + key + "` added with value `" + JSON.stringify(newValue) + "` in item `" + item + "`");
 				}
 			});
 
@@ -228,7 +230,10 @@ const itemBlacklist = ["Prisma Machete"];
 				}
 			});
 			requests.push({"content": baseMessage});
-			requests.forEach(request => Axios.post(process.env.DISCORD_WEBHOOK, request));
+
+			for (let request of requests) {
+				await Axios.post(process.env.DISCORD_WEBHOOK, request);
+			}
 		}
 
 		fs.writeFileSync("items.json", JSON.stringify(newItems));
