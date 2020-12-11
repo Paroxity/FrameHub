@@ -191,6 +191,8 @@ const itemBlacklist = ["Prisma Machete"];
 			}
 			delete finalItem.uniqueName;
 
+			ordered[item] = finalItem;
+
 			if (!oldItems[category]) {
 				differences.push("New item `" + item + "` added in new category with properties `" + JSON.stringify(finalItem) + "`");
 				return;
@@ -210,8 +212,6 @@ const itemBlacklist = ["Prisma Machete"];
 					differences.push("New property `" + key + "` added with value `" + JSON.stringify(newValue) + "` in item `" + item + "`");
 				}
 			});
-
-			ordered[item] = finalItem;
 		});
 		newItems[category] = ordered;
 	});
