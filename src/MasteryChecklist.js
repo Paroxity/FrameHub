@@ -1,131 +1,43 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
-import {useHistory, useParams} from "react-router-dom";
-import Category from "./components/Category.js";
-import NumberInput from "./components/NumberInput.js";
-import LoadingScreen from "./components/LoadingScreen.js";
-import Toggle from "./components/Toggle.js";
-import {complexToSimpleList, foundersItems, ingredientSuffixes} from "./utils/item.js";
-import {
-	baseXPByType,
-	intrinsicsToXP,
-	junctionsToXP,
-	missionsToXP,
-	totalIntrinsics,
-	totalJunctions,
-	totalMissions,
-	totalMissionXP,
-	xpToMR
-} from "./utils/xp.js";
-import firebase from "firebase/app";
+import Axios from "axios";
 import "firebase/auth";
 import "firebase/firestore";
-import Axios from "axios";
+import PropTypes from "prop-types";
+import React, {useEffect, useState} from "react";
+import {useDocumentData} from "react-firebase-hooks/firestore";
+import Masonry from "react-masonry-css";
+import {useDebouncedCallback} from "use-debounce";
+import {firestore} from "./App";
+import Category from "./components/Category";
+import CraftingComponents from "./components/CraftingComponents";
+import LoadingScreen from "./components/LoadingScreen";
+import Sidebar from "./components/Sidebar";
 import framehub from "./media/framehub.svg";
 import paroxity from "./media/paroxity.png";
-import placeholderIcon from "./media/placeholderIcon.svg";
-import Masonry from "react-masonry-css";
-import Button from "./components/Button";
-import debounce from "lodash.debounce";
-import {useAuthState} from "react-firebase-hooks/auth";
+import {complexToSimpleList, foundersItems} from "./utils/item";
+import {baseXPByType, intrinsicsToXP, junctionsToXP, missionsToXP, xpToMR} from "./utils/xp";
 
-function useDebounce(callback, delay) {
-	// Memoize the callback because if it's an arrow function
-	// it would be different on each render
-	const memoizedCallback = useCallback(callback, []); // eslint-disable-line react-hooks/exhaustive-deps
-	const debouncedFn = useRef(debounce(memoizedCallback, delay));
+function MasteryChecklist(props) {
+	const shared = props.shared;
+	const anonymous = props.anonymous;
+	const uid = props.uid;
 
-	useEffect(() => {
-		debouncedFn.current = debounce(memoizedCallback, delay);
-	}, [memoizedCallback, debouncedFn, delay]);
+	const [data, loading] = useDocumentData(firestore.collection(anonymous ? "anonymousMasteryData" : "masteryData").doc(uid));
 
-	return debouncedFn.current;
-}
-
-function MasteryChecklist() {
 	const [items, setItems] = useState({});
 
 	const [mastered, setMastered] = useState(0);
 	const [missions, setMissions] = useState(0);
 	const [junctions, setJunctions] = useState(0);
 	const [intrinsics, setIntrinsics] = useState(0);
-	const [xp, setXp] = useState(0);
 
-	const [hideMastered, setHideMastered] = useState(false);
+	const [hideMastered, setHideMastered] = useState(true);
 	const [hideFounders, setHideFounders] = useState(true);
 
-	const [showComponents, setShowComponents] = useState(false);
-
-	const [showSidebar, setShowSidebar] = useState(false);
-	const [showShare, setShowShare] = useState(false);
-
 	const [changed, setChanged] = useState(false);
-
-	const shareLinkRef = useRef(null);
-
-	const auth = firebase.app("secondary").auth();
-	const firestore = firebase.app("secondary").firestore();
-	const user = useAuthState(auth);
-
-	let {action, uid} = useParams();
-	const history = useHistory();
-	const actions = ["user", "share"];
-	action = action || "";
-	if (action !== "" && !actions.includes(action)) history.push("/");
-
-	if (changed) {
-		window.onbeforeunload = e => {
-			e.preventDefault();
-			e.returnValue = "";
-		};
-	} else {
-		window.onbeforeunload = undefined;
-	}
-
-	const startUp = useCallback(async () => {
-		let loadedItems = {};
-
-		if (localStorage.getItem("lastSave") < Date.now()) {
-			loadedItems = (await Axios.get("https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media")).data;
-			localStorage.setItem("items", JSON.stringify(loadedItems));
-			localStorage.setItem("lastSave", (Date.now() + 7200000).toString());
-		} else {
-			loadedItems = JSON.parse(localStorage.getItem("items"));
-		}
-
-		let doc = await (action !== "user" ? firestore.collection("masteryData").doc(uid || user[0].uid).get() : firestore.collection("anonymousMasteryData").doc(uid).get());
-		if (!doc.exists) {
-			history.push("/");
-			return;
-		}
-		let data = doc.data();
-
-		let loadedXP = missionsToXP(data.missions) + junctionsToXP(data.junctions) + intrinsicsToXP(data.intrinsics);
-		let masteredCount = 0;
-		Object.keys(loadedItems).forEach(category => {
-			let categoryItem = loadedItems[category];
-			Object.keys(categoryItem).forEach(itemName => {
-				if (data.mastered.includes(itemName)) {
-					let item = categoryItem[itemName];
-					item.mastered = true;
-					loadedXP += baseXPByType(category) * (item.maxLvl || 30);
-					masteredCount++;
-				}
-			});
-		});
-		setXp(loadedXP);
-		setMastered(masteredCount);
-		setMissions(data.missions);
-		setJunctions(data.junctions);
-		setIntrinsics(data.intrinsics);
-		setHideMastered(data.hideMastered);
-		setHideFounders(data.hideFounders);
-		setItems(loadedItems);
-	}, [uid]); // eslint-disable-line react-hooks/exhaustive-deps
-
-	const saveData = (intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items) => {
-		if (user) {
+	const save = () => {
+		if (!shared) {
 			setChanged(false);
-			firestore.collection(action === "" ? "masteryData" : "anonymousMasteryData").doc(action === "" ? user[0].uid : uid).set({
+			firestore.collection(anonymous ? "anonymousMasteryData" : "masteryData").doc(uid).set({
 				mastered: complexToSimpleList(items).filter(item => item.mastered).map(item => item.name),
 				missions,
 				junctions,
@@ -135,141 +47,97 @@ function MasteryChecklist() {
 			});
 		}
 	};
+	const debouncedSave = useDebouncedCallback(() => {
+		save();
+	}, 2500);
+
+	window.onbeforeunload = changed ? e => {
+		e.preventDefault();
+		e.returnValue = "";
+	} : undefined;
 
 	useEffect(() => {
-		startUp();
-	}, [startUp]);
+		if (data) {
+			(async () => {
+				let loadedItems;
+				if (localStorage.getItem("lastSave") < Date.now()) {
+					loadedItems = (await Axios.get("https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media")).data;
+					localStorage.setItem("items", JSON.stringify(loadedItems));
+					localStorage.setItem("lastSave", (Date.now() + 7200000).toString());
+				} else {
+					loadedItems = JSON.parse(localStorage.getItem("items"));
+				}
 
-	const debouncedSave = useDebounce((intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items) => saveData(intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items), 5000);
-
-	useEffect(() => {
-		if (changed) {
-			debouncedSave(intrinsics, junctions, missions, mastered, hideFounders, hideMastered, items);
+				Object.values(loadedItems).forEach(categoryItems => {
+					Object.keys(categoryItems).forEach(categoryItem => {
+						if (data.mastered.includes(categoryItem)) {
+							categoryItems[categoryItem].mastered = true;
+						}
+					});
+				});
+				setItems(loadedItems);
+				setMastered(data.mastered.length);
+				setMissions(data.missions);
+				setJunctions(data.junctions);
+				setIntrinsics(data.intrinsics);
+				setHideMastered(data.hideMastered);
+				setHideFounders(data.hideFounders);
+			})();
 		}
-	}, [intrinsics, junctions, missions, mastered, hideFounders, hideMastered, debouncedSave, items, changed]);
-	if (Object.keys(items).length === 0) return <LoadingScreen/>;
+	}, [data]);
 
-	let necessaryComponents = {};
-	let maximumXP = totalMissionXP + junctionsToXP(totalJunctions) + intrinsicsToXP(totalIntrinsics);
-	let maximumItems = 0;
+	useEffect(() => {
+		if (changed) debouncedSave.callback();
+	}, [mastered, missions, junctions, intrinsics, hideMastered, hideFounders, changed]);
+
+	if (loading) return <LoadingScreen/>;
+
+	let xp = missionsToXP(missions) + junctionsToXP(junctions) + intrinsicsToXP(intrinsics);
 	complexToSimpleList(items).forEach(item => {
-		if (!item.mastered) {
-			if (item.components) Object.keys(item.components).forEach(name => {
-				if (ingredientSuffixes.includes(name)) return;
-				if (!necessaryComponents[name]) necessaryComponents[name] = 0;
-				necessaryComponents[name] += isNaN(item.components[name]) ? (item.components[name].count || 1) : item.components[name];
-			});
-		}
-		if (!foundersItems.includes(item.name) || !hideFounders || item.mastered) {
-			maximumXP += baseXPByType(item.type) * (item.maxLvl || 30);
-			maximumItems++;
-		}
+		if (item.mastered) xp += baseXPByType(item.type) * (item.maxLvl || 30);
 	});
 
-	const breakpointColumnsObj = {
-		default: 5,
-		1533: 4,
-		1348: 3,
-		1152: 2,
-		640: 1
-	};
-
 	return <div className="app">
-		<div className={"sidebar" + (showSidebar ? " toggled" : "") + (action !== "share" ? "" : " read-only")}>
-			<img src="" alt="" width="100px"/>
-			<br/>
-			<span className="mastery-rank">{"Mastery Rank " + xpToMR(xp)}</span>
-			<br/>
-			<span className="items-mastered">{mastered.toLocaleString()}/{maximumItems.toLocaleString()} Mastered</span>
-			<br/>
-			<span className="xp">{xp.toLocaleString()}/{maximumXP.toLocaleString()} XP</span>
-			<NumberInput name="Missions" min={0} max={totalMissions} value={missions.toString()} onChange={value => {
-				setXp(xp + missionsToXP(value - missions));
-				setMissions(value);
-				if (action !== "share") setChanged(true);
-			}} tooltip={<><p>Normal missions: {totalMissions / 2}</p><p>Steel Path
-				missions: {totalMissions / 2}</p></>}/>
-			<NumberInput name="Junctions" min={0} max={totalJunctions} value={junctions.toString()} onChange={value => {
-				setXp(xp + junctionsToXP(value - junctions));
-				setJunctions(value);
-				if (action !== "share") setChanged(true);
-			}} tooltip={<><p>Normal junctions: {totalJunctions / 2}</p><p>Steel Path
-				junctions: {totalJunctions / 2}</p></>}/>
-			<NumberInput name="Intrinsics" min={0} max={totalIntrinsics} value={intrinsics.toString()}
-				onChange={value => {
-					setXp(xp + intrinsicsToXP(value - intrinsics));
-					setIntrinsics(value);
+		<Sidebar uid={uid} shared={shared} anonymous={anonymous} items={items} mastered={mastered}
+			setMastered={setMastered} missions={missions} setMissions={setMissions}
+			junctions={junctions} setJunctions={setJunctions} intrinsics={intrinsics} setIntrinsics={setIntrinsics}
+			hideMastered={hideMastered} setHideMastered={setHideMastered} hideFounders={hideFounders}
+			setHideFounders={setHideFounders} changed={changed} setChanged={setChanged}
+			markAllAsMastered={() => {
+				let additionalMastered = 0;
+				Object.keys(items).forEach(category => {
+					let categoryItems = items[category];
+					Object.values(categoryItems).forEach(item => {
+						if (!item.mastered && (!foundersItems.includes(item.name) || !hideFounders)) {
+							item.mastered = true;
+							additionalMastered++;
+						}
+					});
+				});
+				if (additionalMastered > 0) {
+					setMastered(mastered + additionalMastered);
 					setChanged(true);
-				}} tooltip={<p>Max of 10 per intrinsics class</p>}/>
-			<Toggle name="hideMastered" label="Hide Mastered" selected={hideMastered} onToggle={() => {
-				setHideMastered(!hideMastered);
-				if (action !== "share") setChanged(true);
-			}}/>
-			<Toggle name="hideFounders" label="Hide Founders" selected={hideFounders} onToggle={() => {
-				setHideFounders(!hideFounders);
-				if (action !== "share") setChanged(true);
-			}}/>
-			{action !== "share" &&
-			<div className="autosave-text">{changed ? "Your changes are unsaved." : "Changes autosaved."}</div>}
-			{action === "user" &&
-			<div>Remember to bookmark this URL.</div>
-			}
-			{action !== "share" &&
-			<>
-				<span className="danger-text">Danger zone</span>
-				<div className="danger">
-					<Button centered onClick={() => {
-						let additionalMastered = 0;
-						let additionalXP = 0;
-						Object.keys(items).forEach(category => {
-							let categoryItems = items[category];
-							Object.values(categoryItems).forEach(item => {
-								if (!item.mastered && (!foundersItems.includes(item.name) || !hideFounders)) {
-									item.mastered = true;
-									additionalMastered++;
-									additionalXP += baseXPByType(category) * (item.maxLvl || 30);
-								}
-							});
-						});
-						setMastered(mastered + additionalMastered);
-						setXp(xp + additionalXP);
-						if (action !== "share") setChanged(true);
-					}}>Mark All as Mastered</Button>
-
-					<Button centered onClick={() => {
-						Object.values(items).forEach(categoryItems => {
-							Object.values(categoryItems).forEach(item => {
-								item.mastered = false;
-							});
-						});
-						setMastered(0);
-						setXp(missionsToXP(missions) + junctionsToXP(junctions) + intrinsicsToXP(intrinsics));
-						if (action !== "share") setChanged(true);
-					}}>Reset</Button>
-				</div>
-			</>
-			}
-			<br/>
-			{
-				!action &&
-				<Button centered onClick={() => {
-					setShowShare(true);
 				}
-				}>Share</Button>
-			}
-			{auth && !action && <Button centered onClick={() => {
-				auth.signOut();
-			}} disabled={changed}>Logout</Button>}
-			{action && <Button centered onClick={() => {
-				history.push("/");
-			}
-			}>Exit</Button>}
-		</div>
+			}}
+			reset={() => {
+				Object.values(items).forEach(categoryItems => {
+					Object.values(categoryItems).forEach(item => {
+						item.mastered = false;
+					});
+				});
+				setMastered(0);
+				setChanged(true);
+			}} save={save}/>
 		<div className="content">
 			<img className="framehub-logo" src={framehub} alt="" onDragStart={e => e.preventDefault()}/>
-			<div className={"categories" + (!uid || action === "user" ? "" : " read-only")}>
-				<Masonry columnClassName="masonry-grid_column" className="masonry-grid"
-					breakpointCols={breakpointColumnsObj}>
+			<div className={"categories" + (shared ? " read-only" : "")}>
+				<Masonry columnClassName="masonry-grid_column" className="masonry-grid" breakpointCols={{
+					default: 5,
+					1533: 4,
+					1348: 3,
+					1152: 2,
+					640: 1
+				}}>
 					{
 						Object.keys(items).filter(category => {
 							let categoryItems = items[category];
@@ -280,61 +148,25 @@ function MasteryChecklist() {
 						}).map(category => {
 							return <Category key={category} name={category} mr={xpToMR(xp)} hideMastered={hideMastered}
 								hideFounders={hideFounders} items={items[category]}
-								changeMasteredAndXP={(m, x) => {
-									setMastered(mastered + m);
-									setXp(xp + x);
-									if (action !== "share") setChanged(true);
+								changeMastered={difference => {
+									setMastered(mastered + difference);
 								}}
 							/>;
 						})
 					}
 				</Masonry>
 			</div>
-			<Toggle name="showComponents" label="Show All Components" selected={showComponents} onToggle={() => {
-				setShowComponents(!showComponents);
-			}}/>
-			<Masonry columnClassName="masonry-grid_column" className="masonry-grid"
-				breakpointCols={breakpointColumnsObj}>
-				{showComponents && Object.keys(necessaryComponents).sort((a, b) => {
-					let countA = necessaryComponents[a];
-					let countB = necessaryComponents[b];
-					if (countA > countB) return -1;
-					if (countA < countB) return 1;
-					return a.localeCompare(b);
-				}).map(item => {
-					return <div key={item}>
-						<img className="component-image"
-							src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + item.toLowerCase().split(" ").join("-") + ".png"}
-							alt="" width="30px" onDragStart={e => e.preventDefault()}/>
-						<span className="component-name">{necessaryComponents[item].toLocaleString()}x {item}</span>
-						<br/>
-					</div>;
-				})}
-			</Masonry>
+			<CraftingComponents items={items}/>
 		</div>
 		<img className="paroxity-logo" src={paroxity} alt="paroxity" width="50px" onDragStart={e => e.preventDefault()}
 			onClick={() => window.open("https://paroxity.net")}/>
-		<img className="hamburger" src={placeholderIcon} onClick={() => {
-			setShowSidebar(!showSidebar);
-		}} alt="menu"/>
-		{!action && <div className={showShare ? "popup show" : "popup"}>
-			<div className="popup-box">
-				Here's your sharable link:
-				<div className="input"><input type="text"
-					readOnly value={"https://framehub.paroxity.net/share/" + user[0].uid}
-					ref={shareLinkRef}/></div>
-				{
-					document.queryCommandSupported("copy") &&
-					<Button centered onClick={() => {
-						shareLinkRef.current.select();
-						document.execCommand("copy");
-						setShowShare(false);
-					}}>Copy</Button>
-				}
-				<Button centered onClick={() => setShowShare(false)}>Close</Button>
-			</div>
-		</div>}
 	</div>;
 }
+
+MasteryChecklist.propTypes = {
+	uid: PropTypes.string.isRequired,
+	shared: PropTypes.bool,
+	anonymous: PropTypes.bool
+};
 
 export default MasteryChecklist;

@@ -1,43 +1,44 @@
+import PropTypes from "prop-types";
 import React from "react";
-import xIcon from "../media/x-icon.svg";
 import checkmark from "../media/checkmark.svg";
 import placeholderIcon from "../media/placeholderIcon.svg";
-import * as PropTypes from "prop-types";
+import xIcon from "../media/x-icon.svg";
 
-class Toggle extends React.Component {
-	render() {
-		let toggle = (
-			<div className="radio-checkbox">
-				<input type="radio" id={this.props.name + "On"} name={this.props.name}
-					className={this.props.selected ? "selected" : ""}/>
-				<label htmlFor={this.props.name + "On"} onClick={this.props.onToggle}>{this.props.selected ?
-					<img onDragStart={e => e.preventDefault()} src={checkmark} alt=""/> :
-					<img onDragStart={e => e.preventDefault()} src={placeholderIcon} alt=""/>}</label>
-				<input type="radio" id={this.props.name + "Off"} name={this.props.name}
-					className={!this.props.selected ? "selected" : ""}/>
-				<label htmlFor={this.props.name + "Off"} onClick={this.props.onToggle}>{this.props.selected ?
-					<img onDragStart={e => e.preventDefault()} src={placeholderIcon} alt=""/> :
-					<img onDragStart={e => e.preventDefault()} src={xIcon} alt="X"/>}</label>
-			</div>
-		);
-		if (this.props.label) {
-			toggle = (
-				<div className="labeled-input">
-					<span>{this.props.label}</span>
-					{toggle}
-				</div>
-			);
-		}
-		return toggle;
+export function Toggle(props) {
+	let onToggle = () => {
+		if (!props.disabled) props.onToggle(!props.selected);
+	};
 
-	}
+	return <div className="radio-checkbox">
+		<input type="radio" id={props.name + "On"} name={props.name}
+			className={props.selected ? "selected" : ""}/>
+		<label htmlFor={props.name + "On"} onClick={onToggle}>
+			{props.selected ?
+				<img onDragStart={e => e.preventDefault()} src={checkmark} alt=""/> :
+				<img onDragStart={e => e.preventDefault()} src={placeholderIcon} alt=""/>}
+		</label>
+		<input type="radio" id={props.name + "Off"} name={props.name}
+			className={!props.selected ? "selected" : ""}/>
+		<label htmlFor={props.name + "Off"} onClick={onToggle}>
+			{props.selected ?
+				<img onDragStart={e => e.preventDefault()} src={placeholderIcon} alt=""/> :
+				<img onDragStart={e => e.preventDefault()} src={xIcon} alt="X"/>}
+		</label>
+	</div>;
 }
 
 Toggle.propTypes = {
 	name: PropTypes.string.isRequired,
+	disabled: PropTypes.bool,
 	selected: PropTypes.bool,
-	label: PropTypes.string,
 	onToggle: PropTypes.func
 };
 
-export default Toggle;
+export function LabeledToggle(props) {
+	return <div className="labeled-input">
+		<span>{props.label}</span>
+		<Toggle name={props.name} disabled={props.disabled} selected={props.selected} onToggle={props.onToggle}/>
+	</div>;
+}
+
+LabeledToggle.propTypes = {label: PropTypes.string, ...Toggle.propTypes};

@@ -1,11 +1,11 @@
-import React, {useState} from "react";
-import Tooltip from "./Tooltip";
-import {foundersItems, ingredientSuffixes} from "../utils/item.js";
-import credits from "../media/credits.png";
-import {detailedTime} from "../utils/time";
-import checkmark from "../media/checkmark.svg";
-import GluedComponents from "./GluedComponents";
 import PropTypes from "prop-types";
+import React, {useState} from "react";
+import checkmark from "../media/checkmark.svg";
+import credits from "../media/credits.png";
+import {foundersItems, ingredientSuffixes} from "../utils/item.js";
+import {detailedTime} from "../utils/time";
+import GluedComponents from "./GluedComponents";
+import Tooltip from "./Tooltip";
 
 function Item(props) {
 	const [showTooltip, setShowTooltip] = useState(false);

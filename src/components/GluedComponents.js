@@ -1,5 +1,5 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 
 function GluedComponents(props) {
 	let children = props.children.filter(child => child !== undefined);

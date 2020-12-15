@@ -1,14 +1,13 @@
-import React, {useState} from "react";
-import LoadingScreen from "./LoadingScreen.js";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/storage";
+import React, {useState} from "react";
+import {useHistory} from "react-router-dom";
+import {auth} from "../App";
 import logo from "../media/framehub.svg";
 import Button from "./Button";
-import {useHistory} from "react-router-dom";
-import PropTypes from "prop-types";
 
-function Login(props) {
+function Login() {
 	const [signup, setSignup] = useState(false);
 
 	const [email, setEmail] = useState("");
@@ -23,7 +22,7 @@ function Login(props) {
 	const handleSubmit = event => {
 		if (signup) {
 			if (password === confirm) {
-				props.auth.createUserWithEmailAndPassword(email, password).then(() => {
+				auth.createUserWithEmailAndPassword(email, password).then(() => {
 					setSignup(false);
 				}).catch(e => {
 					setError(e.code);
@@ -34,7 +33,7 @@ function Login(props) {
 				setErrorAvailable(true);
 			}
 		} else {
-			props.auth.signInWithEmailAndPassword(email, password).catch(e => {
+			auth.signInWithEmailAndPassword(email, password).catch(e => {
 				setError(e.code);
 				setErrorAvailable(true);
 			});
@@ -50,7 +49,6 @@ function Login(props) {
 		"auth/email-already-in-use": "There is already a registered user with this email.",
 		"auth/weak-password": "This password is too weak. Make sure it is at least 6 characters in length."
 	};
-	if (props.user[1] === true) return <LoadingScreen/>;
 
 	return <>
 		<div className="login">
@@ -76,26 +74,24 @@ function Login(props) {
 			</form>
 			<div className="actions">
 				<Button onClick={() => {
-					props.auth.sendPasswordResetEmail(email)
-						.then(() => {
-							setError("Email sent. Check your inbox.");
-							setErrorAvailable(true);
-						}).catch(e => {
-							setError(e.code);
-							setErrorAvailable(true);
-						});
-				}}>Forgot Password
-				</Button>
+					auth.sendPasswordResetEmail(email).then(() => {
+						setError("Email sent. Check your inbox.");
+						setErrorAvailable(true);
+					}).catch(e => {
+						setError(e.code);
+						setErrorAvailable(true);
+					});
+				}}>Forgot Password</Button>
 				<Button onClick={() => {
 					setSignup(!signup);
 				}}>{signup ? "Login" : "Sign up"}</Button>
 			</div>
 			<div className="alternative-login">
 				<Button onClick={() => {
-					props.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+					auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
 				}}>Sign in with Google</Button>
 				<Button onClick={async () => {
-					let doc = await firebase.app("secondary").firestore().collection("anonymousMasteryData").add({
+					let doc = await firebase.app("paroxity").firestore().collection("anonymousMasteryData").add({
 						hideFounders: true,
 						hideMastered: false,
 						intrinsics: 0,
@@ -109,7 +105,7 @@ function Login(props) {
 		</div>
 
 		<div className={errorAvailable ? "popup show" : "popup"}>
-			<div className={"popup-box"}>
+			<div className="popup-box">
 				{errorMessages[error] || error}
 				<Button centered onClick={() => {
 					setErrorAvailable(false);
@@ -119,10 +115,5 @@ function Login(props) {
 		<div className="disclaimer">FrameHub is not affiliated with Digital Extremes or Warframe.</div>
 	</>;
 }
-
-Login.propTypes = {
-	auth: PropTypes.object,
-	user: PropTypes.array
-};
 
 export default Login;

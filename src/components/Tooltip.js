@@ -1,5 +1,5 @@
-import React, {useLayoutEffect, useRef, useState} from "react";
 import PropTypes from "prop-types";
+import React, {useLayoutEffect, useRef, useState} from "react";
 
 function Tooltip(props) {
 	const tooltip = useRef();

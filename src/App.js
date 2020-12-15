@@ -1,36 +1,39 @@
-import React from "react";
-import {BrowserRouter, Route, Switch} from "react-router-dom";
-import "./App.scss";
+import "firebase/analytics";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import "firebase/analytics";
 import "firebase/performance";
+import React from "react";
 import {useAuthState} from "react-firebase-hooks/auth";
-import MasteryChecklist from "./MasteryChecklist";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
+import "./App.scss";
+import LoadingScreen from "./components/LoadingScreen";
 import Login from "./components/Login";
-import {framehubConfig, paroxityConfig} from "./utils/firebase.js";
+import MasteryChecklist from "./MasteryChecklist";
+import {framehubConfig, paroxityConfig} from "./utils/firebase";
 
-if (firebase.apps.length === 0) {
-	firebase.initializeApp(framehubConfig);
-	firebase.initializeApp(paroxityConfig, "secondary");
-	firebase.analytics();
-	firebase.performance();
-}
+firebase.initializeApp(framehubConfig);
+firebase.initializeApp(paroxityConfig, "paroxity");
+firebase.analytics();
+firebase.performance();
 
 function App() {
-	const auth = firebase.app("secondary").auth();
-	const user = useAuthState(auth);
-
+	let [user, loading] = useAuthState(auth);
 	return <BrowserRouter>
 		<Switch>
-			<Route path="/:action/:uid" component={MasteryChecklist}/>
-			<Route path="/" exact>
-				{user[0] ? <MasteryChecklist/> :
-					<Login auth={auth} user={user}/>}
+			<Route path="/share/:uid" render={props => {
+				return <MasteryChecklist shared uid={props.match.params.uid}/>;
+			}}/>
+			<Route path="/user/:uid" render={props => {
+				return <MasteryChecklist anonymous uid={props.match.params.uid}/>;
+			}}/>
+			<Route path="/">
+				{user ? <MasteryChecklist uid={user.uid}/> : (loading ? <LoadingScreen/> : <Login/>)}
 			</Route>
 		</Switch>
 	</BrowserRouter>;
 }
 
 export default App;
+export const auth = firebase.app("paroxity").auth();
+export const firestore = firebase.app("paroxity").firestore();

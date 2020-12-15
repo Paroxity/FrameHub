@@ -1,9 +1,9 @@
-import React, {useState} from "react";
-import Item from "./Item.js";
-import {baseXPByType} from "../utils/xp.js";
-import Toggle from "./Toggle.js";
-import {foundersItems} from "../utils/item";
 import PropTypes from "prop-types";
+import React, {useState} from "react";
+import {foundersItems} from "../utils/item";
+import {baseXPByType} from "../utils/xp.js";
+import Item from "./Item.js";
+import {Toggle} from "./Toggle.js";
 
 const fancyCategoryNames = {
 	"WF": "Warframe",
@@ -66,7 +66,7 @@ function Category(props) {
 				onClick={() => {
 					item.mastered = !item.mastered;
 					if (!item.mastered) delete item.mastered;
-					props.changeMasteredAndXP(item.mastered ? 1 : -1, baseXPByType(category) * (item.maxLvl || 30) * (item.mastered ? 1 : -1));
+					props.changeMastered(item.mastered ? 1 : -1);
 				}}/>;
 		})}
 	</div>;
@@ -78,7 +78,7 @@ Category.propTypes = {
 	mr: PropTypes.number.isRequired,
 	hideMastered: PropTypes.bool.isRequired,
 	hideFounders: PropTypes.bool.isRequired,
-	changeMasteredAndXP: PropTypes.func.isRequired
+	changeMastered: PropTypes.func.isRequired
 };
 
 export default Category;
