@@ -150,6 +150,7 @@ function MasteryChecklist(props) {
 								hideFounders={hideFounders} items={items[category]}
 								changeMastered={difference => {
 									setMastered(mastered + difference);
+									setChanged(true);
 								}}
 							/>;
 						})

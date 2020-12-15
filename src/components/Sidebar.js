@@ -19,7 +19,6 @@ import Button from "./Button";
 import NumberInput from "./NumberInput";
 import {LabeledToggle} from "./Toggle";
 
-
 function Sidebar(props) {
 	const history = useHistory();
 	const [showSidebar, setShowSidebar] = useState(false);
