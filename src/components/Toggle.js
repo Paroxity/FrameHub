@@ -6,7 +6,7 @@ import xIcon from "../media/x-icon.svg";
 
 export function Toggle(props) {
 	let onToggle = () => {
-		if (!props.disabled) props.onToggle(!props.selected);
+		if (!props.disabled && props.onToggle) props.onToggle(!props.selected);
 	};
 
 	return <div className="radio-checkbox">

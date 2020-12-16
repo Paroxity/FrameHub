@@ -63,7 +63,7 @@ function Item(props) {
 						if (props.hideMastered) {
 							setShowTooltip(false);
 						}
-						if (props.onClick) props.onClick();
+						if (!props.readonly && props.onClick) props.onClick();
 					}
 				}}>{name + ((item.maxLvl || 30) !== 30 ? " [" + item.maxLvl + "]" : "")}{item.mastered &&
 				<img src={checkmark} className="checkmark" alt=""/>}</button>
@@ -78,6 +78,7 @@ Item.propTypes = {
 	mr: PropTypes.number.isRequired,
 	hideMastered: PropTypes.bool,
 	hideFounders: PropTypes.bool,
+	readonly: PropTypes.bool,
 	onClick: PropTypes.func
 };
 

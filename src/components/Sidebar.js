@@ -41,7 +41,7 @@ function Sidebar(props) {
 	});
 
 	return <>
-		<div className={"sidebar" + (showSidebar ? " toggled" : "") + (props.shared ? " read-only" : "")}>
+		<div className={"sidebar" + (showSidebar ? " toggled" : "")}>
 			<span className="mastery-rank">{"Mastery Rank " + xpToMR(xp)}</span>
 			<br/>
 			<span className="items-mastered">{items.toLocaleString()}/{totalItems.toLocaleString()} Mastered</span>

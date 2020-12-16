@@ -61,12 +61,14 @@ function Category(props) {
 		</div>
 		{show && Object.keys(props.items).map(itemName => {
 			let item = props.items[itemName];
-			return <Item key={itemName} mr={props.mr} name={itemName} item={item}
-				hideMastered={props.hideMastered} hideFounders={props.hideFounders}
+			return <Item key={itemName} mr={props.mr} name={itemName} item={item} hideMastered={props.hideMastered}
+				hideFounders={props.hideFounders} readonly={props.readonly}
 				onClick={() => {
-					item.mastered = !item.mastered;
-					if (!item.mastered) delete item.mastered;
-					props.changeMastered(item.mastered ? 1 : -1);
+					if (!props.readonly) {
+						item.mastered = !item.mastered;
+						if (!item.mastered) delete item.mastered;
+						props.changeMastered(item.mastered ? 1 : -1);
+					}
 				}}/>;
 		})}
 	</div>;
@@ -78,6 +80,7 @@ Category.propTypes = {
 	mr: PropTypes.number.isRequired,
 	hideMastered: PropTypes.bool.isRequired,
 	hideFounders: PropTypes.bool.isRequired,
+	readonly: PropTypes.bool,
 	changeMastered: PropTypes.func.isRequired
 };
 

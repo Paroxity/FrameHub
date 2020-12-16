@@ -19,7 +19,8 @@ function Button(props) {
 				setY(e.clientY + 30);
 			}}
 		>
-			<button onClick={props.onClick} type={props.submit ? "submit" : "button"}>{props.children}</button>
+			<button onClick={props.onClick} type={props.submit ? "submit" : "button"}
+				disabled={props.disabled}>{props.children}</button>
 		</div>
 		{showTooltip && props.tooltipTitle &&
 		<Tooltip title={props.tooltipTitle} x={x} y={y}>{props.tooltipBody}</Tooltip>}

@@ -12,7 +12,7 @@ function GluedComponents(props) {
 GluedComponents.propTypes = {
 	separator: PropTypes.string.isRequired,
 	appendAfter: PropTypes.node,
-	children: PropTypes.node
+	children: PropTypes.node.isRequired
 };
 
 export default GluedComponents;

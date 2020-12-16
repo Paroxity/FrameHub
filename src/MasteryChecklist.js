@@ -130,7 +130,7 @@ function MasteryChecklist(props) {
 			}} save={save}/>
 		<div className="content">
 			<img className="framehub-logo" src={framehub} alt="" onDragStart={e => e.preventDefault()}/>
-			<div className={"categories" + (shared ? " read-only" : "")}>
+			<div className="categories">
 				<Masonry columnClassName="masonry-grid_column" className="masonry-grid" breakpointCols={{
 					default: 5,
 					1533: 4,
@@ -147,7 +147,7 @@ function MasteryChecklist(props) {
 							}).length > 0;
 						}).map(category => {
 							return <Category key={category} name={category} mr={xpToMR(xp)} hideMastered={hideMastered}
-								hideFounders={hideFounders} items={items[category]}
+								hideFounders={hideFounders} items={items[category]} readonly={shared}
 								changeMastered={difference => {
 									setMastered(mastered + difference);
 									setChanged(true);

@@ -23,7 +23,7 @@ function NumberInput(props) {
 		<span>{props.name}</span>
 		<div className="form-bg">
 			<div className="input">
-				<input type="text" readOnly={props.disabled} min={props.min} max={props.max} value={props.value}
+				<input type="text" disabled={props.disabled} min={props.min} max={props.max} value={props.value}
 					onChange={e => {
 						let newValue = Math.max(props.min, Math.min(parseInt(e.target.value || 0), props.max));
 						if (isNaN(newValue)) newValue = parseInt(props.value);
