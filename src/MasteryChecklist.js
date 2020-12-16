@@ -51,7 +51,7 @@ function MasteryChecklist(props) {
 		save();
 	}, 2500);
 
-	window.onbeforeunload = changed ? e => {
+	window.onbeforeunload = changed && !shared ? e => {
 		e.preventDefault();
 		e.returnValue = "";
 	} : undefined;
@@ -90,7 +90,7 @@ function MasteryChecklist(props) {
 		if (changed) debouncedSave.callback();
 	}, [mastered, missions, junctions, intrinsics, hideMastered, hideFounders, changed]);
 
-	if (loading) return <LoadingScreen/>;
+	if (loading || Object.keys(items).length === 0) return <LoadingScreen/>;
 
 	let xp = missionsToXP(missions) + junctionsToXP(junctions) + intrinsicsToXP(intrinsics);
 	complexToSimpleList(items).forEach(item => {

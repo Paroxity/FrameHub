@@ -8,7 +8,7 @@ import {useAuthState} from "react-firebase-hooks/auth";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import "./App.scss";
 import LoadingScreen from "./components/LoadingScreen";
-import Login from "./components/Login";
+import Login from "./Login";
 import MasteryChecklist from "./MasteryChecklist";
 import {framehubConfig, paroxityConfig} from "./utils/firebase";
 

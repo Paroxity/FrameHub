@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, {useState} from "react";
-import {foundersItems} from "../utils/item";
+import {foundersItems, itemShape} from "../utils/item";
 import {baseXPByType} from "../utils/xp.js";
 import Item from "./Item.js";
 import {Toggle} from "./Toggle.js";
@@ -74,7 +74,7 @@ function Category(props) {
 
 Category.propTypes = {
 	name: PropTypes.string.isRequired,
-	items: PropTypes.object.isRequired,
+	items: PropTypes.objectOf(PropTypes.shape(itemShape)).isRequired,
 	mr: PropTypes.number.isRequired,
 	hideMastered: PropTypes.bool.isRequired,
 	hideFounders: PropTypes.bool.isRequired,

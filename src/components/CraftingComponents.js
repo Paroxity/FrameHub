@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, {useState} from "react";
 import Masonry from "react-masonry-css";
-import {complexToSimpleList, ingredientSuffixes} from "../utils/item";
+import {complexToSimpleList, ingredientSuffixes, itemShape} from "../utils/item";
 import {LabeledToggle} from "./Toggle";
 
 function CraftingComponents(props) {
@@ -47,18 +47,7 @@ function CraftingComponents(props) {
 }
 
 CraftingComponents.propTypes = {
-	items: PropTypes.objectOf(PropTypes.objectOf(PropTypes.shape({
-		"maxLvl": PropTypes.number,
-		"mr": PropTypes.number,
-		"wiki": PropTypes.string,
-		"vaulted": PropTypes.bool,
-		"components": PropTypes.objectOf(PropTypes.oneOfType(PropTypes.number, PropTypes.shape({
-			"img": PropTypes.string,
-			"count": PropTypes.number
-		}))),
-		"buildTime": PropTypes.number,
-		"buildPrice": PropTypes.number,
-	}))).isRequired
+	items: PropTypes.objectOf(PropTypes.objectOf(PropTypes.shape(itemShape))).isRequired
 };
 
 export default CraftingComponents;

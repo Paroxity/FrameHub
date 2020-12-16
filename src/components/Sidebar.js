@@ -3,7 +3,7 @@ import React, {useRef, useState} from "react";
 import {useHistory} from "react-router-dom";
 import {auth} from "../App";
 import placeholderIcon from "../media/placeholderIcon.svg";
-import {complexToSimpleList, foundersItems} from "../utils/item";
+import {complexToSimpleList, foundersItems, itemShape} from "../utils/item";
 import {
 	baseXPByType,
 	intrinsicsToXP,
@@ -67,13 +67,13 @@ function Sidebar(props) {
 					props.setIntrinsics(intrinsics);
 					props.setChanged(true);
 				}} tooltip={<p>Max of 10 per intrinsics class</p>}/>
-			<LabeledToggle name="hideMastered" disabled={props.shared} label="Hide Mastered"
+			<LabeledToggle name="hideMastered" label="Hide Mastered"
 				selected={props.hideMastered}
 				onToggle={() => {
 					props.setHideMastered(!props.hideMastered);
 					props.setChanged(true);
 				}}/>
-			<LabeledToggle name="hideFounders" disabled={props.shared} label="Hide Founders"
+			<LabeledToggle name="hideFounders" label="Hide Founders"
 				selected={props.hideFounders}
 				onToggle={() => {
 					props.setHideFounders(!props.hideFounders);
@@ -136,18 +136,7 @@ Sidebar.propTypes = {
 	uid: PropTypes.string.isRequired,
 	shared: PropTypes.bool,
 	anonymous: PropTypes.bool,
-	items: PropTypes.objectOf(PropTypes.objectOf(PropTypes.shape({
-		"maxLvl": PropTypes.number,
-		"mr": PropTypes.number,
-		"wiki": PropTypes.string,
-		"vaulted": PropTypes.bool,
-		"components": PropTypes.objectOf(PropTypes.oneOfType(PropTypes.number, PropTypes.shape({
-			"img": PropTypes.string,
-			"count": PropTypes.number
-		}))),
-		"buildTime": PropTypes.number,
-		"buildPrice": PropTypes.number,
-	}))).isRequired,
+	items: PropTypes.objectOf(PropTypes.objectOf(PropTypes.shape(itemShape))).isRequired,
 	mastered: PropTypes.number.isRequired,
 	setMastered: PropTypes.func.isRequired,
 	missions: PropTypes.number.isRequired,

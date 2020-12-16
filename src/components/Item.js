@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React, {useState} from "react";
 import checkmark from "../media/checkmark.svg";
 import credits from "../media/credits.png";
-import {foundersItems, ingredientSuffixes} from "../utils/item.js";
+import {foundersItems, ingredientSuffixes, itemShape} from "../utils/item.js";
 import {detailedTime} from "../utils/time";
 import GluedComponents from "./GluedComponents";
 import Tooltip from "./Tooltip";
@@ -23,21 +23,17 @@ function Item(props) {
 			className={"item" + (item.mastered ? " item-mastered" : "") + ((item.mr || 0) > props.mr ? " item-locked" : "")}>
 			{showTooltip && <Tooltip title="Information" x={x} y={y}>
 				{item.vaulted && <><span className="vaulted-item">VAULTED</span><br/><br/></>}
-				{(() => {
-					if (!item.components) return <><span className="item-uncraftable">UNCRAFTABLE</span><br/></>;
-
-					return Object.keys(item.components).map(componentName => {
-						let component = item.components[componentName];
-						if (!isNaN(component)) component = {"count": component};
-						return <div key={componentName}>
-							<img className="component-image"
-								src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + (component.img || componentName.toLowerCase().split(" ").join("-")) + ".png"}
-								alt="" width="30px"/>
-							<span
-								className="component-name">{(component.count || 1).toLocaleString()}x {ingredientSuffixes.includes(componentName) ? name + " " + componentName : componentName}</span>
-						</div>;
-					});
-				})()}
+				{item.components ? Object.keys(item.components).map(componentName => {
+					let component = item.components[componentName];
+					if (!isNaN(component)) component = {"count": component};
+					return <div key={componentName}>
+						<img className="component-image"
+							src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + (component.img || componentName.toLowerCase().split(" ").join("-")) + ".png"}
+							alt="" width="30px"/>
+						<span
+							className="component-name">{(component.count || 1).toLocaleString()}x {ingredientSuffixes.includes(componentName) ? name + " " + componentName : componentName}</span>
+					</div>;
+				}) : <><span className="item-uncraftable">UNCRAFTABLE</span><br/></>}
 				<br/>
 				<GluedComponents className="item-info" separator=" - " appendAfter={<><br/><br/></>}>
 					{(item.buildTime && item.components) && <span>{detailedTime(item.buildTime)}</span>}
@@ -78,22 +74,7 @@ function Item(props) {
 
 Item.propTypes = {
 	name: PropTypes.string.isRequired,
-	item: PropTypes.shape({
-		wiki: PropTypes.string,
-		mr: PropTypes.number,
-		mastered: PropTypes.bool,
-		vaulted: PropTypes.bool,
-		buildTime: PropTypes.number,
-		buildPrice: PropTypes.number,
-		components: PropTypes.oneOfType([
-			PropTypes.number,
-			PropTypes.shape({
-				img: PropTypes.string,
-				count: PropTypes.number
-			})
-		]),
-		maxLvl: PropTypes.number
-	}).isRequired,
+	item: PropTypes.shape(itemShape).isRequired,
 	mr: PropTypes.number.isRequired,
 	hideMastered: PropTypes.bool,
 	hideFounders: PropTypes.bool,

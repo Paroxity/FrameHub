@@ -3,9 +3,9 @@ import "firebase/auth";
 import "firebase/storage";
 import React, {useState} from "react";
 import {useHistory} from "react-router-dom";
-import {auth} from "../App";
-import logo from "../media/framehub.svg";
-import Button from "./Button";
+import {auth} from "./App";
+import Button from "./components/Button";
+import logo from "./media/framehub.svg";
 
 function Login() {
 	const [signup, setSignup] = useState(false);
