@@ -8,7 +8,9 @@ import {
 	baseXPByType,
 	intrinsicsToXP,
 	junctionsToXP,
+	masteryRankName,
 	missionsToXP,
+	mrToXP,
 	totalIntrinsics,
 	totalJunctions,
 	totalMissions,
@@ -40,13 +42,18 @@ function Sidebar(props) {
 		totalItems++;
 	});
 
+	let mr = xpToMR(xp);
+
 	return <>
 		<div className={"sidebar" + (showSidebar ? " toggled" : "")}>
-			<span className="mastery-rank">{`Mastery Rank ${xpToMR(xp)}`}</span>
-			<br/>
+			<span className="mastery-rank">{`Mastery Rank ${mr}`}</span>
 			<span className="items-mastered">{items.toLocaleString()}/{totalItems.toLocaleString()} Mastered</span>
-			<br/>
 			<span className="xp">{xp.toLocaleString()}/{totalXP.toLocaleString()} XP</span>
+			<progress className="mastery-progress-bar" value={xp - mrToXP(mr)} max={mrToXP(mr + 1) - mrToXP(mr)}/>
+			<span className="mastery-progress">Next Rank: <span
+				className="bold">{masteryRankName(mr + 1).toUpperCase()}</span> in <span
+				className="bold">{Math.ceil(mrToXP(mr + 1) - xp).toLocaleString()}</span>
+			</span>
 			<NumberInput name="Missions" disabled={props.shared} min={0} max={totalMissions}
 				value={props.missions.toString()}
 				onChange={missions => {

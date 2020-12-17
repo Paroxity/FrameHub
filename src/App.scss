@@ -34,6 +34,7 @@ h6 {
 .category-xp,
 .items-mastered,
 .xp,
+.mastery-progress,
 .category {
 	font-size: 1.1em;
 }
@@ -663,6 +664,26 @@ input:disabled {
 	}
 }
 
+.mastery-progress-bar {
+	background: rgb(75, 85, 90);
+	appearance: none;
+	border: none;
+	width: 90%;
+}
+
+.mastery-progress-bar::-webkit-progress-bar {
+	background: rgb(75, 85, 90);
+}
+
+.mastery-progress-bar::-webkit-progress-value {
+	background: #bea966;
+	transition: width 0.5s ease;
+}
+
+.mastery-progress-bar::-moz-progress-bar {
+	background: #bea966;
+}
+
 .paroxity-logo {
 	display: block;
 	bottom: 1em;
@@ -680,6 +701,18 @@ input:disabled {
 	.paroxity-logo {
 		display: none;
 	}
+}
+
+.mastery-rank, .xp, .mastery-progress {
+	padding-bottom: 21px;
+}
+
+.mastery-progress {
+	padding-top: 5px;
+}
+
+.bold {
+	font-weight: bold;
 }
 
 .danger {

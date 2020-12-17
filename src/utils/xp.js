@@ -20,6 +20,11 @@ export function xpToMR(xp) {
 	return mr;
 }
 
+export function mrToXP(mr) {
+	if (mr > 30) return 2250000 + 147500 * (mr - 30);
+	return 2500 * Math.pow(mr, 2);
+}
+
 export function missionsToXP(missions) {
 	return missions * (totalMissionXP / totalMissions);
 }
@@ -30,6 +35,21 @@ export function junctionsToXP(junctions) {
 
 export function intrinsicsToXP(intrinsics) {
 	return intrinsics * 1500;
+}
+
+export function masteryRankName(mr) {
+	if (mr > 30) {
+		return `Legendary ${mr - 30}`;
+	} else if (mr >= 28) {
+		return mr === 28 ? "Master" : `${mr === 29 ? "Middle" : "True"} Master`;
+	} else if (mr === 0) {
+		return "Unranked";
+	} else {
+		let ranks = ["Unranked", "Initiate", "Novice", "Disciple", "Seeker", "Hunter", "Eagle", "Tiger", "Dragon", "Sage"];
+		let rank = ranks[Math.ceil(mr / 3)];
+		let tier = mr % 3;
+		return tier === 1 ? rank : `${tier === 0 ? "Gold" : "Silver"} ${rank}`;
+	}
 }
 
 export const totalMissions = 466;
