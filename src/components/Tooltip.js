@@ -21,7 +21,7 @@ function Tooltip(props) {
 	if (height.current + props.y > document.documentElement.clientHeight) {
 		y = document.documentElement.clientHeight - height.current;
 	}
-	return <div className={"tooltip"} style={{transform: "translate(" + x + "px," + y + "px)"}} ref={tooltip}>
+	return <div className={"tooltip"} style={{transform: `translate(${x}px,${y}px)`}} ref={tooltip}>
 		{props.title}
 		<br/>
 		<div className="info">{props.children}</div>

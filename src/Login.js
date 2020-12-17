@@ -99,7 +99,7 @@ function Login() {
 						mastered: [],
 						missions: 0
 					});
-					history.push("/user/" + doc.id);
+					history.push(`/user/${doc.id}`);
 				}}>Sign in anonymously</Button>
 			</div>
 		</div>

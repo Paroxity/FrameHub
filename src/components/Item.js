@@ -28,7 +28,7 @@ function Item(props) {
 					if (!isNaN(component)) component = {"count": component};
 					return <div key={componentName}>
 						<img className="component-image"
-							src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + (component.img || componentName.toLowerCase().split(" ").join("-")) + ".png"}
+							src={`https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/${component.img || componentName.toLowerCase().split(" ").join("-")}.png`}
 							alt="" width="30px"/>
 						<span
 							className="component-name">{(component.count || 1).toLocaleString()}x {ingredientSuffixes.includes(componentName) ? name + " " + componentName : componentName}</span>
@@ -39,7 +39,7 @@ function Item(props) {
 					{(item.buildTime && item.components) && <span>{detailedTime(item.buildTime)}</span>}
 					{item.buildPrice && <><img className="credits" src={credits} alt=""
 						width="15px"/> {item.buildPrice.toLocaleString()}</>}
-					{item.mr && <span>{"Mastery Rank " + item.mr}</span>}
+					{item.mr && <span>{`Mastery Rank ${item.mr}`}</span>}
 				</GluedComponents>
 				<span>Ctrl + Left Click for Wiki</span>
 			</Tooltip>}
@@ -58,14 +58,14 @@ function Item(props) {
 				}}>
 				<button className="item-name" onClick={e => {
 					if (e.ctrlKey) {
-						window.open(item.wiki || "https://warframe.fandom.com/wiki/" + props.name);
+						window.open(item.wiki || `https://warframe.fandom.com/wiki/${props.name}`);
 					} else {
 						if (props.hideMastered) {
 							setShowTooltip(false);
 						}
 						if (!props.readonly && props.onClick) props.onClick();
 					}
-				}}>{name + ((item.maxLvl || 30) !== 30 ? " [" + item.maxLvl + "]" : "")}{item.mastered &&
+				}}>{name + ((item.maxLvl || 30) !== 30 ? ` [${item.maxLvl}]` : "")}{item.mastered &&
 				<img src={checkmark} className="checkmark" alt=""/>}</button>
 			</div>
 		</div>

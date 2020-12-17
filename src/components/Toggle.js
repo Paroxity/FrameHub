@@ -10,16 +10,16 @@ export function Toggle(props) {
 	};
 
 	return <div className="radio-checkbox">
-		<input type="radio" id={props.name + "On"} name={props.name}
+		<input type="radio" id={`${props.name}On`} name={props.name}
 			className={props.selected ? "selected" : ""}/>
-		<label htmlFor={props.name + "On"} onClick={onToggle}>
+		<label htmlFor={`${props.name}On`} onClick={onToggle}>
 			{props.selected ?
 				<img onDragStart={e => e.preventDefault()} src={checkmark} alt=""/> :
 				<img onDragStart={e => e.preventDefault()} src={placeholderIcon} alt=""/>}
 		</label>
-		<input type="radio" id={props.name + "Off"} name={props.name}
+		<input type="radio" id={`${props.name}Off`} name={props.name}
 			className={!props.selected ? "selected" : ""}/>
-		<label htmlFor={props.name + "Off"} onClick={onToggle}>
+		<label htmlFor={`${props.name}Off`} onClick={onToggle}>
 			{props.selected ?
 				<img onDragStart={e => e.preventDefault()} src={placeholderIcon} alt=""/> :
 				<img onDragStart={e => e.preventDefault()} src={xIcon} alt="X"/>}

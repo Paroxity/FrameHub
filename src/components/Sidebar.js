@@ -42,7 +42,7 @@ function Sidebar(props) {
 
 	return <>
 		<div className={"sidebar" + (showSidebar ? " toggled" : "")}>
-			<span className="mastery-rank">{"Mastery Rank " + xpToMR(xp)}</span>
+			<span className="mastery-rank">{`Mastery Rank ${mr}`}</span>
 			<br/>
 			<span className="items-mastered">{items.toLocaleString()}/{totalItems.toLocaleString()} Mastered</span>
 			<br/>
@@ -116,7 +116,7 @@ function Sidebar(props) {
 			<div className="popup-box">
 				Here's your sharable link:
 				<div className="input"><input type="text"
-					readOnly value={"https://framehub.paroxity.net/share/" + props.uid}
+					readOnly value={`https://framehub.paroxity.net/share/${props.uid}`}
 					ref={shareLinkRef}/></div>
 				{
 					document.queryCommandSupported("copy") &&

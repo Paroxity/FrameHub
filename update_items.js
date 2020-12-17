@@ -11,7 +11,7 @@ const requiredEndpoints = ["Warframes", "Weapons", "Sentinels", "Recipes", "Reso
 const itemBlacklist = ["Prisma Machete"];
 
 (async () => {
-	let data = (await Axios.get(API_URL + "PublicExport/index_en.txt.lzma", {responseType: "arraybuffer"})).data;
+	let data = (await Axios.get(`${API_URL}PublicExport/index_en.txt.lzma`, {responseType: "arraybuffer"})).data;
 	let endpoints = lzma.decompress(data).split("\n");
 
 	let oldItems = fs.existsSync("items.json") ? JSON.parse(fs.readFileSync("items.json", "utf8")) : (await Axios.get("https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media")).data;
@@ -48,9 +48,9 @@ const itemBlacklist = ["Prisma Machete"];
 		return (async () => {
 			let baseCategory = filterEndpointName(endpoint);
 
-			let data = (await Axios.get(API_URL + "PublicExport/Manifest/" + endpoint)).data;
+			let data = (await Axios.get(`${API_URL}PublicExport/Manifest/${endpoint}`)).data;
 			if (typeof data !== "object") data = JSON.parse(data.replace(/\\r|\r?\n/g, ""));
-			data = data["Export" + baseCategory];
+			data = data[`Export${baseCategory}`];
 
 			Object.values(data).forEach(baseItem => {
 				if (baseCategory === "Recipes") {
@@ -154,7 +154,7 @@ const itemBlacklist = ["Prisma Machete"];
 	Object.keys(oldItems).forEach(category => {
 		Object.keys(oldItems[category]).forEach(key => {
 			if (!newItems[category][key]) {
-				differences.push("Removed item `" + key + "`");
+				differences.push(`Removed item \`${key}\``);
 			}
 		});
 	});
@@ -174,7 +174,7 @@ const itemBlacklist = ["Prisma Machete"];
 						ingredients[ingredientName].count += ingredient.ItemCount;
 						if (originalIngredientName !== ingredientName) {
 							if (category.startsWith("AW")) ingredients[ingredientName].img = originalIngredientName.toLowerCase().split(" ").join("-");
-							if (item.endsWith(" Prime")) ingredients[ingredientName].img = "prime-" + (ingredients[ingredientName].img || ingredientName.toLowerCase().split(" ").join("-"));
+							if (item.endsWith(" Prime")) ingredients[ingredientName].img = `prime-${(ingredients[ingredientName].img || ingredientName.toLowerCase().split(" ").join("-"))}`;
 						}
 					});
 					Object.keys(ingredients).forEach(key => {
@@ -194,11 +194,11 @@ const itemBlacklist = ["Prisma Machete"];
 			ordered[item] = finalItem;
 
 			if (!oldItems[category]) {
-				differences.push("New item `" + item + "` added in new category with properties `" + JSON.stringify(finalItem) + "`");
+				differences.push(`New item \`${item}\` added in new category with properties \`${JSON.stringify(finalItem)}\``);
 				return;
 			}
 			if (!oldItems[category][item]) {
-				differences.push("New item `" + item + "` added with properties `" + JSON.stringify(finalItem) + "`");
+				differences.push(`New item \`${item}\` added with properties \`${JSON.stringify(finalItem)}\``);
 				return;
 			}
 			Object.keys(finalItem).forEach(key => {
@@ -206,10 +206,10 @@ const itemBlacklist = ["Prisma Machete"];
 				let newValue = finalItem[key];
 				if (oldValue !== undefined) {
 					if (!util.isDeepStrictEqual(oldValue, newValue)) {
-						differences.push("Property `" + key + "` changed in item `" + item + "` (`" + JSON.stringify(oldValue) + "` -> `" + JSON.stringify(newValue) + "`)");
+						differences.push(`Property \`${key}\` changed in item \`${item}\` (\`${JSON.stringify(oldValue)}\` -> \`${JSON.stringify(newValue)}\`)`);
 					}
 				} else {
-					differences.push("New property `" + key + "` added with value `" + JSON.stringify(newValue) + "` in item `" + item + "`");
+					differences.push(`New property \`${key}\` added with value \`${JSON.stringify(newValue)}\` in item \`${item}\``);
 				}
 			});
 		});
@@ -219,9 +219,9 @@ const itemBlacklist = ["Prisma Machete"];
 	if (differences.length > 0) {
 		if (process.env.DISCORD_WEBHOOK && process.env.DISCORD_ADMIN_IDS) {
 			let requests = [];
-			let baseMessage = process.env.DISCORD_ADMIN_IDS.split(",").map(id => "<@" + id + ">").join(" ") + " items.json updated! Changes:";
+			let baseMessage = `${process.env.DISCORD_ADMIN_IDS.split(",").map(id => `< @${id} >`).join(" ")} items.json updated! Changes:`;
 			differences.forEach(difference => {
-				let newMessage = baseMessage + "\n- " + difference;
+				let newMessage = `${baseMessage}\n- ${difference}`;
 				if (newMessage.length <= 2000) {
 					baseMessage = newMessage;
 				} else {
@@ -237,9 +237,9 @@ const itemBlacklist = ["Prisma Machete"];
 		}
 
 		fs.writeFileSync("items.json", JSON.stringify(newItems));
-		console.log("Updated items.json in " + ((Date.now() - startTime) / 1000) + " seconds with size of " + (fs.statSync("items.json").size / 1024).toFixed(3) + "KB");
+		console.log(`Updated items.json in ${(Date.now() - startTime) / 1000} seconds with size of ${(fs.statSync("items.json").size / 1024).toFixed(3)}KB`);
 		console.log("\nChanges:\n");
-		console.log(differences.map(change => "- " + change).join("\n"));
+		console.log(differences.map(change => `- ${change}`).join("\n"));
 		process.stdout.write("::set-output name=updated::true");
 		return;
 	}

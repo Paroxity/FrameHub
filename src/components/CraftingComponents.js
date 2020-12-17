@@ -36,7 +36,7 @@ function CraftingComponents(props) {
 			}).map(item => {
 				return <div key={item}>
 					<img className="component-image"
-						src={"https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/" + item.toLowerCase().split(" ").join("-") + ".png"}
+						src={`https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/${item.toLowerCase().split(" ").join("-")}.png`}
 						alt="" width="30px" onDragStart={e => e.preventDefault()}/>
 					<span className="component-name">{necessaryComponents[item].toLocaleString()}x {item}</span>
 					<br/>
