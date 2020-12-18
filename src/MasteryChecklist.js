@@ -120,13 +120,15 @@ function MasteryChecklist(props) {
 				}
 			}}
 			reset={() => {
-				Object.values(items).forEach(categoryItems => {
-					Object.values(categoryItems).forEach(item => {
-						item.mastered = false;
+				if (mastered > 0) {
+					Object.values(items).forEach(categoryItems => {
+						Object.values(categoryItems).forEach(item => {
+							item.mastered = false;
+						});
 					});
-				});
-				setMastered(0);
-				setChanged(true);
+					setMastered(0);
+					setChanged(true);
+				}
 			}} save={save}/>
 		<div className="content">
 			<img className="framehub-logo" src={framehub} alt="" onDragStart={e => e.preventDefault()}/>

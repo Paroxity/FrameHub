@@ -141,6 +141,9 @@ const itemBlacklist = ["Prisma Machete"];
 	};
 	newItems["CAT"]["Venari"] = {};
 
+	//TODO: Remove this
+	if (!newItems["AW_GUN"]["Prisma Dual Decurions"]) newItems["AW_GUN"]["Prisma Dual Decurions"] = {"mr": 1};
+
 	//TODO: Remove hacks
 	newItems["MECH"]["Voidrig Necramech"].maxLvl = 40;
 	newItems["MECH"]["Bonewidow Necramech"] = {
