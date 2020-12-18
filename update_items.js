@@ -145,18 +145,8 @@ const itemBlacklist = ["Prisma Machete"];
 	if (!newItems["AW_GUN"]["Prisma Dual Decurions"]) newItems["AW_GUN"]["Prisma Dual Decurions"] = {"mr": 1};
 
 	//TODO: Remove hacks
-	newItems["MECH"]["Voidrig Necramech"] = {
-		...newItems["MECH"]["Voidrig"],
-		"maxLvl": 40,
-		"wiki": WIKI_URL + "Voidrig"
-	};
-	delete newItems["MECH"]["Voidrig"];
-	newItems["MECH"]["Bonewidow Necramech"] = {
-		...newItems["MECH"]["Bonewidow"],
-		"maxLvl": 40,
-		"wiki": WIKI_URL + "Bonewidow"
-	};
-	delete newItems["MECH"]["Bonewidow"];
+	newItems["MECH"]["Voidrig"].maxLvl = 40;
+	newItems["MECH"]["Bonewidow"].maxLvl = 40;
 
 	let differences = [];
 	Object.keys(oldItems).forEach(category => {

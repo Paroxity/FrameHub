@@ -73,6 +73,15 @@ function MasteryChecklist(props) {
 						if (data.mastered.includes(categoryItem)) {
 							categoryItems[categoryItem].mastered = true;
 						}
+
+						//TODO: Remove hack
+						if (categoryItem === "Bonewidow" || categoryItem === "Voidrig") {
+							if (data.mastered.includes(`${categoryItem} Necramech`)) {
+								categoryItems[categoryItem].mastered = true;
+								setChanged(true);
+								console.log("Converted old Necramech name");
+							}
+						}
 					});
 				});
 				setItems(loadedItems);
