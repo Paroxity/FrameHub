@@ -57,42 +57,34 @@ function MasteryChecklist(props) {
 	} : undefined;
 
 	useEffect(() => {
-		if (data) {
-			(async () => {
-				let loadedItems;
-				if (localStorage.getItem("lastSave") < Date.now()) {
-					loadedItems = (await Axios.get("https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media")).data;
-					localStorage.setItem("items", JSON.stringify(loadedItems));
-					localStorage.setItem("lastSave", (Date.now() + 7200000).toString());
-				} else {
-					loadedItems = JSON.parse(localStorage.getItem("items"));
-				}
+		(async () => {
+			let loadedItems;
+			if (localStorage.getItem("lastSave") < Date.now()) {
+				loadedItems = (await Axios.get("https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media")).data;
+				localStorage.setItem("items", JSON.stringify(loadedItems));
+				localStorage.setItem("lastSave", (Date.now() + 7200000).toString());
+			} else {
+				loadedItems = JSON.parse(localStorage.getItem("items"));
+			}
 
+			if (data) {
 				Object.values(loadedItems).forEach(categoryItems => {
 					Object.keys(categoryItems).forEach(categoryItem => {
 						if (data.mastered.includes(categoryItem)) {
 							categoryItems[categoryItem].mastered = true;
 						}
-
-						//TODO: Remove hack
-						if (categoryItem === "Bonewidow" || categoryItem === "Voidrig") {
-							if (data.mastered.includes(`${categoryItem} Necramech`)) {
-								categoryItems[categoryItem].mastered = true;
-								setChanged(true);
-								console.log("Converted old Necramech name");
-							}
-						}
 					});
 				});
-				setItems(loadedItems);
 				setMastered(data.mastered.length);
 				setMissions(data.missions);
 				setJunctions(data.junctions);
 				setIntrinsics(data.intrinsics);
 				setHideMastered(data.hideMastered);
 				setHideFounders(data.hideFounders);
-			})();
-		}
+			}
+
+			setItems(loadedItems);
+		})();
 	}, [data]);
 
 	useEffect(() => {
