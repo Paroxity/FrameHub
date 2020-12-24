@@ -120,6 +120,7 @@ const itemBlacklist = ["Prisma Machete"];
 					let newItem = {"uniqueName": baseItem.uniqueName};
 					newItems[type][baseItem.name] = newItem;
 
+					if (type === "MECH") newItem.maxLvl = 40; //TODO: Remove if mobile endpoint sets maxLevelCap to 40
 					if (baseItem.maxLevelCap) newItem.maxLvl = baseItem.maxLevelCap;
 					if (baseItem.masteryReq) newItem.mr = baseItem.masteryReq;
 					if (baseItem.name.includes("Mk1-")) newItem.wiki = WIKI_URL + baseItem.name.replace("Mk1-", "MK1-");
@@ -143,10 +144,6 @@ const itemBlacklist = ["Prisma Machete"];
 
 	//TODO: Remove this
 	if (!newItems["AW_GUN"]["Prisma Dual Decurions"]) newItems["AW_GUN"]["Prisma Dual Decurions"] = {"mr": 1};
-
-	//TODO: Remove hacks
-	newItems["MECH"]["Voidrig"].maxLvl = 40;
-	newItems["MECH"]["Bonewidow"].maxLvl = 40;
 
 	let differences = [];
 	Object.keys(oldItems).forEach(category => {
@@ -216,21 +213,23 @@ const itemBlacklist = ["Prisma Machete"];
 
 	if (differences.length > 0) {
 		if (process.env.DISCORD_WEBHOOK && process.env.DISCORD_ADMIN_IDS) {
-			let requests = [];
-			let baseMessage = `${process.env.DISCORD_ADMIN_IDS.split(",").map(id => `<@${id}>`).join(" ")} items.json updated! Changes:`;
-			differences.forEach(difference => {
-				let newMessage = `${baseMessage}\n- ${difference}`;
-				if (newMessage.length <= 2000) {
-					baseMessage = newMessage;
-				} else {
-					requests.push({"content": baseMessage});
-					baseMessage = difference;
-				}
-			});
-			requests.push({"content": baseMessage});
+			if (differences.length > 100) {
+				Axios.post(process.env.DISCORD_WEBHOOK, {"content": `${process.env.DISCORD_ADMIN_IDS.split(",").map(id => `<@${id}>`).join(" ")} Over 100 differences detected. Review and deploy items.json manually.`});
+			} else {
+				let requests = [];
+				let baseMessage = `${process.env.DISCORD_ADMIN_IDS.split(",").map(id => `<@${id}>`).join(" ")} items.json updated! Changes:`;
+				differences.forEach(difference => {
+					let newMessage = `${baseMessage}\n- ${difference}`;
+					if (newMessage.length <= 2000) {
+						baseMessage = newMessage;
+					} else {
+						requests.push({"content": baseMessage});
+						baseMessage = difference;
+					}
+				});
+				requests.push({"content": baseMessage});
 
-			for (let request of requests) {
-				await Axios.post(process.env.DISCORD_WEBHOOK, request);
+				for (let request of requests) await Axios.post(process.env.DISCORD_WEBHOOK, request);
 			}
 		}
 
@@ -238,7 +237,7 @@ const itemBlacklist = ["Prisma Machete"];
 		console.log(`Updated items.json in ${(Date.now() - startTime) / 1000} seconds with size of ${(fs.statSync("items.json").size / 1024).toFixed(3)}KB`);
 		console.log("\nChanges:\n");
 		console.log(differences.map(change => `- ${change}`).join("\n"));
-		process.stdout.write("::set-output name=updated::true");
+		process.stdout.write(`::set-output name=updated::${differences.length <= 100}`);
 		return;
 	}
 	console.log("No differences detected");
