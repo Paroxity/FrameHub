@@ -21,11 +21,11 @@ function App() {
 	let [user, loading] = useAuthState(auth);
 	return <BrowserRouter>
 		<Switch>
-			<Route path="/share/:uid" render={props => {
-				return <MasteryChecklist shared uid={props.match.params.uid}/>;
+			<Route path="/share/:uid" render={params => {
+				return <MasteryChecklist shared uid={params.match.params.uid}/>;
 			}}/>
-			<Route path="/user/:uid" render={props => {
-				return <MasteryChecklist anonymous uid={props.match.params.uid}/>;
+			<Route path="/user/:uid" render={params => {
+				return <MasteryChecklist anonymous uid={params.match.params.uid}/>;
 			}}/>
 			<Route path="/">
 				{user ? <MasteryChecklist uid={user.uid}/> : (loading ? <LoadingScreen/> : <Login/>)}
