@@ -20,6 +20,7 @@ function Login() {
 	const history = useHistory();
 
 	const handleSubmit = event => {
+		event.preventDefault();
 		if (signup) {
 			if (password === confirm) {
 				auth.createUserWithEmailAndPassword(email, password).then(() => {
@@ -28,17 +29,16 @@ function Login() {
 					setError(e.code);
 					setErrorAvailable(true);
 				});
-			} else {
-				setError("Passwords do not match.");
-				setErrorAvailable(true);
+				return;
 			}
-		} else {
-			auth.signInWithEmailAndPassword(email, password).catch(e => {
-				setError(e.code);
-				setErrorAvailable(true);
-			});
+			setError("Passwords do not match.");
+			setErrorAvailable(true);
+			return;
 		}
-		event.preventDefault();
+		auth.signInWithEmailAndPassword(email, password).catch(e => {
+			setError(e.code);
+			setErrorAvailable(true);
+		});
 	};
 
 	const errorMessages = {
