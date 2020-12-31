@@ -145,11 +145,13 @@ const itemBlacklist = ["Prisma Machete"];
 	//TODO: Remove this
 	if (!newItems["AW_GUN"]["Prisma Dual Decurions"]) newItems["AW_GUN"]["Prisma Dual Decurions"] = {"mr": 1};
 
-	let differences = [];
+	let additions = [];
+	let deletions = [];
+	let changes = [];
 	Object.keys(oldItems).forEach(category => {
 		Object.keys(oldItems[category]).forEach(key => {
 			if (!newItems[category][key]) {
-				differences.push(`Removed item \`${key}\``);
+				deletions.push(`Removed item \`${key}\``);
 			}
 		});
 	});
@@ -189,11 +191,11 @@ const itemBlacklist = ["Prisma Machete"];
 			ordered[item] = finalItem;
 
 			if (!oldItems[category]) {
-				differences.push(`New item \`${item}\` added in new category with properties \`${JSON.stringify(finalItem)}\``);
+				additions.push(`New item \`${item}\` added in new category with properties \`${JSON.stringify(finalItem)}\``);
 				return;
 			}
 			if (!oldItems[category][item]) {
-				differences.push(`New item \`${item}\` added with properties \`${JSON.stringify(finalItem)}\``);
+				additions.push(`New item \`${item}\` added with properties \`${JSON.stringify(finalItem)}\``);
 				return;
 			}
 			Object.keys(finalItem).forEach(key => {
@@ -201,20 +203,23 @@ const itemBlacklist = ["Prisma Machete"];
 				let newValue = finalItem[key];
 				if (oldValue !== undefined) {
 					if (!util.isDeepStrictEqual(oldValue, newValue)) {
-						differences.push(`Property \`${key}\` changed in item \`${item}\` (\`${JSON.stringify(oldValue)}\` -> \`${JSON.stringify(newValue)}\`)`);
+						changes.push(`Property \`${key}\` changed in item \`${item}\` (\`${JSON.stringify(oldValue)}\` -> \`${JSON.stringify(newValue)}\`)`);
 					}
 				} else {
-					differences.push(`New property \`${key}\` added with value \`${JSON.stringify(newValue)}\` in item \`${item}\``);
+					changes.push(`New property \`${key}\` added with value \`${JSON.stringify(newValue)}\` in item \`${item}\``);
 				}
 			});
 		});
 		newItems[category] = ordered;
 	});
 
+	let differences = [...additions, ...deletions, ...changes];
 	if (differences.length > 0) {
 		if (process.env.DISCORD_WEBHOOK && process.env.DISCORD_ADMIN_IDS) {
-			if (differences.length > 100) {
-				Axios.post(process.env.DISCORD_WEBHOOK, {"content": `${process.env.DISCORD_ADMIN_IDS.split(",").map(id => `<@${id}>`).join(" ")} Over 100 differences detected. Review and deploy items.json manually.`});
+			if (deletions.length > 1) {
+				Axios.post(process.env.DISCORD_WEBHOOK, {"content": `${process.env.DISCORD_ADMIN_IDS.split(",").map(id => `<@${id}>`).join(" ")} More than 1 item deletion detected. Review and deploy items.json manually.`});
+			} else if (additions.length > 25) {
+				Axios.post(process.env.DISCORD_WEBHOOK, {"content": `${process.env.DISCORD_ADMIN_IDS.split(",").map(id => `<@${id}>`).join(" ")} More than 25 item additions detected. Review and deploy items.json manually.`});
 			} else {
 				let requests = [];
 				let baseMessage = `${process.env.DISCORD_ADMIN_IDS.split(",").map(id => `<@${id}>`).join(" ")} items.json updated! Changes:`;
@@ -237,7 +242,7 @@ const itemBlacklist = ["Prisma Machete"];
 		console.log(`Updated items.json in ${(Date.now() - startTime) / 1000} seconds with size of ${(fs.statSync("items.json").size / 1024).toFixed(3)}KB`);
 		console.log("\nChanges:\n");
 		console.log(differences.map(change => `- ${change}`).join("\n"));
-		process.stdout.write(`::set-output name=updated::${differences.length <= 100}`);
+		process.stdout.write(`::set-output name=updated::${deletions.length <= 1 && additions.length <= 25}`);
 		return;
 	}
 	console.log("No differences detected");
