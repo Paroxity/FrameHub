@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.21.1",
-    "firebase": "^8.2.1",
+    "firebase": "^8.2.2",
     "lzma": "^2.3.2",
     "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
