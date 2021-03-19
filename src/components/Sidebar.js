@@ -73,7 +73,7 @@ function Sidebar(props) {
 				onChange={intrinsics => {
 					props.setIntrinsics(intrinsics);
 					props.setChanged(true);
-				}} tooltip={<p>Max of 10 per intrinsics class</p>}/>
+				}} tooltip={<p>Max of 10 per intrinsics class, 9 for Command</p>}/>
 			<LabeledToggle name="hideMastered" label="Hide Mastered"
 				selected={props.hideMastered}
 				onToggle={() => {
