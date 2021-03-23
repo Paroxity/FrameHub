@@ -45,7 +45,18 @@ export function masteryRankName(mr) {
 	} else if (mr === 0) {
 		return "Unranked";
 	} else {
-		let ranks = ["Unranked", "Initiate", "Novice", "Disciple", "Seeker", "Hunter", "Eagle", "Tiger", "Dragon", "Sage"];
+		let ranks = [
+			"Unranked",
+			"Initiate",
+			"Novice",
+			"Disciple",
+			"Seeker",
+			"Hunter",
+			"Eagle",
+			"Tiger",
+			"Dragon",
+			"Sage"
+		];
 		let rank = ranks[Math.ceil(mr / 3)];
 		let tier = mr % 3;
 		return tier === 1 ? rank : `${tier === 0 ? "Gold" : "Silver"} ${rank}`;

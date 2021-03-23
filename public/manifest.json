@@ -2,21 +2,21 @@
   "short_name": "FrameHub",
   "name": "Mastery Checklist for Warframe",
   "icons": [
-    {
-      "src": "favicon.ico",
-      "type": "image/x-icon",
-      "sizes": "48x48"
-    },
-    {
-      "src": "favicon-32x32.png",
-      "type": "image/png",
-      "sizes": "32x32"
-    },
-    {
-      "src": "favicon-16x16.png",
-      "type": "image/png",
-      "sizes": "16x16"
-    }
+	{
+	  "src": "favicon.ico",
+	  "type": "image/x-icon",
+	  "sizes": "48x48"
+	},
+	{
+	  "src": "favicon-32x32.png",
+	  "type": "image/png",
+	  "sizes": "32x32"
+	},
+	{
+	  "src": "favicon-16x16.png",
+	  "type": "image/png",
+	  "sizes": "16x16"
+	}
   ],
   "start_url": ".",
   "display": "standalone",
