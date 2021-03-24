@@ -1,16 +1,23 @@
 import Masonry from "react-masonry-css";
+import shallow from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { foundersItems } from "../../utils/items";
 import Category from "./Category";
 
 function Checklist() {
-	const { items, itemsMastered, hideMastered, hideFounders } = useStore(
-		state => ({
-			items: state.items,
-			itemsMastered: state.itemsMastered,
-			hideMastered: state.hideMastered,
-			hideFounders: state.hideFounders
-		})
+	const visibleColumns = useStore(
+		state =>
+			Object.keys(state.items).filter(category => {
+				return (
+					!state.hideMastered ||
+					!Object.keys(state.items[category]).every(
+						item =>
+							state.itemsMastered.includes(item) ||
+							(state.hideFounders && foundersItems.includes(state.items))
+					)
+				);
+			}),
+		shallow
 	);
 
 	return (
@@ -24,20 +31,9 @@ function Checklist() {
 				1152: 2,
 				640: 1
 			}}>
-			{Object.keys(items)
-				.filter(category => {
-					return (
-						!hideMastered ||
-						!Object.keys(items[category]).every(
-							item =>
-								itemsMastered.includes(item) ||
-								(hideFounders && foundersItems.includes(item))
-						)
-					);
-				})
-				.map(category => {
-					return <Category key={category} name={category} />;
-				})}
+			{visibleColumns.map(category => {
+				return <Category key={category} name={category} />;
+			})}
 		</Masonry>
 	);
 }

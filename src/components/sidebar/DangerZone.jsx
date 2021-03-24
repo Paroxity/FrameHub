@@ -1,3 +1,4 @@
+import shallow from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { SHARED } from "../../utils/checklist-types";
 import Button from "../Button";
@@ -10,14 +11,17 @@ function DangerZone() {
 		setMissions,
 		setJunctions,
 		setIntrinsics
-	} = useStore(state => ({
-		type: state.type,
-		masterAllItems: state.masterAllItems,
-		unmasterAllItems: state.unmasterAllItems,
-		setMissions: state.setMissions,
-		setJunctions: state.setJunctions,
-		setIntrinsics: state.setIntrinsics
-	}));
+	} = useStore(
+		state => ({
+			type: state.type,
+			masterAllItems: state.masterAllItems,
+			unmasterAllItems: state.unmasterAllItems,
+			setMissions: state.setMissions,
+			setJunctions: state.setJunctions,
+			setIntrinsics: state.setIntrinsics
+		}),
+		shallow
+	);
 
 	return type === SHARED ? null : (
 		<>

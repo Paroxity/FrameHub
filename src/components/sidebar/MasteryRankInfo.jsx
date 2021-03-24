@@ -1,3 +1,4 @@
+import shallow from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { masteryRankName, mrToXP } from "../../utils/mastery-rank";
 
@@ -9,7 +10,8 @@ function MasteryRankInfo() {
 			xp: state.xp,
 			totalXP: state.totalXP,
 			masteryRank: state.masteryRank
-		})
+		}),
+		shallow
 	);
 
 	return (

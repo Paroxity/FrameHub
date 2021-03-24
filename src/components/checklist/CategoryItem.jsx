@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
+import shallow from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import checkmark from "../../icons/checkmark.svg";
 import { SHARED } from "../../utils/checklist-types";
@@ -12,24 +13,27 @@ function CategoryItem({ name, item }) {
 		masterItem,
 		unmasterItem,
 		mastered,
-		masteryRank,
+		masteryRankLocked,
 		hidden
-	} = useStore(state => ({
-		type: state.type,
-		masterItem: state.masterItem,
-		unmasterItem: state.unmasterItem,
-		mastered: state.itemsMastered.includes(name),
-		masteryRank: state.masteryRank,
-		hidden:
-			(state.hideMastered && state.itemsMastered.includes(name)) ||
-			(state.hideFounders && foundersItems.includes(name))
-	}));
+	} = useStore(
+		state => ({
+			type: state.type,
+			masterItem: state.masterItem,
+			unmasterItem: state.unmasterItem,
+			mastered: state.itemsMastered.includes(name),
+			masteryRankLocked: (item.mr || 0) > state.masteryRank,
+			hidden:
+				(state.hideMastered && state.itemsMastered.includes(name)) ||
+				(state.hideFounders && foundersItems.includes(name))
+		}),
+		shallow
+	);
 
 	return hidden ? null : (
 		<div
 			className={classNames("item", {
 				"item-mastered": mastered,
-				"item-locked": (item.mr || 0) > masteryRank
+				"item-locked": masteryRankLocked
 			})}>
 			<Button
 				className="item-name"

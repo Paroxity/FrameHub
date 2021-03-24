@@ -4,9 +4,7 @@ import CategoryInfo from "./CategoryInfo";
 import CategoryItem from "./CategoryItem";
 
 function Category({ name }) {
-	const { categoryItems } = useStore(state => ({
-		categoryItems: state.items[name]
-	}));
+	const categoryItems = useStore(state => state.items[name]);
 
 	return (
 		<div className="category">

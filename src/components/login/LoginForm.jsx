@@ -1,3 +1,4 @@
+import shallow from "zustand/shallow";
 import { useLoginFormStore } from "../../hooks/useLoginFormStore";
 import Button from "../Button";
 import FormInput from "./FormInput";
@@ -9,13 +10,16 @@ function LoginForm() {
 		setPassword,
 		setConfirmPassword,
 		signUp
-	} = useLoginFormStore(state => ({
-		handleSubmit: state.handleSubmit,
-		setEmail: state.setEmail,
-		setPassword: state.setPassword,
-		setConfirmPassword: state.setConfirmPassword,
-		signUp: state.signUp
-	}));
+	} = useLoginFormStore(
+		state => ({
+			handleSubmit: state.handleSubmit,
+			setEmail: state.setEmail,
+			setPassword: state.setPassword,
+			setConfirmPassword: state.setConfirmPassword,
+			signUp: state.signUp
+		}),
+		shallow
+	);
 
 	return (
 		<form onSubmit={handleSubmit}>

@@ -2,9 +2,7 @@ import Masonry from "react-masonry-css";
 import { useStore } from "../../hooks/useStore";
 
 function MissingIngredients() {
-	const { ingredients } = useStore(state => ({
-		ingredients: state.ingredients
-	}));
+	const ingredients = useStore(state => state.ingredients);
 
 	return (
 		<>
@@ -28,7 +26,7 @@ function MissingIngredients() {
 					)
 					.map(([name, count]) => {
 						return (
-							<div id={name}>
+							<div id={name} key={name}>
 								<img
 									className="component-image"
 									src={`https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/${name

@@ -5,9 +5,7 @@ import Button from "../Button";
 
 function ExitButton() {
 	const history = useHistory();
-	const { type } = useStore(state => ({
-		type: state.type
-	}));
+	const type = useStore(state => state.type);
 	return type === SHARED ? (
 		<Button centered onClick={() => history.push("/")}>
 			Exit

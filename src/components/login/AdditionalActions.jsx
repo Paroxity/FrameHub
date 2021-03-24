@@ -1,3 +1,4 @@
+import shallow from "zustand/shallow";
 import { auth } from "../../App";
 import { useLoginFormStore } from "../../hooks/useLoginFormStore";
 import Button from "../Button";
@@ -9,13 +10,16 @@ function AdditionalActions() {
 		displayError,
 		signUp,
 		setSignUp
-	} = useLoginFormStore(state => ({
-		email: state.email,
-		setError: state.setError,
-		displayError: state.displayError,
-		signUp: state.signUp,
-		setSignUp: state.setSignUp
-	}));
+	} = useLoginFormStore(
+		state => ({
+			email: state.email,
+			setError: state.setError,
+			displayError: state.displayError,
+			signUp: state.signUp,
+			setSignUp: state.setSignUp
+		}),
+		shallow
+	);
 
 	return (
 		<div className="actions">

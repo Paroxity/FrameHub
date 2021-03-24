@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import shallow from "zustand/shallow";
 import { useLoginFormStore } from "../../hooks/useLoginFormStore";
 import Button from "../Button";
 
@@ -15,11 +16,14 @@ const errorMessages = {
 };
 
 function LoginFormPopup() {
-	const { displayError, error, errorDisplayed } = useLoginFormStore(state => ({
-		displayError: state.displayError,
-		error: state.error,
-		errorDisplayed: state.errorDisplayed
-	}));
+	const { displayError, error, errorDisplayed } = useLoginFormStore(
+		state => ({
+			displayError: state.displayError,
+			error: state.error,
+			errorDisplayed: state.errorDisplayed
+		}),
+		shallow
+	);
 	return (
 		<div className={classNames("popup", { show: errorDisplayed })}>
 			<div className="popup-box">

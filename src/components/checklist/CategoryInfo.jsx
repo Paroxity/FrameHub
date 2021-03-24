@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import shallow from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { foundersItems } from "../../utils/items";
 import { baseXPByType } from "../../utils/mastery-rank";
@@ -17,11 +18,17 @@ const fancyCategoryNames = {
 };
 
 function CategoryItem({ name }) {
-	const { categoryItems, itemsMastered, hideFounders } = useStore(state => ({
-		categoryItems: state.items[name],
-		itemsMastered: state.itemsMastered.filter(item => state.items[name][item]),
-		hideFounders: state.hideFounders
-	}));
+	const { categoryItems, hideFounders } = useStore(
+		state => ({
+			categoryItems: state.items[name],
+			hideFounders: state.hideFounders
+		}),
+		shallow
+	);
+	const itemsMastered = useStore(
+		state => state.itemsMastered.filter(item => categoryItems[item]),
+		shallow
+	);
 
 	let masteredCount = 0;
 	let masteredXP = 0;

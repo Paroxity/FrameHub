@@ -4,9 +4,7 @@ import { useStore } from "../../hooks/useStore";
 import Button from "../Button";
 
 function SharePrompt({ showLink, setShowLink }) {
-	const { id } = useStore(state => ({
-		id: state.id
-	}));
+	const id = useStore(state => state.id);
 	const showLinkRef = useRef(null);
 
 	return (
