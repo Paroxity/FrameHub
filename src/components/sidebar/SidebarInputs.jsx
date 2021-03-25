@@ -38,6 +38,14 @@ function SidebarInputs() {
 				max={totalMissions}
 				value={missions.toString()}
 				onChange={setMissions}
+				tooltipTitle="Missions"
+				tooltipContent={
+					<>
+						<p>Normal Missions: {totalMissions / 2}</p>
+						<p>Steel Path Missions: {totalMissions / 2}</p>
+						<p>Maximum Value: {totalMissions}</p>
+					</>
+				}
 			/>
 			<NumberInput
 				name="Junctions"
@@ -46,6 +54,14 @@ function SidebarInputs() {
 				max={totalJunctions}
 				value={junctions.toString()}
 				onChange={setJunctions}
+				tooltipTitle="Junctions"
+				tooltipContent={
+					<>
+						<p>Normal Junctions: {totalJunctions / 2}</p>
+						<p>Steel Path Junctions: {totalJunctions / 2}</p>
+						<p>Maximum Value: {totalJunctions}</p>
+					</>
+				}
 			/>
 			<NumberInput
 				name="Intrinsics"
@@ -54,6 +70,13 @@ function SidebarInputs() {
 				max={totalIntrinsics}
 				value={intrinsics.toString()}
 				onChange={setIntrinsics}
+				tooltipTitle="Intrinsics"
+				tooltipContent={
+					<>
+						<p>Max of 10 per intrinsics class, 9 for Command</p>
+						<p>Maximum Value: {totalIntrinsics}</p>
+					</>
+				}
 			/>
 		</>
 	);

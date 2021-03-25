@@ -112,9 +112,9 @@ button::before {
 	left: 0;
 	width: 100%;
 	background: linear-gradient(
-									180deg,
-									rgba(0, 0, 0, 0) 0%,
-									rgba(245, 227, 173, 0.25) 100%
+		180deg,
+		rgba(0, 0, 0, 0) 0%,
+		rgba(245, 227, 173, 0.25) 100%
 	);
 	transition: all 0.2s ease-out;
 }
@@ -283,9 +283,9 @@ input::placeholder {
 	left: 0;
 	width: 100%;
 	background: linear-gradient(
-									180deg,
-									rgba(0, 0, 0, 0) 0%,
-									rgba(245, 227, 173, 0.25) 90%
+		180deg,
+		rgba(0, 0, 0, 0) 0%,
+		rgba(245, 227, 173, 0.25) 90%
 	);
 	transition: all 0.2s ease-out;
 }
@@ -467,12 +467,12 @@ input:disabled {
 	right: -1px;
 	top: -1px;
 	background: linear-gradient(
-									60deg,
-									#f5e3ad,
-									#bea966,
-									#f5e3ad,
-									#f5e3ad,
-									#bea966
+		60deg,
+		#f5e3ad,
+		#bea966,
+		#f5e3ad,
+		#f5e3ad,
+		#bea966
 	);
 	z-index: -1;
 	animation: animatedgradient 3s ease alternate infinite;
@@ -669,8 +669,6 @@ input:disabled {
 	padding: 5px 10px;
 	position: fixed;
 	z-index: 10;
-	top: 0;
-	left: 0;
 	pointer-events: none;
 
 	.info {
@@ -680,10 +678,10 @@ input:disabled {
 		font-weight: 400;
 		margin: 10px 10px 0;
 		background: linear-gradient(
-										90deg,
-										rgba(0, 0, 0, 0) 0%,
-										rgba(129, 107, 62, 1) 50%,
-										rgba(0, 0, 0, 0) 100%
+			90deg,
+			rgba(0, 0, 0, 0) 0%,
+			rgba(129, 107, 62, 1) 50%,
+			rgba(0, 0, 0, 0) 100%
 		);
 	}
 }
@@ -744,6 +742,7 @@ input:disabled {
 .danger {
 	border: 1px solid #bea966;
 	padding: 0.5em 1em;
+	margin-bottom: 21px;
 }
 
 .danger-text {

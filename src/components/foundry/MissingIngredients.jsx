@@ -40,7 +40,6 @@ function MissingIngredients() {
 								<span className="component-name">
 									{count.toLocaleString()}x {name}
 								</span>
-								<br />
 							</div>
 						);
 					})}

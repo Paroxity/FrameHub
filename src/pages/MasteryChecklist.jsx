@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import shallow from "zustand/shallow";
 import { firestore } from "../App";
@@ -52,7 +52,7 @@ function MasteryChecklist(props) {
 			)
 			.doc(props.id)
 	);
-	useEffect(() => {
+	useLayoutEffect(() => {
 		setItemsMastered(data?.mastered ?? []);
 		setMissions(data?.missions ?? 0, true);
 		setJunctions(data?.junctions ?? 0, true);

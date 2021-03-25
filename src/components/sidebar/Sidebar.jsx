@@ -25,7 +25,6 @@ function Sidebar() {
 				<SaveStatus />
 				{type === ANONYMOUS && <div>Remember to bookmark this URL.</div>}
 				<DangerZone />
-				<br />
 				{type === AUTHENTICATED && (
 					<Button centered onClick={() => setShowLink(true)}>
 						Share

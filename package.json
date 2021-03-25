@@ -1,45 +1,44 @@
 {
-  "name": "framehub",
-  "version": "0.1.0",
-  "dependencies": {
-	"classnames": "^2.2.6",
-	"debounce": "^1.2.1",
-	"firebase": "^8.3.1",
-	"immer": "^9.0.1",
-	"lzma": "^2.3.2",
-	"node-sass": "^4.14.1",
-	"prop-types": "^15.7.2",
-	"react": "^17.0.2",
-	"react-dom": "^17.0.2",
-	"react-firebase-hooks": "^3.0.3",
-	"react-masonry-css": "^1.0.14",
-	"react-router-dom": "^5.2.0",
-	"react-scripts": "4.0.3",
-	"react-tooltip": "^4.2.15",
-	"zustand": "^3.3.3"
-  },
-  "devDependencies": {
-	"eslint": "^7.22.0",
-	"eslint-config-prettier": "^8.1.0",
-	"eslint-plugin-react": "^7.23.0",
-	"prettier": "^2.2.1"
-  },
-  "scripts": {
-	"start": "react-scripts start",
-	"build": "react-scripts build",
-	"test": "react-scripts test",
-	"eject": "react-scripts eject"
-  },
-  "browserslist": {
-	"production": [
-	  ">0.2%",
-	  "not dead",
-	  "not op_mini all"
-	],
-	"development": [
-	  "last 1 chrome version",
-	  "last 1 firefox version",
-	  "last 1 safari version"
-	]
-  }
+	"name": "framehub",
+	"version": "0.1.0",
+	"dependencies": {
+		"classnames": "^2.2.6",
+		"debounce": "^1.2.1",
+		"firebase": "^8.3.1",
+		"immer": "^9.0.1",
+		"lzma": "^2.3.2",
+		"node-sass": "^4.14.1",
+		"prop-types": "^15.7.2",
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2",
+		"react-firebase-hooks": "^3.0.3",
+		"react-masonry-css": "^1.0.14",
+		"react-router-dom": "^5.2.0",
+		"react-scripts": "4.0.3",
+		"zustand": "^3.3.3"
+	},
+	"devDependencies": {
+		"eslint": "^7.22.0",
+		"eslint-config-prettier": "^8.1.0",
+		"eslint-plugin-react": "^7.23.0",
+		"prettier": "^2.2.1"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
 }

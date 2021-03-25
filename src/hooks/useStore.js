@@ -148,6 +148,8 @@ export const useStore = create((set, get) => ({
 								draftState.ingredients[componentName] -= isNaN(component)
 									? component.count || 1
 									: component;
+								if (draftState.ingredients[componentName] === 0)
+									delete draftState.ingredients[componentName];
 							}
 						}
 					);
@@ -173,10 +175,10 @@ export const useStore = create((set, get) => ({
 						}
 					}
 				});
+				draftState.ingredients = {};
 			})
 		);
 		get().recalculateMasteryRank();
-		get().recalculateIngredients();
 		get().save();
 	},
 	unmasterItem: (name, item) => {
@@ -194,6 +196,7 @@ export const useStore = create((set, get) => ({
 				if (item.components) {
 					Object.entries(item.components).forEach(
 						([componentName, component]) => {
+							if (ingredientSuffixes.includes(componentName)) return;
 							if (!draftState.ingredients[componentName])
 								draftState.ingredients[componentName] = 0;
 							draftState.ingredients[componentName] += isNaN(component)
@@ -211,15 +214,13 @@ export const useStore = create((set, get) => ({
 		set(state =>
 			produce(state, draftState => {
 				state.itemsMastered.forEach(item => {
-					let index = draftState.itemsMastered.indexOf(item);
-					draftState.itemsMastered.splice(index, 1);
-
 					if (draftState.unsavedItemChanges[item] === true) {
 						delete draftState.unsavedItemChanges[item];
 					} else {
 						draftState.unsavedItemChanges[item] = false;
 					}
 				});
+				draftState.itemsMastered = [];
 			})
 		);
 		get().recalculateMasteryRank();
