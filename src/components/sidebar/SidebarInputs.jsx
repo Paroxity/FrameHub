@@ -7,6 +7,7 @@ import {
 	totalMissions
 } from "../../utils/mastery-rank";
 import NumberInput from "../NumberInput";
+import { LabeledToggle } from "../Toggle";
 
 function SidebarInputs() {
 	const {
@@ -16,7 +17,11 @@ function SidebarInputs() {
 		junctions,
 		setJunctions,
 		intrinsics,
-		setIntrinsics
+		setIntrinsics,
+		hideMastered,
+		setHideMastered,
+		hideFounders,
+		setHideFounders
 	} = useStore(
 		state => ({
 			type: state.type,
@@ -25,7 +30,11 @@ function SidebarInputs() {
 			junctions: state.junctions,
 			setJunctions: state.setJunctions,
 			intrinsics: state.intrinsics,
-			setIntrinsics: state.setIntrinsics
+			setIntrinsics: state.setIntrinsics,
+			hideMastered: state.hideMastered,
+			setHideMastered: state.setHideMastered,
+			hideFounders: state.hideFounders,
+			setHideFounders: state.setHideFounders
 		}),
 		shallow
 	);
@@ -77,6 +86,16 @@ function SidebarInputs() {
 						<p>Maximum Value: {totalIntrinsics}</p>
 					</>
 				}
+			/>
+			<LabeledToggle
+				label="Hide Mastered"
+				toggled={hideMastered}
+				onToggle={setHideMastered}
+			/>
+			<LabeledToggle
+				label="Hide Founders"
+				toggled={hideFounders}
+				onToggle={setHideFounders}
 			/>
 		</>
 	);

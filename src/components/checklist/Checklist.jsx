@@ -13,7 +13,7 @@ function Checklist() {
 					!Object.keys(state.items[category]).every(
 						item =>
 							state.itemsMastered.includes(item) ||
-							(state.hideFounders && foundersItems.includes(state.items))
+							(state.hideFounders && foundersItems.includes(item))
 					)
 				);
 			}),

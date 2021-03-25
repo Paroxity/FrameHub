@@ -640,7 +640,7 @@ input:disabled {
 	border-color: #96855e;
 }
 
-.radio-checkbox label {
+.radio-checkbox div {
 	display: inline-block;
 	background-color: #18161b;
 	padding: 5px 10px;
@@ -652,7 +652,7 @@ input:disabled {
 	}
 }
 
-.radio-checkbox input[type="radio"].selected + label {
+.radio-checkbox .selected {
 	background-color: #40392d;
 }
 

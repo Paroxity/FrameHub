@@ -33,7 +33,9 @@ export const useStore = create((set, get) => ({
 			Object.keys(unsavedItemChanges).length > 0
 		) {
 			let doc = firestore
-				.collection(type === ANONYMOUS ? "anonymousMasteryData" : "masteryData")
+				.collection(
+					type === ANONYMOUS ? "anonymousMasteryData" : "masteryData"
+				)
 				.doc(id);
 			let batch = firestore.batch();
 
@@ -145,11 +147,15 @@ export const useStore = create((set, get) => ({
 					Object.entries(item.components).forEach(
 						([componentName, component]) => {
 							if (draftState.ingredients[componentName]) {
-								draftState.ingredients[componentName] -= isNaN(component)
+								draftState.ingredients[componentName] -= isNaN(
+									component
+								)
 									? component.count || 1
 									: component;
 								if (draftState.ingredients[componentName] === 0)
-									delete draftState.ingredients[componentName];
+									delete draftState.ingredients[
+										componentName
+									];
 							}
 						}
 					);
@@ -164,10 +170,16 @@ export const useStore = create((set, get) => ({
 			produce(state, draftState => {
 				itemsAsArray(draftState.items).forEach(item => {
 					if (!draftState.itemsMastered.includes(item.name)) {
-						if (!state.hideFounders || !foundersItems.includes(item.name)) {
+						if (
+							!state.hideFounders ||
+							!foundersItems.includes(item.name)
+						) {
 							draftState.itemsMastered.push(item.name);
 
-							if (draftState.unsavedItemChanges[item.name] === false) {
+							if (
+								draftState.unsavedItemChanges[item.name] ===
+								false
+							) {
 								delete draftState.unsavedItemChanges[item.name];
 							} else {
 								draftState.unsavedItemChanges[item.name] = true;
@@ -196,10 +208,13 @@ export const useStore = create((set, get) => ({
 				if (item.components) {
 					Object.entries(item.components).forEach(
 						([componentName, component]) => {
-							if (ingredientSuffixes.includes(componentName)) return;
+							if (ingredientSuffixes.includes(componentName))
+								return;
 							if (!draftState.ingredients[componentName])
 								draftState.ingredients[componentName] = 0;
-							draftState.ingredients[componentName] += isNaN(component)
+							draftState.ingredients[componentName] += isNaN(
+								component
+							)
 								? component.count || 1
 								: component;
 						}
@@ -236,7 +251,8 @@ export const useStore = create((set, get) => ({
 			if (!itemsMastered.includes(item.name) && item.components) {
 				Object.entries(item.components).forEach(([name, component]) => {
 					if (ingredientSuffixes.includes(name)) return;
-					if (!necessaryComponents[name]) necessaryComponents[name] = 0;
+					if (!necessaryComponents[name])
+						necessaryComponents[name] = 0;
 					necessaryComponents[name] += isNaN(component)
 						? component.count || 1
 						: component;
@@ -250,8 +266,10 @@ export const useStore = create((set, get) => ({
 	setHideMastered: (hideMastered, load) =>
 		setAndMarkChange(set, load, "hideMastered", hideMastered),
 	hideFounders: true,
-	setHideFounders: (hideFounders, load) =>
-		setAndMarkChange(set, load, "hideFounders", hideFounders),
+	setHideFounders: (hideFounders, load) => {
+		setAndMarkChange(set, load, "hideFounders", hideFounders);
+		get().recalculateMasteryRank();
+	},
 
 	missions: 0,
 	setMissions: (missions, load) => {
