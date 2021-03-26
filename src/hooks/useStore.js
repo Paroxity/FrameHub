@@ -3,7 +3,7 @@ import firebase from "firebase";
 import produce from "immer";
 import create from "zustand";
 import { firestore } from "../App";
-import { ANONYMOUS } from "../utils/checklist-types";
+import { ANONYMOUS, SHARED } from "../utils/checklist-types";
 import {
 	foundersItems,
 	ingredientSuffixes,
@@ -29,8 +29,9 @@ export const useStore = create((set, get) => ({
 	saveImmediate: () => {
 		const { type, id, unsavedChanges, unsavedItemChanges } = get();
 		if (
-			Object.keys(unsavedChanges).length > 0 ||
-			Object.keys(unsavedItemChanges).length > 0
+			type !== SHARED &&
+			(Object.keys(unsavedChanges).length > 0 ||
+				Object.keys(unsavedItemChanges).length > 0)
 		) {
 			let doc = firestore
 				.collection(
@@ -39,27 +40,36 @@ export const useStore = create((set, get) => ({
 				.doc(id);
 			let batch = firestore.batch();
 
-			batch.update(
+			batch.set(
 				doc,
 				Object.keys(unsavedChanges).reduce((changes, key) => {
 					changes[key] = unsavedChanges[key].new;
 					return changes;
-				}, {})
+				}, {}),
+				{ merge: true }
 			);
-			batch.update(doc, {
-				mastered: firebase.firestore.FieldValue.arrayUnion(
-					...Object.keys(unsavedItemChanges).filter(
-						item => unsavedItemChanges[item]
+			batch.set(
+				doc,
+				{
+					mastered: firebase.firestore.FieldValue.arrayUnion(
+						...Object.keys(unsavedItemChanges).filter(
+							item => unsavedItemChanges[item]
+						)
 					)
-				)
-			});
-			batch.update(doc, {
-				mastered: firebase.firestore.FieldValue.arrayRemove(
-					...Object.keys(unsavedItemChanges).filter(
-						item => !unsavedItemChanges[item]
+				},
+				{ merge: true }
+			);
+			batch.set(
+				doc,
+				{
+					mastered: firebase.firestore.FieldValue.arrayRemove(
+						...Object.keys(unsavedItemChanges).filter(
+							item => !unsavedItemChanges[item]
+						)
 					)
-				)
-			});
+				},
+				{ merge: true }
+			);
 
 			batch.commit();
 
