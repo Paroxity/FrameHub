@@ -2,7 +2,7 @@ html,
 body,
 input,
 button {
-	cursor: url("./media/cursor.png"), auto !important;
+	cursor: url("icons/cursor.png"), auto !important;
 	background-color: #05040e;
 }
 
@@ -111,7 +111,11 @@ button::before {
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(245, 227, 173, 0.25) 100%);
+	background: linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 0) 0%,
+		rgba(245, 227, 173, 0.25) 100%
+	);
 	transition: all 0.2s ease-out;
 }
 
@@ -278,7 +282,11 @@ input::placeholder {
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(245, 227, 173, 0.25) 90%);
+	background: linear-gradient(
+		180deg,
+		rgba(0, 0, 0, 0) 0%,
+		rgba(245, 227, 173, 0.25) 90%
+	);
 	transition: all 0.2s ease-out;
 }
 
@@ -361,6 +369,10 @@ input:disabled {
 	-moz-user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
+}
+
+.login .framehub-logo {
+	margin-bottom: 21px;
 }
 
 @media (min-width: 620px) {
@@ -454,7 +466,14 @@ input:disabled {
 	height: calc(100% + 2px);
 	right: -1px;
 	top: -1px;
-	background: linear-gradient(60deg, #f5e3ad, #bea966, #f5e3ad, #f5e3ad, #bea966);
+	background: linear-gradient(
+		60deg,
+		#f5e3ad,
+		#bea966,
+		#f5e3ad,
+		#f5e3ad,
+		#bea966
+	);
 	z-index: -1;
 	animation: animatedgradient 3s ease alternate infinite;
 	background-size: 300% 300%;
@@ -621,11 +640,11 @@ input:disabled {
 	border-color: #96855e;
 }
 
-.radio-checkbox label {
+.radio-checkbox div {
 	display: inline-block;
 	background-color: #18161b;
 	padding: 5px 10px;
-	cursor: url("./media/cursor.png"), auto !important;
+	cursor: url("icons/cursor.png"), auto !important;
 
 	img {
 		margin-bottom: -1px;
@@ -633,7 +652,7 @@ input:disabled {
 	}
 }
 
-.radio-checkbox input[type="radio"].selected + label {
+.radio-checkbox .selected {
 	background-color: #40392d;
 }
 
@@ -650,17 +669,21 @@ input:disabled {
 	padding: 5px 10px;
 	position: fixed;
 	z-index: 10;
-	top: 0;
-	left: 0;
 	pointer-events: none;
 
 	.info {
+		display: block;
 		text-transform: unset;
 		padding: 10px 0;
 		color: white;
 		font-weight: 400;
 		margin: 10px 10px 0;
-		background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(129, 107, 62, 1) 50%, rgba(0, 0, 0, 0) 100%);
+		background: linear-gradient(
+			90deg,
+			rgba(0, 0, 0, 0) 0%,
+			rgba(129, 107, 62, 1) 50%,
+			rgba(0, 0, 0, 0) 100%
+		);
 	}
 }
 
@@ -720,6 +743,7 @@ input:disabled {
 .danger {
 	border: 1px solid #bea966;
 	padding: 0.5em 1em;
+	margin-bottom: 21px;
 }
 
 .danger-text {

@@ -1,26 +1,7 @@
-# dependencies
 /node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-.eslintcache
-*.log*
-
-# production
 /build
-/.firebase
-
-# env
-.env
-.env.test
-.env*.local
-
-# editors
-/.idea
-/.vscode
-
-# misc
-.DS_Store
 items.json
+.env
+.idea
+.eslintcache
+.firebase
