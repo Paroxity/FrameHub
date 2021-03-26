@@ -23,7 +23,9 @@ function Sidebar() {
 				<MasteryRankInfo />
 				<SidebarInputs />
 				<SaveStatus />
-				{type === ANONYMOUS && <div>Remember to bookmark this URL.</div>}
+				{type === ANONYMOUS && (
+					<div>Remember to bookmark this URL.</div>
+				)}
 				<DangerZone />
 				{type === AUTHENTICATED && (
 					<Button centered onClick={() => setShowLink(true)}>

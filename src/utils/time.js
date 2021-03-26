@@ -13,7 +13,9 @@ export function detailedTime(seconds) {
 		let amount = duration[interval.toLowerCase()];
 		if (amount > 0) {
 			formattedString +=
-				amount + " " + interval.slice(0, amount > 1 ? interval.length : -1);
+				amount +
+				" " +
+				interval.slice(0, amount > 1 ? interval.length : -1);
 		}
 	});
 	return formattedString;

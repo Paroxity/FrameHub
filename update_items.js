@@ -49,7 +49,8 @@ const itemBlacklist = ["Prisma Machete"];
 		CAT: {},
 		MOA: {},
 		KDRIVE: {},
-		MECH: {}
+		MECH: {},
+		MISC: {}
 	};
 	let recipes = {};
 	let itemNames = {};
@@ -71,7 +72,9 @@ const itemBlacklist = ["Prisma Machete"];
 					let baseCategory = filterEndpointName(endpoint);
 
 					let data = (
-						await Axios.get(`${API_URL}PublicExport/Manifest/${endpoint}`)
+						await Axios.get(
+							`${API_URL}PublicExport/Manifest/${endpoint}`
+						)
 					).data;
 					if (typeof data !== "object")
 						data = JSON.parse(data.replace(/\\r|\r?\n/g, ""));
@@ -83,7 +86,8 @@ const itemBlacklist = ["Prisma Machete"];
 								"/Lotus/Types/Recipes/Weapons/CorpusHandcannonBlueprint",
 								"/Lotus/Types/Recipes/Weapons/GrineerCombatKnifeBlueprint"
 							];
-							if (invalidBPs.includes(baseItem.uniqueName)) return;
+							if (invalidBPs.includes(baseItem.uniqueName))
+								return;
 							if (!recipes[baseItem.resultType])
 								recipes[baseItem.resultType] = baseItem;
 							return;
@@ -95,10 +99,16 @@ const itemBlacklist = ["Prisma Machete"];
 							.replace("<ARCHWING> ", "")
 							.toLowerCase()
 							.split(" ")
-							.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+							.map(
+								word =>
+									word.charAt(0).toUpperCase() + word.slice(1)
+							)
 							.join(" ")
 							.split("-")
-							.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+							.map(
+								word =>
+									word.charAt(0).toUpperCase() + word.slice(1)
+							)
 							.join("-");
 						if (baseItem.name.startsWith("Mk1-"))
 							baseItem.name =
@@ -107,7 +117,8 @@ const itemBlacklist = ["Prisma Machete"];
 								baseItem.name.slice(5);
 						itemNames[uniqueName] = baseItem.name;
 
-						if (filterEndpointName(endpoint) === "Resources") return;
+						if (filterEndpointName(endpoint) === "Resources")
+							return;
 
 						let type;
 						switch (baseItem.productCategory) {
@@ -125,25 +136,31 @@ const itemBlacklist = ["Prisma Machete"];
 									uniqueName.includes("ModularSecondary") ||
 									uniqueName.includes("InfKitGun")
 								) {
-									if (uniqueName.includes("Barrel")) type = "KITGUN";
+									if (uniqueName.includes("Barrel"))
+										type = "KITGUN";
 									break;
 								}
 								if (uniqueName.includes("OperatorAmplifiers")) {
-									if (uniqueName.includes("Barrel")) type = "AMP";
+									if (uniqueName.includes("Barrel"))
+										type = "AMP";
 									break;
 								}
 								if (uniqueName.includes("Hoverboard")) {
-									if (uniqueName.includes("Deck")) type = "KDRIVE";
+									if (uniqueName.includes("Deck"))
+										type = "KDRIVE";
 									break;
 								}
 								if (uniqueName.includes("MoaPets")) {
-									if (uniqueName.includes("MoaPetHead")) type = "MOA";
+									if (uniqueName.includes("MoaPetHead"))
+										type = "MOA";
 									break;
 								}
 								if (baseItem.slot === 0) type = "SECONDARY";
 								break;
 							case "KubrowPets":
-								type = uniqueName.includes("Catbrow") ? "CAT" : "DOG";
+								type = uniqueName.includes("Catbrow")
+									? "CAT"
+									: "DOG";
 								break;
 							default:
 								type = {
@@ -168,11 +185,16 @@ const itemBlacklist = ["Prisma Machete"];
 							newItems[type][baseItem.name] = newItem;
 
 							if (type === "MECH") newItem.maxLvl = 40; //TODO: Remove if mobile endpoint sets maxLevelCap to 40
-							if (baseItem.maxLevelCap) newItem.maxLvl = baseItem.maxLevelCap;
-							if (baseItem.masteryReq) newItem.mr = baseItem.masteryReq;
+							if (baseItem.maxLevelCap)
+								newItem.maxLvl = baseItem.maxLevelCap;
+							if (baseItem.masteryReq)
+								newItem.mr = baseItem.masteryReq;
 							if (baseItem.name.includes("Mk1-"))
-								newItem.wiki = WIKI_URL + baseItem.name.replace("Mk1-", "MK1-");
-							if (vaulted.includes(baseItem.name)) newItem.vaulted = true;
+								newItem.wiki =
+									WIKI_URL +
+									baseItem.name.replace("Mk1-", "MK1-");
+							if (vaulted.includes(baseItem.name))
+								newItem.vaulted = true;
 						}
 					});
 				})();
@@ -190,6 +212,7 @@ const itemBlacklist = ["Prisma Machete"];
 		buildPrice: 1000
 	};
 	newItems["CAT"]["Venari"] = {};
+	newItems["MISC"]["Plexus"] = { xp: 6000 };
 
 	//TODO: Remove this
 	if (!newItems["AW_GUN"]["Prisma Dual Decurions"])
@@ -216,14 +239,18 @@ const itemBlacklist = ["Prisma Machete"];
 					if (recipe.ingredients) {
 						let ingredients = {};
 						recipe.ingredients.forEach(ingredient => {
-							let originalIngredientName = itemNames[ingredient.ItemType];
-							let ingredientName = ingredient.ItemType.includes("/Recipes/")
+							let originalIngredientName =
+								itemNames[ingredient.ItemType];
+							let ingredientName = ingredient.ItemType.includes(
+								"/Recipes/"
+							)
 								? originalIngredientName.replace(item + " ", "")
 								: originalIngredientName;
 							if (!ingredients[ingredientName])
 								ingredients[ingredientName] = { count: 0 };
 
-							ingredients[ingredientName].count += ingredient.ItemCount;
+							ingredients[ingredientName].count +=
+								ingredient.ItemCount;
 							if (originalIngredientName !== ingredientName) {
 								if (category.startsWith("AW"))
 									ingredients[
@@ -235,7 +262,10 @@ const itemBlacklist = ["Prisma Machete"];
 								if (item.endsWith(" Prime"))
 									ingredients[ingredientName].img = `prime-${
 										ingredients[ingredientName].img ||
-										ingredientName.toLowerCase().split(" ").join("-")
+										ingredientName
+											.toLowerCase()
+											.split(" ")
+											.join("-")
 									}`;
 							}
 						});
@@ -252,8 +282,10 @@ const itemBlacklist = ["Prisma Machete"];
 						if (Object.keys(ingredients).length > 0)
 							finalItem.components = ingredients;
 					}
-					if (recipe.buildTime) finalItem.buildTime = recipe.buildTime;
-					if (recipe.buildPrice) finalItem.buildPrice = recipe.buildPrice;
+					if (recipe.buildTime)
+						finalItem.buildTime = recipe.buildTime;
+					if (recipe.buildPrice)
+						finalItem.buildPrice = recipe.buildPrice;
 				}
 				delete finalItem.uniqueName;
 
@@ -342,9 +374,9 @@ const itemBlacklist = ["Prisma Machete"];
 		console.log(
 			`Updated items.json in ${
 				(Date.now() - startTime) / 1000
-			} seconds with size of ${(fs.statSync("items.json").size / 1024).toFixed(
-				3
-			)}KB`
+			} seconds with size of ${(
+				fs.statSync("items.json").size / 1024
+			).toFixed(3)}KB`
 		);
 		console.log("\nChanges:\n");
 		console.log(differences.map(change => `- ${change}`).join("\n"));

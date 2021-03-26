@@ -1,5 +1,7 @@
-export function baseXPByType(type) {
-	switch (type) {
+export function xpFromItem(item, category) {
+	if (item.xp) return item.xp;
+
+	switch (category) {
 		case "WF":
 		case "AW":
 		case "SENTINEL":
@@ -8,9 +10,9 @@ export function baseXPByType(type) {
 		case "MOA":
 		case "MECH":
 		case "KDRIVE":
-			return 200;
+			return 200 * (item.maxLvl || 30);
 		default:
-			return 100;
+			return 100 * (item.maxLvl || 30);
 	}
 }
 

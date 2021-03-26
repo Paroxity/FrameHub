@@ -46,7 +46,10 @@ function App() {
 					path="/share/:id"
 					render={params => {
 						return (
-							<MasteryChecklist id={params.match.params.id} type={SHARED} />
+							<MasteryChecklist
+								id={params.match.params.id}
+								type={SHARED}
+							/>
 						);
 					}}
 				/>
@@ -54,7 +57,10 @@ function App() {
 					path="/user/:id"
 					render={params => {
 						return (
-							<MasteryChecklist id={params.match.params.id} type={ANONYMOUS} />
+							<MasteryChecklist
+								id={params.match.params.id}
+								type={ANONYMOUS}
+							/>
 						);
 					}}
 				/>

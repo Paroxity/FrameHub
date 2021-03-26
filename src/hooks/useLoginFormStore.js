@@ -23,16 +23,19 @@ export const useLoginFormStore = create((set, get) => ({
 				set({ error: "Passwords do not match.", errorDisplayed: true });
 				return;
 			}
-			auth
-				.createUserWithEmailAndPassword(email, password)
+			auth.createUserWithEmailAndPassword(email, password)
 				.then(() =>
-					set({ signUp: false, password: "", confirmPassword: "", email: "" })
+					set({
+						signUp: false,
+						password: "",
+						confirmPassword: "",
+						email: ""
+					})
 				)
 				.catch(e => set({ error: e.code, errorDisplayed: true }));
 			return;
 		}
-		auth
-			.signInWithEmailAndPassword(email, password)
+		auth.signInWithEmailAndPassword(email, password)
 			.then(() => set({ password: "", confirmPassword: "", email: "" }))
 			.catch(e => set({ error: e.code, errorDisplayed: true }));
 	}

@@ -18,9 +18,13 @@ function NumberInput(props) {
 							onChange={e => {
 								let newValue = Math.max(
 									props.min,
-									Math.min(parseInt(e.target.value || 0), props.max)
+									Math.min(
+										parseInt(e.target.value || 0),
+										props.max
+									)
 								);
-								if (isNaN(newValue)) newValue = parseInt(props.value);
+								if (isNaN(newValue))
+									newValue = parseInt(props.value);
 								if (
 									newValue !== parseInt(props.value) &&
 									props.onChange &&

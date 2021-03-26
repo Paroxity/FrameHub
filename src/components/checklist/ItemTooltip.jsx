@@ -15,28 +15,33 @@ function ItemTooltip({ name, item }) {
 				</>
 			)}
 			{item.components ? (
-				Object.entries(item.components).map(([componentName, component]) => {
-					if (!isNaN(component)) component = { count: component };
-					return (
-						<div key={componentName}>
-							<img
-								className="component-image"
-								src={`https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/${
-									component.img ||
-									componentName.toLowerCase().split(" ").join("-")
-								}.png`}
-								alt=""
-								width="30px"
-							/>
-							<span className="component-name">
-								{(component.count || 1).toLocaleString()}x{" "}
-								{ingredientSuffixes.includes(componentName)
-									? name + " " + componentName
-									: componentName}
-							</span>
-						</div>
-					);
-				})
+				Object.entries(item.components).map(
+					([componentName, component]) => {
+						if (!isNaN(component)) component = { count: component };
+						return (
+							<div key={componentName}>
+								<img
+									className="component-image"
+									src={`https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/${
+										component.img ||
+										componentName
+											.toLowerCase()
+											.split(" ")
+											.join("-")
+									}.png`}
+									alt=""
+									width="30px"
+								/>
+								<span className="component-name">
+									{(component.count || 1).toLocaleString()}x{" "}
+									{ingredientSuffixes.includes(componentName)
+										? name + " " + componentName
+										: componentName}
+								</span>
+							</div>
+						);
+					}
+				)
 			) : (
 				<>
 					<span className="item-uncraftable">UNCRAFTABLE</span>
@@ -58,7 +63,12 @@ function ItemTooltip({ name, item }) {
 				)}
 				{item.buildPrice && (
 					<>
-						<img className="credits" src={credits} alt="" width="15px" />{" "}
+						<img
+							className="credits"
+							src={credits}
+							alt=""
+							width="15px"
+						/>{" "}
 						{item.buildPrice.toLocaleString()}
 					</>
 				)}

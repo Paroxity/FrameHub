@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import shallow from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { foundersItems } from "../../utils/items";
-import { baseXPByType } from "../../utils/mastery-rank";
+import { xpFromItem } from "../../utils/mastery-rank";
 
 const fancyCategoryNames = {
 	WF: "Warframe",
@@ -14,7 +14,8 @@ const fancyCategoryNames = {
 	CAT: "Kavat",
 	MOA: "MOA",
 	MECH: "Necramech",
-	KDRIVE: "K-Drive"
+	KDRIVE: "K-Drive",
+	MISC: "Miscellaneous"
 };
 
 function CategoryItem({ name }) {
@@ -42,10 +43,10 @@ function CategoryItem({ name }) {
 		)
 			return;
 		totalCount++;
-		totalXP += baseXPByType(name) * (item.maxLvl || 30);
+		totalXP += xpFromItem(item, name);
 		if (itemsMastered.includes(itemName)) {
 			masteredCount++;
-			masteredXP += baseXPByType(name) * (item.maxLvl || 30);
+			masteredXP += xpFromItem(item, name);
 		}
 	});
 
@@ -56,7 +57,9 @@ function CategoryItem({ name }) {
 					name
 						.split(" ")
 						.map(
-							word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+							word =>
+								word.charAt(0).toUpperCase() +
+								word.slice(1).toLowerCase()
 						)
 						.join(" ")}
 			</span>

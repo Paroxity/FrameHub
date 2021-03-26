@@ -45,15 +45,21 @@ function CategoryItem({ name, item }) {
 					onClick={e => {
 						if (e.ctrlKey) {
 							window.open(
-								item.wiki || `https://warframe.fandom.com/wiki/${name}`
+								item.wiki ||
+									`https://warframe.fandom.com/wiki/${name}`
 							);
 						} else {
 							if (type !== SHARED)
-								mastered ? unmasterItem(name, item) : masterItem(name, item);
+								mastered
+									? unmasterItem(name, item)
+									: masterItem(name, item);
 						}
 					}}>
-					{name + ((item.maxLvl || 30) !== 30 ? ` [${item.maxLvl}]` : "")}
-					{mastered && <img src={checkmark} className="checkmark" alt="" />}
+					{name +
+						((item.maxLvl || 30) !== 30 ? ` [${item.maxLvl}]` : "")}
+					{mastered && (
+						<img src={checkmark} className="checkmark" alt="" />
+					)}
 				</Button>
 			</div>
 		</Tooltip>

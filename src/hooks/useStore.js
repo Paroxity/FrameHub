@@ -10,13 +10,13 @@ import {
 	itemsAsArray
 } from "../utils/items";
 import {
-	baseXPByType,
 	intrinsicsToXP,
 	junctionsToXP,
 	missionsToXP,
 	totalIntrinsics,
 	totalJunctions,
 	totalMissions,
+	xpFromItem,
 	xpToMR
 } from "../utils/mastery-rank";
 
@@ -123,14 +123,14 @@ export const useStore = create((set, get) => ({
 		let totalItems = 0;
 		itemsAsArray(items).forEach(item => {
 			if (itemsMastered.includes(item.name))
-				xp += baseXPByType(item.type) * (item.maxLvl || 30);
+				xp += xpFromItem(item, item.type);
 			if (
 				hideFounders &&
 				foundersItems.includes(item.name) &&
 				!itemsMastered.includes(item.name)
 			)
 				return;
-			totalXP += baseXPByType(item.type) * (item.maxLvl || 30);
+			totalXP += xpFromItem(item, item.type);
 			totalItems++;
 		});
 

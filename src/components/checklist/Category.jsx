@@ -22,13 +22,22 @@ function Category({ name }) {
 					let categoryShown =
 						JSON.parse(localStorage.getItem("categoryShown")) || {};
 					categoryShown[name] = value;
-					localStorage.setItem("categoryShown", JSON.stringify(categoryShown));
+					localStorage.setItem(
+						"categoryShown",
+						JSON.stringify(categoryShown)
+					);
 					setVisible(value);
 				}}
 			/>
 			{visible &&
 				Object.entries(categoryItems).map(([itemName, item]) => {
-					return <CategoryItem key={itemName} name={itemName} item={item} />;
+					return (
+						<CategoryItem
+							key={itemName}
+							name={itemName}
+							item={item}
+						/>
+					);
 				})}
 		</div>
 	);

@@ -48,7 +48,9 @@ function MasteryChecklist(props) {
 	const [data, dataLoading] = useDocumentData(
 		firestore
 			.collection(
-				props.type === ANONYMOUS ? "anonymousMasteryData" : "masteryData"
+				props.type === ANONYMOUS
+					? "anonymousMasteryData"
+					: "masteryData"
 			)
 			.doc(props.id)
 	);
