@@ -14,6 +14,9 @@ import {
 	intrinsicsToXP,
 	junctionsToXP,
 	missionsToXP,
+	totalIntrinsics,
+	totalJunctions,
+	totalMissions,
 	xpToMR
 } from "../utils/mastery-rank";
 
@@ -113,7 +116,10 @@ export const useStore = create((set, get) => ({
 			missionsToXP(missions) +
 			junctionsToXP(junctions) +
 			intrinsicsToXP(intrinsics);
-		let totalXP = 0;
+		let totalXP =
+			missionsToXP(totalMissions) +
+			junctionsToXP(totalJunctions) +
+			intrinsicsToXP(totalIntrinsics);
 		let totalItems = 0;
 		itemsAsArray(items).forEach(item => {
 			if (itemsMastered.includes(item.name))

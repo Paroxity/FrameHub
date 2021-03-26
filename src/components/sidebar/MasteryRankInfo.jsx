@@ -18,11 +18,12 @@ function MasteryRankInfo() {
 		<>
 			<span className="mastery-rank">{`Mastery Rank ${masteryRank}`}</span>{" "}
 			<span className="items-mastered">
-				{itemsMastered.length.toLocaleString()}/{totalItems.toLocaleString()}{" "}
-				Mastered
+				{itemsMastered.length.toLocaleString()}/
+				{totalItems.toLocaleString()} Mastered
 			</span>
 			<span className="xp">
-				{xp.toLocaleString()}/{totalXP.toLocaleString()} XP
+				{Math.floor(xp).toLocaleString()}/
+				{Math.floor(totalXP).toLocaleString()} XP
 			</span>
 			<progress
 				className="mastery-progress-bar"
