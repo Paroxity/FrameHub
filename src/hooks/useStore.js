@@ -84,8 +84,8 @@ export const useStore = create((set, get) => ({
 	items: {},
 	fetchItems: async () => {
 		if (
-			localStorage.getItem("lastSave") < Date.now() &&
-			localStorage.getItem("items")
+			localStorage.getItem("lastSave") < Date.now() ||
+			!localStorage.getItem("items")
 		) {
 			let loadedItems = await (
 				await fetch(
