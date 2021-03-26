@@ -1,13 +1,13 @@
 root = true
 
-[*.{js, jsx, json}]
+[*.{js,jsx,json}]
 indent_style = tab
 indent_size = 4
 
-[{.firebaserc, firestore.rules}]
+[{.firebaserc,firestore.rules}]
 indent_style = tab
 indent_size = 4
 
-[*.{html, scss, css}]
+[*.{html,scss,css}]
 indent_style = tab
 indent_size = 2

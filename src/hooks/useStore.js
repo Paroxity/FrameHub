@@ -128,6 +128,18 @@ export const useStore = create((set, get) => ({
 
 	itemsMastered: [],
 	setItemsMastered: itemsMastered => {
+		const unsavedItemChanges = get().unsavedItemChanges;
+		const added = Object.keys(unsavedItemChanges).filter(
+			item => unsavedItemChanges[item] === true
+		);
+		const removed = Object.keys(unsavedItemChanges).filter(
+			item => unsavedItemChanges[item] === false
+		);
+		itemsMastered = itemsMastered.filter(item => !removed.includes(item));
+		added.forEach(item => {
+			if (!itemsMastered.includes(item)) itemsMastered.push(item);
+		});
+
 		set(() => ({ itemsMastered }));
 		get().recalculateMasteryRank();
 		get().recalculateIngredients();
