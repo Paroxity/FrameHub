@@ -1,5 +1,5 @@
 import debounce from "debounce";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import produce from "immer";
 import create from "zustand";
 import { firestore } from "../App";
@@ -83,7 +83,10 @@ export const useStore = create((set, get) => ({
 
 	items: {},
 	fetchItems: async () => {
-		if (localStorage.getItem("lastSave") < Date.now()) {
+		if (
+			localStorage.getItem("lastSave") < Date.now() &&
+			localStorage.getItem("items")
+		) {
 			let loadedItems = await (
 				await fetch(
 					"https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media"
