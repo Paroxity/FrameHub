@@ -3,9 +3,15 @@ import { useStore } from "../../hooks/useStore";
 import { masteryRankName, mrToXP } from "../../utils/mastery-rank";
 
 function MasteryRankInfo() {
-	const { itemsMastered, totalItems, xp, totalXP, masteryRank } = useStore(
+	const {
+		itemsMasteredCount,
+		totalItems,
+		xp,
+		totalXP,
+		masteryRank
+	} = useStore(
 		state => ({
-			itemsMastered: state.itemsMastered,
+			itemsMasteredCount: state.itemsMasteredCount,
 			totalItems: state.totalItems,
 			xp: state.xp,
 			totalXP: state.totalXP,
@@ -18,7 +24,7 @@ function MasteryRankInfo() {
 		<>
 			<span className="mastery-rank">{`Mastery Rank ${masteryRank}`}</span>{" "}
 			<span className="items-mastered">
-				{itemsMastered.length.toLocaleString()}/
+				{itemsMasteredCount.toLocaleString()}/
 				{totalItems.toLocaleString()} Mastered
 			</span>
 			<span className="xp">

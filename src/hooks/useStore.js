@@ -103,6 +103,7 @@ export const useStore = create((set, get) => ({
 
 	masteryRank: 0,
 	xp: 0,
+	itemsMasteredCount: 0,
 	totalXP: 0,
 	totalItems: 0,
 	recalculateMasteryRank: () => {
@@ -119,14 +120,17 @@ export const useStore = create((set, get) => ({
 			missionsToXP(missions) +
 			junctionsToXP(junctions) +
 			intrinsicsToXP(intrinsics);
+		let itemsMasteredCount = 0;
 		let totalXP =
 			missionsToXP(totalMissions) +
 			junctionsToXP(totalJunctions) +
 			intrinsicsToXP(totalIntrinsics);
 		let totalItems = 0;
 		itemsAsArray(items).forEach(item => {
-			if (itemsMastered.includes(item.name))
+			if (itemsMastered.includes(item.name)) {
 				xp += xpFromItem(item, item.type);
+				itemsMasteredCount++;
+			}
 			if (
 				hideFounders &&
 				foundersItems.includes(item.name) &&
@@ -140,6 +144,7 @@ export const useStore = create((set, get) => ({
 		set({
 			masteryRank: Math.floor(xpToMR(xp)),
 			xp,
+			itemsMasteredCount,
 			totalXP,
 			totalItems
 		});
