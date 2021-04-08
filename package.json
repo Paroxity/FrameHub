@@ -20,7 +20,7 @@
 		"axios": "^0.21.1",
 		"eslint": "^7.23.0",
 		"eslint-config-prettier": "^8.1.0",
-		"eslint-plugin-react": "^7.23.1",
+		"eslint-plugin-react": "^7.23.2",
 		"lzma": "^2.3.2",
 		"prettier": "^2.2.1"
 	},
