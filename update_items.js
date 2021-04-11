@@ -216,7 +216,9 @@ const itemBlacklist = ["Prisma Machete"];
 
 	//TODO: Remove this
 	if (!newItems["AW_GUN"]["Prisma Dual Decurions"])
-		newItems["AW_GUN"]["Prisma Dual Decurions"] = { mr: 1 };
+		newItems["AW_GUN"]["Prisma Dual Decurions"] = { mr: 10 };
+	if (!newItems["MELEE"]["Halikar Wraith"])
+		newItems["MELEE"]["Halikar Wraith"] = { mr: 13 };
 
 	let additions = [];
 	let deletions = [];
