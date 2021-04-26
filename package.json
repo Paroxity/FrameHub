@@ -18,7 +18,7 @@
 	},
 	"devDependencies": {
 		"axios": "^0.21.1",
-		"eslint": "^7.24.0",
+		"eslint": "^7.25.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-react": "^7.23.2",
 		"lzma": "^2.3.2",
