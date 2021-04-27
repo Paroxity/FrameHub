@@ -99,6 +99,7 @@ export const useStore = create((set, get) => ({
 			set({ items: JSON.parse(localStorage.getItem("items")) });
 		}
 		get().recalculateMasteryRank();
+		get().recalculateIngredients();
 	},
 
 	masteryRank: 0,
