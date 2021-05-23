@@ -3,22 +3,17 @@ import { useStore } from "../../hooks/useStore";
 import { masteryRankName, mrToXP } from "../../utils/mastery-rank";
 
 function MasteryRankInfo() {
-	const {
-		itemsMasteredCount,
-		totalItems,
-		xp,
-		totalXP,
-		masteryRank
-	} = useStore(
-		state => ({
-			itemsMasteredCount: state.itemsMasteredCount,
-			totalItems: state.totalItems,
-			xp: state.xp,
-			totalXP: state.totalXP,
-			masteryRank: state.masteryRank
-		}),
-		shallow
-	);
+	const { itemsMasteredCount, totalItems, xp, totalXP, masteryRank } =
+		useStore(
+			state => ({
+				itemsMasteredCount: state.itemsMasteredCount,
+				totalItems: state.totalItems,
+				xp: state.xp,
+				totalXP: state.totalXP,
+				masteryRank: state.masteryRank
+			}),
+			shallow
+		);
 
 	return (
 		<>

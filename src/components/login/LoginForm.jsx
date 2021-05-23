@@ -4,22 +4,17 @@ import Button from "../Button";
 import FormInput from "./FormInput";
 
 function LoginForm() {
-	const {
-		handleSubmit,
-		setEmail,
-		setPassword,
-		setConfirmPassword,
-		signUp
-	} = useLoginFormStore(
-		state => ({
-			handleSubmit: state.handleSubmit,
-			setEmail: state.setEmail,
-			setPassword: state.setPassword,
-			setConfirmPassword: state.setConfirmPassword,
-			signUp: state.signUp
-		}),
-		shallow
-	);
+	const { handleSubmit, setEmail, setPassword, setConfirmPassword, signUp } =
+		useLoginFormStore(
+			state => ({
+				handleSubmit: state.handleSubmit,
+				setEmail: state.setEmail,
+				setPassword: state.setPassword,
+				setConfirmPassword: state.setConfirmPassword,
+				signUp: state.signUp
+			}),
+			shallow
+		);
 
 	return (
 		<form onSubmit={handleSubmit}>
