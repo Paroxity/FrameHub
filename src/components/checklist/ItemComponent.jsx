@@ -12,14 +12,17 @@ export default function ItemComponent({
 			<img
 				className="component-image"
 				src={`https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/${
-					component?.img || component.generic
-						? (componentName.includes(" Prime ") ? "prime-" : "") +
-						  ingredientSuffixes
-								.find(suffix => componentName.endsWith(suffix))
-								.split(" ")
-								.join("-")
-								.toLowerCase()
-						: componentName.toLowerCase().split(" ").join("-")
+					component?.img ||
+					(componentName.includes(" Prime ") ? "prime-" : "") +
+						(component.generic
+							? ingredientSuffixes
+									.find(suffix =>
+										componentName.endsWith(suffix)
+									)
+									.split(" ")
+									.join("-")
+									.toLowerCase()
+							: componentName.toLowerCase().split(" ").join("-"))
 				}.png`}
 				alt=""
 				width="30px"
