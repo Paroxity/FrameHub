@@ -70,7 +70,10 @@ const itemBlacklist = ["Prisma Machete"];
 				ingredients[ingredientName].count +=
 					ingredient.ItemCount * count;
 
-				if (ingredient.ItemType.includes("WeaponParts"))
+				if (
+					ingredient.ItemType.includes("WeaponParts") ||
+					ingredient.ItemType.includes("WarframeRecipes")
+				)
 					ingredients[ingredientName].generic = true;
 
 				if (recipes[ingredient.ItemType]?.ingredients.length > 0) {
