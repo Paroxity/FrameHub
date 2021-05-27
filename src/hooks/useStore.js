@@ -258,16 +258,16 @@ export const useStore = create((set, get) => ({
 		function calculate(recipe) {
 			Object.entries(recipe.components).forEach(
 				([componentName, component]) => {
+					if (component.components) {
+						calculate(component);
+						return;
+					}
 					if (
 						ingredientSuffixes.some(suffix =>
 							componentName.endsWith(suffix)
 						)
 					)
 						return;
-					if (component.components) {
-						calculate(component);
-						return;
-					}
 					if (!necessaryComponents[componentName])
 						necessaryComponents[componentName] = 0;
 					necessaryComponents[componentName] += isNaN(component)
