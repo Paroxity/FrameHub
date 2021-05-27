@@ -1,8 +1,9 @@
 import PropTypes from "prop-types";
 import credits from "../../icons/credits.png";
-import { ingredientSuffixes, itemShape } from "../../utils/items";
+import { itemShape } from "../../utils/items";
 import { detailedTime } from "../../utils/time";
 import GluedComponents from "../GluedComponents";
+import ItemComponent from "./ItemComponent";
 
 function ItemTooltip({ name, item }) {
 	return (
@@ -17,28 +18,12 @@ function ItemTooltip({ name, item }) {
 			{item.components ? (
 				Object.entries(item.components).map(
 					([componentName, component]) => {
-						if (!isNaN(component)) component = { count: component };
 						return (
-							<div key={componentName}>
-								<img
-									className="component-image"
-									src={`https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/${
-										component.img ||
-										componentName
-											.toLowerCase()
-											.split(" ")
-											.join("-")
-									}.png`}
-									alt=""
-									width="30px"
-								/>
-								<span className="component-name">
-									{(component.count || 1).toLocaleString()}x{" "}
-									{ingredientSuffixes.includes(componentName)
-										? name + " " + componentName
-										: componentName}
-								</span>
-							</div>
+							<ItemComponent
+								key={componentName}
+								componentName={componentName}
+								component={component}
+							/>
 						);
 					}
 				)

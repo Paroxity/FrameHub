@@ -42,7 +42,11 @@ export const ingredientSuffixes = [
 	"Subcortex",
 	"Systems",
 	"Upper Limb",
-	"Wings"
+	"Wings",
+	"Casing",
+	"Engine",
+	"Capsule",
+	"Weapon Pod"
 ];
 export const foundersItems = ["Excalibur Prime", "Skana Prime", "Lato Prime"];
 

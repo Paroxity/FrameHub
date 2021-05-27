@@ -180,26 +180,10 @@ export const useStore = create((set, get) => ({
 				} else {
 					draftState.unsavedItemChanges[name] = true;
 				}
-				if (item.components) {
-					Object.entries(item.components).forEach(
-						([componentName, component]) => {
-							if (draftState.ingredients[componentName]) {
-								draftState.ingredients[componentName] -= isNaN(
-									component
-								)
-									? component.count || 1
-									: component;
-								if (draftState.ingredients[componentName] === 0)
-									delete draftState.ingredients[
-										componentName
-									];
-							}
-						}
-					);
-				}
 			})
 		);
 		get().recalculateMasteryRank();
+		get().recalculateIngredients();
 		get().save();
 	},
 	masterAllItems: () => {
@@ -242,24 +226,10 @@ export const useStore = create((set, get) => ({
 				} else {
 					draftState.unsavedItemChanges[name] = false;
 				}
-				if (item.components) {
-					Object.entries(item.components).forEach(
-						([componentName, component]) => {
-							if (ingredientSuffixes.includes(componentName))
-								return;
-							if (!draftState.ingredients[componentName])
-								draftState.ingredients[componentName] = 0;
-							draftState.ingredients[componentName] += isNaN(
-								component
-							)
-								? component.count || 1
-								: component;
-						}
-					);
-				}
 			})
 		);
 		get().recalculateMasteryRank();
+		get().recalculateIngredients();
 		get().save();
 	},
 	unmasterAllItems: () => {
@@ -284,16 +254,32 @@ export const useStore = create((set, get) => ({
 	recalculateIngredients: () => {
 		const { items, itemsMastered } = get();
 		const necessaryComponents = {};
-		itemsAsArray(items).forEach(item => {
-			if (!itemsMastered.includes(item.name) && item.components) {
-				Object.entries(item.components).forEach(([name, component]) => {
-					if (ingredientSuffixes.includes(name)) return;
-					if (!necessaryComponents[name])
-						necessaryComponents[name] = 0;
-					necessaryComponents[name] += isNaN(component)
+
+		function calculate(recipe) {
+			Object.entries(recipe.components).forEach(
+				([componentName, component]) => {
+					if (
+						ingredientSuffixes.some(suffix =>
+							componentName.endsWith(suffix)
+						)
+					)
+						return;
+					if (component.components) {
+						calculate(component);
+						return;
+					}
+					if (!necessaryComponents[componentName])
+						necessaryComponents[componentName] = 0;
+					necessaryComponents[componentName] += isNaN(component)
 						? component.count || 1
 						: component;
-				});
+				}
+			);
+		}
+
+		itemsAsArray(items).forEach(item => {
+			if (!itemsMastered.includes(item.name) && item.components) {
+				calculate(item);
 			}
 		});
 		set({ ingredients: necessaryComponents });

@@ -35,7 +35,7 @@ function MissingIngredients() {
 						)
 						.map(([name, count]) => {
 							return (
-								<div id={name} key={name}>
+								<div key={name}>
 									<img
 										className="component-image"
 										src={`https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/${name

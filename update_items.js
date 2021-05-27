@@ -13,11 +13,14 @@ const requiredEndpoints = [
 	"Weapons",
 	"Sentinels",
 	"Recipes",
-	"Resources"
+	"Resources",
+	"MiscItems"
 ];
 const itemBlacklist = ["Prisma Machete"];
 
 (async () => {
+	let startTime = Date.now();
+
 	let data = (
 		await Axios.get(`${API_URL}PublicExport/index_en.txt.lzma`, {
 			responseType: "arraybuffer"
@@ -52,15 +55,54 @@ const itemBlacklist = ["Prisma Machete"];
 		MECH: {},
 		MISC: {}
 	};
-	let recipes = {};
+
 	let itemNames = {};
+	let recipes = {};
 
-	let startTime = Date.now();
+	function processIngredients(item, category, recipe, count = 1) {
+		return Object.entries(
+			recipe.ingredients.reduce((ingredients, ingredient) => {
+				let ingredientName = itemNames[ingredient.ItemType];
+				if (!ingredients[ingredientName])
+					ingredients[ingredientName] = {
+						count: 0
+					};
+				ingredients[ingredientName].count +=
+					ingredient.ItemCount * count;
 
-	let vaulted = [];
-	(await Axios.get(VAULTED_DATA_URL)).data.data.forEach(vaultedItem => {
-		if (vaultedItem.Vaulted) vaulted.push(vaultedItem.Name);
-	});
+				if (ingredient.ItemType.includes("WeaponParts"))
+					ingredients[ingredientName].generic = true;
+
+				if (recipes[ingredient.ItemType]?.ingredients.length > 0) {
+					if (
+						!ingredient.ItemType.includes("Items") &&
+						(!ingredient.ItemType.includes("Gameplay") ||
+							ingredient.ItemType.includes("Mechs"))
+					) {
+						ingredients[ingredientName].components =
+							processIngredients(
+								item,
+								category,
+								recipes[ingredient.ItemType],
+								ingredients[ingredientName].count
+							);
+					}
+				}
+
+				return ingredients;
+			}, {})
+		).reduce((ingredients, [ingredientName, ingredient]) => {
+			ingredients[ingredientName] =
+				Object.keys(ingredient).length <= 1
+					? ingredient.count
+					: ingredient;
+			return ingredients;
+		}, {});
+	}
+
+	let vaulted = (await Axios.get(VAULTED_DATA_URL)).data.data
+		.filter(primeItem => primeItem.Vaulted)
+		.map(primeItem => primeItem.Name);
 
 	await Promise.all(
 		endpoints
@@ -236,52 +278,12 @@ const itemBlacklist = ["Prisma Machete"];
 				let finalItem = newItems[category][item];
 				if (recipes[finalItem.uniqueName]) {
 					let recipe = recipes[finalItem.uniqueName];
-					if (recipe.ingredients) {
-						let ingredients = {};
-						recipe.ingredients.forEach(ingredient => {
-							let originalIngredientName =
-								itemNames[ingredient.ItemType];
-							let ingredientName = ingredient.ItemType.includes(
-								"/Recipes/"
-							)
-								? originalIngredientName.replace(item + " ", "")
-								: originalIngredientName;
-							if (!ingredients[ingredientName])
-								ingredients[ingredientName] = { count: 0 };
-
-							ingredients[ingredientName].count +=
-								ingredient.ItemCount;
-							if (originalIngredientName !== ingredientName) {
-								if (category.startsWith("AW"))
-									ingredients[
-										ingredientName
-									].img = originalIngredientName
-										.toLowerCase()
-										.split(" ")
-										.join("-");
-								if (item.endsWith(" Prime"))
-									ingredients[ingredientName].img = `prime-${
-										ingredients[ingredientName].img ||
-										ingredientName
-											.toLowerCase()
-											.split(" ")
-											.join("-")
-									}`;
-							}
-						});
-						Object.keys(ingredients).forEach(key => {
-							if (
-								Object.keys(ingredients[key]).length <= 1 &&
-								ingredients[key].count
-							) {
-								ingredients[key] = ingredients[key].count;
-							} else if (ingredients[key].count === 1) {
-								delete ingredients[key].count;
-							}
-						});
-						if (Object.keys(ingredients).length > 0)
-							finalItem.components = ingredients;
-					}
+					if (recipe.ingredients?.length > 0)
+						finalItem.components = processIngredients(
+							item,
+							category,
+							recipe
+						);
 					if (recipe.buildTime)
 						finalItem.buildTime = recipe.buildTime;
 					if (recipe.buildPrice)
