@@ -1,3 +1,5 @@
+const overwriteItems = require("./update_items_overwrite");
+
 const Axios = require("axios");
 const lzma = require("lzma");
 const fs = require("fs");
@@ -16,7 +18,6 @@ const requiredEndpoints = [
 	"Resources",
 	"MiscItems"
 ];
-const itemBlacklist = ["Prisma Machete"];
 
 (async () => {
 	let startTime = Date.now();
@@ -31,10 +32,10 @@ const itemBlacklist = ["Prisma Machete"];
 	let oldItems = fs.existsSync("items.json")
 		? JSON.parse(fs.readFileSync("items.json", "utf8"))
 		: (
-				await Axios.get(
-					"https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media"
-				)
-		  ).data;
+			await Axios.get(
+				"https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media"
+			)
+		).data;
 	let newItems = {
 		WF: {},
 		PRIMARY: {},
@@ -62,33 +63,33 @@ const itemBlacklist = ["Prisma Machete"];
 	function processIngredients(item, category, recipe, count = 1) {
 		return Object.entries(
 			recipe.ingredients.reduce((ingredients, ingredient) => {
-				let ingredientName = itemNames[ingredient.ItemType];
+				let ingredientRawName = ingredient.ItemType;
+				let ingredientName = itemNames[ingredientRawName];
 				if (!ingredients[ingredientName])
 					ingredients[ingredientName] = {
 						count: 0
 					};
-				ingredients[ingredientName].count +=
-					ingredient.ItemCount * count;
+				let ingredientData = ingredients[ingredientName];
+				ingredientData.count += ingredient.ItemCount * count;
 
 				if (
-					ingredient.ItemType.includes("WeaponParts") ||
-					ingredient.ItemType.includes("WarframeRecipes")
+					ingredientRawName.includes("WeaponParts") ||
+					ingredientRawName.includes("WarframeRecipes")
 				)
 					ingredients[ingredientName].generic = true;
 
-				if (recipes[ingredient.ItemType]?.ingredients.length > 0) {
+				if (recipes[ingredientRawName]?.ingredients.length > 0) {
 					if (
-						!ingredient.ItemType.includes("Items") &&
-						(!ingredient.ItemType.includes("Gameplay") ||
-							ingredient.ItemType.includes("Mechs"))
+						!ingredientRawName.includes("Items") &&
+						(!ingredientRawName.includes("Gameplay") ||
+							ingredientRawName.includes("Mechs"))
 					) {
-						ingredients[ingredientName].components =
-							processIngredients(
-								item,
-								category,
-								recipes[ingredient.ItemType],
-								ingredients[ingredientName].count
-							);
+						ingredientData.components = processIngredients(
+							item,
+							category,
+							recipes[ingredientRawName],
+							ingredients[ingredientName].count
+						);
 					}
 				}
 
@@ -162,7 +163,10 @@ const itemBlacklist = ["Prisma Machete"];
 								baseItem.name.slice(5);
 						itemNames[uniqueName] = baseItem.name;
 
-						if (filterEndpointName(endpoint) === "Resources")
+						if (
+							filterEndpointName(endpoint) === "Resources" ||
+							filterEndpointName(endpoint) === "MiscItems"
+						)
 							return;
 
 						let type;
@@ -221,10 +225,8 @@ const itemBlacklist = ["Prisma Machete"];
 								}[baseItem.productCategory];
 						}
 
-						if (type && !itemBlacklist.includes(baseItem.name)) {
+						if (type) {
 							if (!newItems[type]) newItems[type] = {};
-							if (!newItems[type][baseItem.name])
-								newItems[type][baseItem.name] = {};
 
 							let newItem = { uniqueName: baseItem.uniqueName };
 							newItems[type][baseItem.name] = newItem;
@@ -245,23 +247,7 @@ const itemBlacklist = ["Prisma Machete"];
 				})();
 			})
 	);
-
-	newItems["AMP"]["Mote Prism"] = {
-		components: {
-			"Cetus Wisp": 1,
-			"Tear Azurite": 20,
-			"Pyrotic Alloy": 10,
-			"Fish Oil": 30
-		},
-		buildTime: 600,
-		buildPrice: 1000
-	};
-	newItems["CAT"]["Venari"] = {};
-	newItems["MISC"]["Plexus"] = { xp: 6000 };
-
-	//TODO: Remove this
-	if (!newItems["AW_GUN"]["Prisma Dual Decurions"])
-		newItems["AW_GUN"]["Prisma Dual Decurions"] = { mr: 10 };
+	newItems = overwriteItems(newItems);
 
 	let additions = [];
 	let deletions = [];
