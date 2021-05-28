@@ -32,10 +32,10 @@ const requiredEndpoints = [
 	let oldItems = fs.existsSync("items.json")
 		? JSON.parse(fs.readFileSync("items.json", "utf8"))
 		: (
-			await Axios.get(
-				"https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media"
-			)
-		).data;
+				await Axios.get(
+					"https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media"
+				)
+		  ).data;
 	let newItems = {
 		WF: {},
 		PRIMARY: {},
@@ -76,7 +76,7 @@ const requiredEndpoints = [
 					ingredientRawName.includes("WeaponParts") ||
 					ingredientRawName.includes("WarframeRecipes")
 				)
-					ingredients[ingredientName].generic = true;
+					ingredientData.generic = true;
 
 				if (recipes[ingredientRawName]?.ingredients.length > 0) {
 					if (

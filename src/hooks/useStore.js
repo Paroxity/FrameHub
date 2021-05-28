@@ -4,11 +4,7 @@ import produce from "immer";
 import create from "zustand";
 import { firestore } from "../App";
 import { ANONYMOUS, SHARED } from "../utils/checklist-types";
-import {
-	foundersItems,
-	ingredientSuffixes,
-	itemsAsArray
-} from "../utils/items";
+import { foundersItems, itemsAsArray } from "../utils/items";
 import {
 	intrinsicsToXP,
 	junctionsToXP,
@@ -179,7 +175,7 @@ export const useStore = create((set, get) => ({
 		get().recalculateMasteryRank();
 		get().recalculateIngredients();
 	},
-	masterItem: (name, item) => {
+	masterItem: name => {
 		set(state =>
 			produce(state, draftState => {
 				if (draftState.itemsMastered.includes(name)) return;
@@ -224,7 +220,7 @@ export const useStore = create((set, get) => ({
 		get().recalculateMasteryRank();
 		get().save();
 	},
-	unmasterItem: (name, item) => {
+	unmasterItem: name => {
 		set(state =>
 			produce(state, draftState => {
 				let index = draftState.itemsMastered.indexOf(name);
@@ -272,12 +268,7 @@ export const useStore = create((set, get) => ({
 						calculate(component);
 						return;
 					}
-					if (
-						ingredientSuffixes.some(suffix =>
-							componentName.endsWith(suffix)
-						)
-					)
-						return;
+					if (component.components || component.generic) return;
 					if (!necessaryComponents[componentName])
 						necessaryComponents[componentName] = 0;
 					necessaryComponents[componentName] += isNaN(component)

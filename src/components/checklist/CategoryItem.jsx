@@ -49,8 +49,8 @@ function CategoryItem({ name, item }) {
 						} else {
 							if (type !== SHARED)
 								mastered
-									? unmasterItem(name, item)
-									: masterItem(name, item);
+									? unmasterItem(name)
+									: masterItem(name);
 						}
 					}}>
 					{name +

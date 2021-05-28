@@ -17,7 +17,7 @@ function MissingIngredients() {
 			{visible && (
 				<Masonry
 					columnClassName="masonry-grid_column"
-					className="masonry-grid"
+					className="masonry-grid foundry"
 					breakpointCols={{
 						default: 5,
 						1533: 4,
