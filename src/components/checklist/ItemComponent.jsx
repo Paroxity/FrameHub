@@ -48,18 +48,19 @@ export default function ItemComponent({
 	);
 }
 
-const componentPropType = function () {
-	return PropTypes.shape({
-		count: PropTypes.number.isRequired,
-		components: PropTypes.objectOf(componentPropType),
-		generic: PropTypes.bool,
-		img: PropTypes.string
-	}).apply(this, arguments);
+const componentShape = {
+	count: PropTypes.number.isRequired,
+	generic: PropTypes.bool,
+	img: PropTypes.string
 };
+const componentType = PropTypes.oneOfType([
+	PropTypes.shape(componentShape),
+	PropTypes.number
+]);
+componentShape.components = PropTypes.objectOf(componentType);
 
 ItemComponent.propTypes = {
 	componentName: PropTypes.string.isRequired,
-	component: PropTypes.oneOfType(componentPropType, PropTypes.number)
-		.isRequired,
+	component: componentType.isRequired,
 	isSubcomponent: PropTypes.bool
 };

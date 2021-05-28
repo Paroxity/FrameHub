@@ -5,7 +5,7 @@ import { detailedTime } from "../../utils/time";
 import GluedComponents from "../GluedComponents";
 import ItemComponent from "./ItemComponent";
 
-function ItemTooltip({ name, item }) {
+function ItemTooltip({ item }) {
 	return (
 		<>
 			{item.vaulted && (
@@ -65,7 +65,6 @@ function ItemTooltip({ name, item }) {
 }
 
 ItemTooltip.propTypes = {
-	name: PropTypes.string,
 	item: PropTypes.shape(itemShape)
 };
 

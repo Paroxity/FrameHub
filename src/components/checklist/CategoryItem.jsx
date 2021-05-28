@@ -32,9 +32,7 @@ function CategoryItem({ name, item }) {
 	);
 
 	return hidden ? null : (
-		<Tooltip
-			title="Information"
-			content={<ItemTooltip name={name} item={item} />}>
+		<Tooltip title="Information" content={<ItemTooltip item={item} />}>
 			<div
 				className={classNames("item", {
 					"item-mastered": mastered,
