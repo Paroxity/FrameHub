@@ -82,24 +82,34 @@ export const useStore = create((set, get) => ({
 	save: debounce(() => get().saveImmediate(), 2500),
 
 	items: {},
+	setItems: items => {
+		set({ items });
+		get().recalculateMasteryRank();
+		get().recalculateIngredients();
+	},
 	fetchItems: async () => {
+		if (localStorage.getItem("items")) {
+			get().setItems(JSON.parse(localStorage.getItem("items")));
+		}
+
+		const { updated } = await firebase
+			.storage()
+			.ref("items.json")
+			.getMetadata();
+
 		if (
-			localStorage.getItem("lastSave") < Date.now() ||
+			localStorage.getItem("items-updated-at") !== updated ||
 			!localStorage.getItem("items")
 		) {
-			let loadedItems = await (
+			let items = await (
 				await fetch(
 					"https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media"
 				)
 			).json();
-			localStorage.setItem("items", JSON.stringify(loadedItems));
-			localStorage.setItem("lastSave", (Date.now() + 7200000).toString());
-			set({ items: loadedItems });
-		} else {
-			set({ items: JSON.parse(localStorage.getItem("items")) });
+			localStorage.setItem("items", JSON.stringify(items));
+			localStorage.setItem("items-updated-at", updated);
+			get().setItems(items);
 		}
-		get().recalculateMasteryRank();
-		get().recalculateIngredients();
 	},
 
 	masteryRank: 0,
