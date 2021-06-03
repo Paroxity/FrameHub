@@ -10,7 +10,6 @@ import LoadingScreen from "../components/LoadingScreen";
 import Sidebar from "../components/sidebar/Sidebar";
 import UnloadWarning from "../components/sidebar/UnloadWarning";
 import { useStore } from "../hooks/useStore";
-import paroxity from "../icons/paroxity.png";
 import { ANONYMOUS, AUTHENTICATED, SHARED } from "../utils/checklist-types";
 
 function MasteryChecklist(props) {
@@ -83,14 +82,6 @@ function MasteryChecklist(props) {
 				<Checklist />
 				<MissingIngredients />
 			</div>
-			<img
-				className="paroxity-logo"
-				src={paroxity}
-				alt="paroxity"
-				width="50px"
-				onDragStart={e => e.preventDefault()}
-				onClick={() => window.open("https://paroxity.net")}
-			/>
 		</div>
 	);
 }

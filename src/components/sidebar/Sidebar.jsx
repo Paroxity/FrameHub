@@ -11,6 +11,7 @@ import MasteryRankInfo from "./MasteryRankInfo";
 import SaveStatus from "./SaveStatus";
 import SharePrompt from "./SharePrompt";
 import SidebarInputs from "./SidebarInputs";
+import Social from "./Social";
 
 function Sidebar() {
 	const type = useStore(state => state.type);
@@ -34,6 +35,7 @@ function Sidebar() {
 				)}
 				<LogoutButton />
 				<ExitButton />
+				<Social />
 			</div>
 			<img
 				className="hamburger"

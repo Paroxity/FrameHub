@@ -711,25 +711,6 @@ input:disabled {
 	background: #bea966;
 }
 
-.paroxity-logo {
-	display: block;
-	bottom: 1em;
-	right: 1em;
-	z-index: 1;
-	position: fixed;
-	opacity: 0.25;
-	user-select: none;
-	-moz-user-select: none;
-	-webkit-user-select: none;
-	-ms-user-select: none;
-}
-
-@media (max-width: 580px) {
-	.paroxity-logo {
-		display: none;
-	}
-}
-
 .mastery-rank,
 .xp,
 .mastery-progress {
@@ -778,4 +759,13 @@ input:disabled {
 
 .foundry {
 	text-align: left;
+}
+
+.social {
+	display: flex;
+	justify-content: space-between;
+
+	a {
+		margin: 0.5em;
+	}
 }
