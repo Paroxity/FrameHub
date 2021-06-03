@@ -365,7 +365,7 @@ class ItemUpdater {
 		existingItems,
 		updater.processedItems
 	);
-	if (difference || process.env.FORCE_UPLOAD) {
+	if (difference || process.env.FORCE_UPLOAD === "true") {
 		await fs.writeFile(
 			"items.json",
 			JSON.stringify(updater.processedItems)
@@ -406,7 +406,7 @@ class ItemUpdater {
 	console.log(`Completed in ${(Date.now() - startTime) / 1000} seconds.`);
 	process.stdout.write(
 		`::set-output name=updated::${
-			difference.length > 0 || process.env.FORCE_UPLOAD || false
+			difference.length > 0 || process.env.FORCE_UPLOAD === "true"
 		}`
 	);
 })();
