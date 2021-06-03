@@ -1,75 +1,143 @@
-const overwriteItems = require("./update_items_overwrite");
+const OVERWRITES = {
+	AMP: {
+		"Mote Prism": {
+			components: {
+				"Cetus Wisp": 1,
+				"Tear Azurite": 20,
+				"Pyrotic Alloy": 10,
+				"Fish Oil": 30
+			},
+			buildTime: 600,
+			buildPrice: 1000
+		}
+	},
+	AW_GUN: {
+		"Prisma Dual Decurions": { mr: 10 }
+	},
+	CAT: { Venari: {} },
+	MISC: { Plexus: { xp: 6000 } }
+};
+const BLACKLIST = ["Prisma Machete"];
 
-const Axios = require("axios");
+const fetch = require("node-fetch");
+const fs = require("fs/promises");
+const jsonDiff = require("json-diff");
 const lzma = require("lzma");
-const fs = require("fs");
-const util = require("util");
+const { Webhook } = require("discord-webhook-node");
 
-const API_URL = "https://content.warframe.com/";
-const WIKI_URL = "https://warframe.fandom.com/wiki/";
-const VAULTED_DATA_URL =
-	"https://oggtechnologies.com/api/ducatsorplat/v2/MainItemData.json";
+const API_URL = "https://content.warframe.com";
+const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
+const WIKI_URL = "https://warframe.fandom.com/wiki";
 
-const requiredEndpoints = [
-	"Warframes",
-	"Weapons",
-	"Sentinels",
-	"Recipes",
-	"Resources",
-	"MiscItems"
-];
+class ItemUpdater {
+	constructor(overwrites, blacklist) {
+		this.overwrites = overwrites;
+		this.blacklist = blacklist;
+	}
 
-(async () => {
-	let startTime = Date.now();
+	async run() {
+		this.processedItems = {
+			WF: {},
+			PRIMARY: {},
+			SECONDARY: {},
+			KITGUN: {},
+			MELEE: {},
+			ZAW: {},
+			SENTINEL: {},
+			SENTINEL_WEAPON: {},
+			AMP: {},
+			AW: {},
+			AW_GUN: {},
+			AW_MELEE: {},
+			DOG: {},
+			CAT: {},
+			MOA: {},
+			KDRIVE: {},
+			MECH: {},
+			MISC: {}
+		};
 
-	let data = (
-		await Axios.get(`${API_URL}PublicExport/index_en.txt.lzma`, {
-			responseType: "arraybuffer"
-		})
-	).data;
-	let endpoints = lzma.decompress(data).split("\n");
+		await this.fetchEndpoints();
+		await Promise.all([
+			this.fetchItems(),
+			this.fetchRecipes(),
+			this.fetchRelics()
+		]);
 
-	let oldItems = fs.existsSync("items.json")
-		? JSON.parse(fs.readFileSync("items.json", "utf8"))
-		: (
-				await Axios.get(
-					"https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media"
-				)
-		  ).data;
-	let newItems = {
-		WF: {},
-		PRIMARY: {},
-		SECONDARY: {},
-		KITGUN: {},
-		MELEE: {},
-		ZAW: {},
-		SENTINEL: {},
-		SENTINEL_WEAPON: {},
-		AMP: {},
-		AW: {},
-		AW_GUN: {},
-		AW_MELEE: {},
-		DOG: {},
-		CAT: {},
-		MOA: {},
-		KDRIVE: {},
-		MECH: {},
-		MISC: {}
-	};
+		this.mapItemNames(
+			this.items,
+			(await this.fetchEndpoint("Resources")).ExportResources
+		);
 
-	let itemNames = {};
-	let recipes = {};
+		this.processItems();
+		this.processedItems = this.mergeObjects(
+			this.processedItems,
+			this.overwrites
+		);
+	}
 
-	function processIngredients(item, category, recipe, count = 1) {
+	mergeObjects(target, source) {
+		const output = { ...target };
+		Object.entries(source).forEach(([key, value]) => {
+			if (
+				value &&
+				typeof value === "object" &&
+				!Array.isArray(value) &&
+				key in target
+			)
+				output[key] = this.mergeObjects(target[key], source[key]);
+			else Object.assign(output, { [key]: value });
+		});
+		return output;
+	}
+
+	processItems() {
+		Object.values(this.items).forEach(item => {
+			const type = this.categorizeItem(item);
+			const name = this.processItemName(item.name);
+			if (type && !this.blacklist.includes(name)) {
+				const recipe = this.recipes[item.uniqueName];
+				const processedItem = {
+					maxLvl: type === "MECH" ? 40 : item.maxLevelCap,
+					mr: item.masteryReq
+				};
+				if (recipe) {
+					if (
+						this.relics[recipe.uniqueName] &&
+						Object.values(this.relics[recipe.uniqueName]).every(
+							relic => relic.vaulted
+						)
+					)
+						processedItem.vaulted = true;
+					if (recipe.ingredients?.length > 0)
+						processedItem.components = this.processRecipe(recipe);
+					processedItem.buildTime = recipe.buildTime;
+					processedItem.buildPrice = recipe.buildPrice;
+				}
+				if (name.startsWith("Mk1-"))
+					processedItem.wiki = `${WIKI_URL}/${name.replace(
+						"Mk1-",
+						"MK1-"
+					)}`;
+
+				Object.entries(processedItem).forEach(([key, value]) => {
+					if (!value) delete processedItem[key];
+				});
+				this.processedItems[type][name] = processedItem;
+			}
+		});
+	}
+
+	processRecipe(recipe, count = 1) {
 		return Object.entries(
 			recipe.ingredients.reduce((ingredients, ingredient) => {
-				let ingredientRawName = ingredient.ItemType;
-				let ingredientName = itemNames[ingredientRawName];
+				const ingredientRawName = ingredient.ItemType;
+				const ingredientName = this.itemNames[ingredientRawName];
 				if (!ingredients[ingredientName])
 					ingredients[ingredientName] = {
 						count: 0
 					};
-				let ingredientData = ingredients[ingredientName];
+				const ingredientData = ingredients[ingredientName];
 				ingredientData.count += ingredient.ItemCount * count;
 
 				if (
@@ -78,16 +146,14 @@ const requiredEndpoints = [
 				)
 					ingredientData.generic = true;
 
-				if (recipes[ingredientRawName]?.ingredients.length > 0) {
+				if (this.recipes[ingredientRawName]?.ingredients.length > 0) {
 					if (
 						!ingredientRawName.includes("Items") &&
 						(!ingredientRawName.includes("Gameplay") ||
 							ingredientRawName.includes("Mechs"))
 					) {
-						ingredientData.components = processIngredients(
-							item,
-							category,
-							recipes[ingredientRawName],
+						ingredientData.components = this.processRecipe(
+							this.recipes[ingredientRawName],
 							ingredients[ingredientName].count
 						);
 					}
@@ -104,288 +170,223 @@ const requiredEndpoints = [
 		}, {});
 	}
 
-	let vaulted = (await Axios.get(VAULTED_DATA_URL)).data.data
-		.filter(primeItem => primeItem.Vaulted)
-		.map(primeItem => primeItem.Name);
-
-	await Promise.all(
-		endpoints
-			.filter(endpoint =>
-				requiredEndpoints.includes(filterEndpointName(endpoint))
-			)
-			.map(endpoint => {
-				return (async () => {
-					let baseCategory = filterEndpointName(endpoint);
-
-					let data = (
-						await Axios.get(
-							`${API_URL}PublicExport/Manifest/${endpoint}`
-						)
-					).data;
-					if (typeof data !== "object")
-						data = JSON.parse(data.replace(/\\r|\r?\n/g, ""));
-					data = data[`Export${baseCategory}`];
-
-					Object.values(data).forEach(baseItem => {
-						if (baseCategory === "Recipes") {
-							let invalidBPs = [
-								"/Lotus/Types/Recipes/Weapons/CorpusHandcannonBlueprint",
-								"/Lotus/Types/Recipes/Weapons/GrineerCombatKnifeBlueprint"
-							];
-							if (invalidBPs.includes(baseItem.uniqueName))
-								return;
-							if (!recipes[baseItem.resultType])
-								recipes[baseItem.resultType] = baseItem;
-							return;
-						}
-
-						let uniqueName = baseItem.uniqueName;
-
-						baseItem.name = baseItem.name
-							.replace("<ARCHWING> ", "")
-							.toLowerCase()
-							.split(" ")
-							.map(
-								word =>
-									word.charAt(0).toUpperCase() + word.slice(1)
-							)
-							.join(" ")
-							.split("-")
-							.map(
-								word =>
-									word.charAt(0).toUpperCase() + word.slice(1)
-							)
-							.join("-");
-						if (baseItem.name.startsWith("Mk1-"))
-							baseItem.name =
-								baseItem.name.slice(0, 4) +
-								baseItem.name.charAt(4).toUpperCase() +
-								baseItem.name.slice(5);
-						itemNames[uniqueName] = baseItem.name;
-
-						if (
-							filterEndpointName(endpoint) === "Resources" ||
-							filterEndpointName(endpoint) === "MiscItems"
-						)
-							return;
-
-						let type;
-						switch (baseItem.productCategory) {
-							case "Pistols":
-								if (uniqueName.includes("ModularMelee")) {
-									if (
-										uniqueName.includes("Tip") &&
-										!uniqueName.includes("PvPVariant")
-									)
-										type = "ZAW";
-									break;
-								}
-								if (
-									uniqueName.includes("ModularPrimary") ||
-									uniqueName.includes("ModularSecondary") ||
-									uniqueName.includes("InfKitGun")
-								) {
-									if (uniqueName.includes("Barrel"))
-										type = "KITGUN";
-									break;
-								}
-								if (uniqueName.includes("OperatorAmplifiers")) {
-									if (uniqueName.includes("Barrel"))
-										type = "AMP";
-									break;
-								}
-								if (uniqueName.includes("Hoverboard")) {
-									if (uniqueName.includes("Deck"))
-										type = "KDRIVE";
-									break;
-								}
-								if (uniqueName.includes("MoaPets")) {
-									if (uniqueName.includes("MoaPetHead"))
-										type = "MOA";
-									break;
-								}
-								if (baseItem.slot === 0) type = "SECONDARY";
-								break;
-							case "KubrowPets":
-								type = uniqueName.includes("Catbrow")
-									? "CAT"
-									: "DOG";
-								break;
-							default:
-								type = {
-									SpaceMelee: "AW_MELEE",
-									SpaceGuns: "AW_GUN",
-									SpaceSuits: "AW",
-									Suits: "WF",
-									MechSuits: "MECH",
-									LongGuns: "PRIMARY",
-									Melee: "MELEE",
-									Sentinels: "SENTINEL",
-									SentinelWeapons: "SENTINEL_WEAPON"
-								}[baseItem.productCategory];
-						}
-
-						if (type) {
-							if (!newItems[type]) newItems[type] = {};
-
-							let newItem = { uniqueName: baseItem.uniqueName };
-							newItems[type][baseItem.name] = newItem;
-
-							if (type === "MECH") newItem.maxLvl = 40; //TODO: Remove if mobile endpoint sets maxLevelCap to 40
-							if (baseItem.maxLevelCap)
-								newItem.maxLvl = baseItem.maxLevelCap;
-							if (baseItem.masteryReq)
-								newItem.mr = baseItem.masteryReq;
-							if (baseItem.name.includes("Mk1-"))
-								newItem.wiki =
-									WIKI_URL +
-									baseItem.name.replace("Mk1-", "MK1-");
-							if (vaulted.includes(baseItem.name))
-								newItem.vaulted = true;
-						}
-					});
-				})();
-			})
-	);
-	newItems = overwriteItems(newItems);
-
-	let additions = [];
-	let deletions = [];
-	let changes = [];
-	Object.keys(oldItems).forEach(category => {
-		Object.keys(oldItems[category]).forEach(key => {
-			if (!newItems[category][key]) {
-				deletions.push(`Removed item \`${key}\``);
-			}
-		});
-	});
-	Object.keys(newItems).forEach(category => {
-		let ordered = {};
-		Object.keys(newItems[category])
-			.sort()
-			.forEach(item => {
-				let finalItem = newItems[category][item];
-				if (recipes[finalItem.uniqueName]) {
-					let recipe = recipes[finalItem.uniqueName];
-					if (recipe.ingredients?.length > 0)
-						finalItem.components = processIngredients(
-							item,
-							category,
-							recipe
-						);
-					if (recipe.buildTime)
-						finalItem.buildTime = recipe.buildTime;
-					if (recipe.buildPrice)
-						finalItem.buildPrice = recipe.buildPrice;
+	categorizeItem(item) {
+		const uniqueName = item.uniqueName;
+		let type;
+		switch (item.productCategory) {
+			case "Pistols":
+				if (uniqueName.includes("ModularMelee")) {
+					if (
+						uniqueName.includes("Tip") &&
+						!uniqueName.includes("PvPVariant")
+					)
+						type = "ZAW";
+					break;
 				}
-				delete finalItem.uniqueName;
-
-				ordered[item] = finalItem;
-
-				if (!oldItems[category]) {
-					additions.push(
-						`New item \`${item}\` added in new category with properties \`${JSON.stringify(
-							finalItem
-						)}\``
-					);
-					return;
+				if (
+					uniqueName.includes("ModularPrimary") ||
+					uniqueName.includes("ModularSecondary") ||
+					uniqueName.includes("InfKitGun")
+				) {
+					if (uniqueName.includes("Barrel")) type = "KITGUN";
+					break;
 				}
-				if (!oldItems[category][item]) {
-					additions.push(
-						`New item \`${item}\` added with properties \`${JSON.stringify(
-							finalItem
-						)}\``
-					);
-					return;
+				if (uniqueName.includes("OperatorAmplifiers")) {
+					if (uniqueName.includes("Barrel")) type = "AMP";
+					break;
 				}
-				Object.keys(finalItem).forEach(key => {
-					let oldValue = oldItems[category][item][key];
-					let newValue = finalItem[key];
-					if (oldValue !== undefined) {
-						if (!util.isDeepStrictEqual(oldValue, newValue)) {
-							changes.push(
-								`Property \`${key}\` changed in item \`${item}\` (\`${JSON.stringify(
-									oldValue
-								)}\` -> \`${JSON.stringify(newValue)}\`)`
-							);
-						}
-					} else {
-						changes.push(
-							`New property \`${key}\` added with value \`${JSON.stringify(
-								newValue
-							)}\` in item \`${item}\``
-						);
-					}
-				});
-			});
-		newItems[category] = ordered;
-	});
-
-	let differences = [...additions, ...deletions, ...changes];
-	if (differences.length > 0) {
-		if (process.env.DISCORD_WEBHOOK && process.env.DISCORD_ADMIN_IDS) {
-			if (deletions.length > 1) {
-				Axios.post(process.env.DISCORD_WEBHOOK, {
-					content: `${process.env.DISCORD_ADMIN_IDS.split(",")
-						.map(id => `<@${id}>`)
-						.join(
-							" "
-						)} More than 1 item deletion detected. Review and deploy items.json manually.`
-				});
-			} else if (additions.length > 25) {
-				Axios.post(process.env.DISCORD_WEBHOOK, {
-					content: `${process.env.DISCORD_ADMIN_IDS.split(",")
-						.map(id => `<@${id}>`)
-						.join(
-							" "
-						)} More than 25 item additions detected. Review and deploy items.json manually.`
-				});
-			} else {
-				let requests = [];
-				let baseMessage = `${process.env.DISCORD_ADMIN_IDS.split(",")
-					.map(id => `<@${id}>`)
-					.join(" ")} items.json updated! Changes:`;
-				differences.forEach(difference => {
-					let newMessage = `${baseMessage}\n- ${difference}`;
-					if (newMessage.length <= 2000) {
-						baseMessage = newMessage;
-					} else {
-						requests.push({ content: baseMessage });
-						baseMessage = difference;
-					}
-				});
-				requests.push({ content: baseMessage });
-
-				for (let request of requests)
-					await Axios.post(process.env.DISCORD_WEBHOOK, request);
-			}
+				if (uniqueName.includes("Hoverboard")) {
+					if (uniqueName.includes("Deck")) type = "KDRIVE";
+					break;
+				}
+				if (uniqueName.includes("MoaPets")) {
+					if (uniqueName.includes("MoaPetHead")) type = "MOA";
+					break;
+				}
+				if (item.slot === 0) type = "SECONDARY";
+				break;
+			case "KubrowPets":
+				type = uniqueName.includes("Catbrow") ? "CAT" : "DOG";
+				break;
+			default:
+				type = {
+					SpaceMelee: "AW_MELEE",
+					SpaceGuns: "AW_GUN",
+					SpaceSuits: "AW",
+					Suits: "WF",
+					MechSuits: "MECH",
+					LongGuns: "PRIMARY",
+					Melee: "MELEE",
+					Sentinels: "SENTINEL",
+					SentinelWeapons: "SENTINEL_WEAPON"
+				}[item.productCategory];
 		}
-
-		fs.writeFileSync("items.json", JSON.stringify(newItems));
-		console.log(
-			`Updated items.json in ${
-				(Date.now() - startTime) / 1000
-			} seconds with size of ${(
-				fs.statSync("items.json").size / 1024
-			).toFixed(3)}KB`
-		);
-		console.log("\nChanges:\n");
-		console.log(differences.map(change => `- ${change}`).join("\n"));
-		process.stdout.write(
-			`::set-output name=updated::${
-				deletions.length <= 1 && additions.length <= 25
-			}`
-		);
-		return;
+		return type;
 	}
-	console.log("No differences detected");
-	process.stdout.write("::set-output name=updated::false");
-})();
 
-function filterEndpointName(endpoint) {
-	return endpoint
-		.replace("Export", "")
-		.replace(/_[a-z]{2}\.json.*/, "")
-		.replace(/\.json.*/, "")
-		.trim();
+	mapItemNames() {
+		this.itemNames = {};
+
+		Object.values(Array.from(arguments)).forEach(items => {
+			items.forEach(item => {
+				if (item.uniqueName && item.name)
+					this.itemNames[item.uniqueName] = this.processItemName(
+						item.name
+					);
+			});
+		});
+	}
+
+	processItemName(name) {
+		return name
+			.replace("<ARCHWING> ", "")
+			.toLowerCase()
+			.split(" ")
+			.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" ")
+			.split("-")
+			.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+			.join("-");
+	}
+
+	async fetchRelics() {
+		this.relics = {};
+		(await this.fetchEndpoint("RelicArcane")).ExportRelicArcane.forEach(
+			relic => {
+				if (relic.relicRewards)
+					relic.relicRewards.forEach(reward => {
+						const rewardName = reward.rewardName.replace(
+							"/StoreItems",
+							""
+						);
+						if (!this.relics[rewardName])
+							this.relics[rewardName] = {};
+						this.relics[rewardName][relic.name] = {
+							rarity: reward.rarity
+						};
+						if (relic.codexSecret)
+							this.relics[rewardName][relic.name].vaulted = true;
+					});
+			}
+		);
+	}
+
+	async fetchRecipes() {
+		this.recipes = (
+			await this.fetchEndpoint("Recipes")
+		).ExportRecipes.reduce((recipes, recipe) => {
+			const invalidBPs = [
+				"/Lotus/Types/Recipes/Weapons/CorpusHandcannonBlueprint",
+				"/Lotus/Types/Recipes/Weapons/GrineerCombatKnifeBlueprint"
+			];
+			if (
+				!invalidBPs.includes(recipe.uniqueName) &&
+				!recipes[recipe.resultType]
+			)
+				recipes[recipe.resultType] = recipe;
+			return recipes;
+		}, {});
+	}
+
+	async fetchItems() {
+		const data = await Promise.all(
+			ITEM_ENDPOINTS.map(async e => {
+				return (await this.fetchEndpoint(e))[`Export${e}`];
+			})
+		);
+		this.items = data.reduce((merged, d) => {
+			return [...merged, ...d];
+		}, []);
+	}
+
+	async fetchEndpoint(endpoint) {
+		return this.parseDamagedJSON(
+			await (
+				await fetch(
+					`${API_URL}/PublicExport/Manifest/${this.endpoints.find(e =>
+						e.startsWith(`Export${endpoint}`)
+					)}`
+				)
+			).text()
+		);
+	}
+
+	async fetchEndpoints() {
+		this.endpoints = lzma
+			.decompress(
+				Buffer.from(
+					await (
+						await fetch(`${API_URL}/PublicExport/index_en.txt.lzma`)
+					).arrayBuffer()
+				)
+			)
+			.split("\n");
+	}
+
+	parseDamagedJSON(json) {
+		return JSON.parse(json.replace(/\\r|\r?\n/g, ""));
+	}
 }
+
+(async () => {
+	const startTime = Date.now();
+
+	let existingItems;
+	try {
+		existingItems = JSON.parse(await fs.readFile("items.json", "utf8"));
+	} catch (e) {
+		existingItems = await (
+			await fetch(
+				"https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media"
+			)
+		).json();
+	}
+
+	const updater = new ItemUpdater(OVERWRITES, BLACKLIST);
+	await updater.run();
+
+	const difference = jsonDiff.diffString(
+		existingItems,
+		updater.processedItems
+	);
+	if (difference) {
+		await fs.writeFile(
+			"items.json",
+			JSON.stringify(updater.processedItems)
+		);
+		console.log(difference);
+
+		if (process.env.DISCORD_WEBHOOK && process.env.DISCORD_ADMIN_IDS) {
+			const colorlessDifference = difference.replace(
+				/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+				""
+			);
+
+			const hook = new Webhook(process.env.DISCORD_WEBHOOK);
+			const messageTemplate = "```diff\n${MESSAGE}```";
+			const chunkSize =
+				2000 - messageTemplate.replace("${MESSAGE}", "").length;
+			const chunkCount = Math.ceil(
+				colorlessDifference.length / chunkSize
+			);
+
+			const chunks = [
+				process.env.DISCORD_ADMIN_IDS.split(",")
+					.map(id => `<@${id}>`)
+					.join(" ")
+			];
+			for (let i = 0; i < chunkCount; i++) {
+				chunks.push(
+					messageTemplate.replace(
+						"${MESSAGE}",
+						colorlessDifference.slice(i * chunkSize, chunkSize)
+					)
+				);
+			}
+
+			for (const chunk of chunks) await hook.send(chunk);
+		}
+	}
+	console.log(`Completed in ${(Date.now() - startTime) / 1000} seconds.`);
+	process.stdout.write(`::set-output name=updated::${difference.length > 0}`);
+})();
