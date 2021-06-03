@@ -74,6 +74,22 @@ class ItemUpdater {
 			this.processedItems,
 			this.overwrites
 		);
+		this.orderItems();
+	}
+
+	orderItems() {
+		this.processedItems = Object.entries(this.processedItems).reduce(
+			(sortedCategories, [category, items]) => {
+				sortedCategories[category] = Object.keys(items)
+					.sort()
+					.reduce((sortedItems, name) => {
+						sortedItems[name] = items[name];
+						return sortedItems;
+					}, {});
+				return sortedCategories;
+			},
+			{}
+		);
 	}
 
 	mergeObjects(target, source) {
@@ -349,7 +365,7 @@ class ItemUpdater {
 		existingItems,
 		updater.processedItems
 	);
-	if (difference) {
+	if (difference || process.env.FORCE_UPLOAD) {
 		await fs.writeFile(
 			"items.json",
 			JSON.stringify(updater.processedItems)

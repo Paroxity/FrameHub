@@ -29,6 +29,7 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           DISCORD_ADMIN_IDS: ${{ secrets.DISCORD_ADMIN_IDS }}
+          FORCE_UPLOAD: ${{ contains(github.event.head_commit.message, 'force upload') }}
       - name: Upload items.json to Firebase
         uses: google-github-actions/upload-cloud-storage@main
         if: steps.update_items.outputs.updated == 'true'
