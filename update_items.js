@@ -404,5 +404,9 @@ class ItemUpdater {
 		}
 	}
 	console.log(`Completed in ${(Date.now() - startTime) / 1000} seconds.`);
-	process.stdout.write(`::set-output name=updated::${difference.length > 0}`);
+	process.stdout.write(
+		`::set-output name=updated::${
+			difference.length > 0 || process.env.FORCE_UPLOAD === true
+		}`
+	);
 })();
