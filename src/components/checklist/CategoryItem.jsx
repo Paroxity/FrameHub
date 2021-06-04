@@ -7,7 +7,7 @@ import { SHARED } from "../../utils/checklist-types";
 import { foundersItems, itemShape } from "../../utils/items";
 import Button from "../Button";
 import Tooltip from "../Tooltip";
-import ItemTooltip from "./ItemTooltip";
+import ItemGeneralInfoTooltip from "./ItemGeneralInfoTooltip";
 
 function CategoryItem({ name, item }) {
 	const {
@@ -32,7 +32,9 @@ function CategoryItem({ name, item }) {
 	);
 
 	return hidden ? null : (
-		<Tooltip title="Information" content={<ItemTooltip item={item} />}>
+		<Tooltip
+			title="Information"
+			content={<ItemGeneralInfoTooltip item={item} />}>
 			<div
 				className={classNames("item", {
 					"item-mastered": mastered,

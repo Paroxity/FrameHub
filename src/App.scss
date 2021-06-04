@@ -769,3 +769,13 @@ input:disabled {
 		margin: 0.5em;
 	}
 }
+
+.item-tooltip {
+	& > :not(:last-child) {
+		margin-bottom: 1em;
+	}
+
+	& > span {
+		display: block;
+	}
+}
