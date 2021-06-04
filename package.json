@@ -17,10 +17,10 @@
 		"zustand": "^3.5.1"
 	},
 	"devDependencies": {
-		"discord-webhook-node": "^1.1.8",
 		"eslint": "^7.26.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-react": "^7.24.0",
+		"form-data": "^4.0.0",
 		"json-diff": "^0.5.4",
 		"lzma": "^2.3.2",
 		"node-fetch": "^2.6.1",

@@ -20,10 +20,10 @@ const OVERWRITES = {
 const BLACKLIST = ["Prisma Machete"];
 
 const fetch = require("node-fetch");
+const FormData = require("form-data");
 const fs = require("fs/promises");
 const jsonDiff = require("json-diff");
 const lzma = require("lzma");
-const { Webhook } = require("discord-webhook-node");
 
 const API_URL = "https://content.warframe.com";
 const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
@@ -406,30 +406,15 @@ class ItemUpdater {
 				/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
 				""
 			);
-
-			const hook = new Webhook(process.env.DISCORD_WEBHOOK);
-			const messageTemplate = "```diff\n${MESSAGE}```";
-			const chunkSize =
-				2000 - messageTemplate.replace("${MESSAGE}", "").length;
-			const chunkCount = Math.ceil(
-				colorlessDifference.length / chunkSize
-			);
-
-			const chunks = [
+			const form = new FormData();
+			form.append(
+				"content",
 				process.env.DISCORD_ADMIN_IDS.split(",")
 					.map(id => `<@${id}>`)
 					.join(" ")
-			];
-			for (let i = 0; i < chunkCount; i++) {
-				chunks.push(
-					messageTemplate.replace(
-						"${MESSAGE}",
-						colorlessDifference.slice(i * chunkSize, chunkSize)
-					)
-				);
-			}
-
-			for (const chunk of chunks) await hook.send(chunk);
+			);
+			form.append("file", colorlessDifference, "items.diff");
+			form.submit(process.env.DISCORD_WEBHOOK, () => {});
 		}
 	}
 	console.log(`Completed in ${(Date.now() - startTime) / 1000} seconds.`);
