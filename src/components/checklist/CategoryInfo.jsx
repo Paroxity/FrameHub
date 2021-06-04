@@ -51,7 +51,7 @@ function CategoryItem({ name }) {
 	});
 
 	return (
-		<div className="categoryInfo">
+		<div className="category-info">
 			<span className="category-name">
 				{fancyCategoryNames[name] ||
 					name
