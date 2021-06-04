@@ -118,15 +118,20 @@ class ItemUpdater {
 					mr: item.masteryReq
 				};
 				if (recipe) {
-					if (
-						this.relics[recipe.uniqueName] &&
-						Object.values(this.relics[recipe.uniqueName]).every(
-							relic => relic.vaulted
-						)
-					)
-						processedItem.vaulted = true;
+					if (this.relics[recipe.uniqueName]) {
+						processedItem.vaulted = Object.values(
+							this.relics[recipe.uniqueName]
+						).every(relic => relic.vaulted);
+						processedItem.relics = {
+							[`${name} Blueprint`]:
+								this.relics[recipe.uniqueName]
+						};
+					}
 					if (recipe.ingredients?.length > 0)
-						processedItem.components = this.processRecipe(recipe);
+						processedItem.components = this.processRecipe(
+							processedItem,
+							recipe
+						);
 					processedItem.buildTime = recipe.buildTime;
 					processedItem.buildPrice = recipe.buildPrice;
 				}
@@ -144,7 +149,7 @@ class ItemUpdater {
 		});
 	}
 
-	processRecipe(recipe, count = 1) {
+	processRecipe(item, recipe, count = 1) {
 		return Object.entries(
 			recipe.ingredients.reduce((ingredients, ingredient) => {
 				const ingredientRawName = ingredient.ItemType;
@@ -159,8 +164,16 @@ class ItemUpdater {
 				if (
 					ingredientRawName.includes("WeaponParts") ||
 					ingredientRawName.includes("WarframeRecipes")
-				)
+				) {
 					ingredientData.generic = true;
+
+					const relics =
+						this.relics[ingredientRawName] ||
+						this.relics[
+							ingredientRawName.replace("Component", "Blueprint")
+						];
+					if (relics) item.relics[ingredientName] = relics;
+				}
 
 				if (this.recipes[ingredientRawName]?.ingredients.length > 0) {
 					if (
@@ -169,6 +182,7 @@ class ItemUpdater {
 							ingredientRawName.includes("Mechs"))
 					) {
 						ingredientData.components = this.processRecipe(
+							item,
 							this.recipes[ingredientRawName],
 							ingredients[ingredientName].count
 						);
@@ -271,17 +285,27 @@ class ItemUpdater {
 			relic => {
 				if (relic.relicRewards)
 					relic.relicRewards.forEach(reward => {
+						const processedRelic = {
+							rarity:
+								reward.rarity === "COMMON"
+									? 0
+									: reward.rarity === "UNCOMMON"
+									? 1
+									: 2
+						};
+						if (relic.codexSecret) processedRelic.vaulted = true;
+
 						const rewardName = reward.rewardName.replace(
 							"/StoreItems",
 							""
 						);
 						if (!this.relics[rewardName])
 							this.relics[rewardName] = {};
-						this.relics[rewardName][relic.name] = {
-							rarity: reward.rarity
-						};
-						if (relic.codexSecret)
-							this.relics[rewardName][relic.name].vaulted = true;
+						this.relics[rewardName][
+							this.processItemName(
+								relic.name.replace(" RELIC", "")
+							)
+						] = processedRelic;
 					});
 			}
 		);
@@ -371,6 +395,11 @@ class ItemUpdater {
 			JSON.stringify(updater.processedItems)
 		);
 		console.log(difference);
+		console.log(
+			`File size: ${((await fs.stat("items.json")).size / 1024).toFixed(
+				3
+			)}KB`
+		);
 
 		if (process.env.DISCORD_WEBHOOK && process.env.DISCORD_ADMIN_IDS) {
 			const colorlessDifference = difference.replace(
