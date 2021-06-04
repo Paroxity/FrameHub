@@ -59,10 +59,19 @@ export const itemShape = {
 		PropTypes.oneOfType([
 			PropTypes.number,
 			PropTypes.shape({
+				generic: PropTypes.bool,
 				img: PropTypes.string,
 				count: PropTypes.number
 			})
 		])
+	),
+	relics: PropTypes.objectOf(
+		PropTypes.objectOf(
+			PropTypes.shape({
+				vaulted: PropTypes.bool,
+				rarity: PropTypes.number.isRequired
+			})
+		)
 	),
 	buildTime: PropTypes.number,
 	buildPrice: PropTypes.number
