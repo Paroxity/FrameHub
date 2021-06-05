@@ -50,6 +50,9 @@ export const ingredientSuffixes = [
 ];
 export const foundersItems = ["Excalibur Prime", "Skana Prime", "Lato Prime"];
 
+export const relicTiers = ["Lith", "Meso", "Neo", "Axi", "Requiem"];
+export const relicRarity = ["Common", "Uncommon", "Rare"];
+
 export const itemShape = {
 	maxLvl: PropTypes.number,
 	mr: PropTypes.number,

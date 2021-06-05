@@ -779,3 +779,53 @@ input:disabled {
 		display: block;
 	}
 }
+
+.pagination-ui {
+	float: right;
+
+	.pagination-page {
+		display: inline-block;
+		border: 1px solid #bea966;
+		width: 0.375em;
+		height: 0.375em;
+		margin: 0 0.2em;
+		transform: rotate(45deg);
+	}
+
+	.pagination-page-current {
+		background: #bea966;
+	}
+
+	.pagination-key {
+		font-size: 0.825em;
+		text-transform: none;
+		margin-left: 0.5em;
+		border: 1px solid #bea966;
+		border-radius: 0.25em;
+		padding: 0.25em 0.125em;
+	}
+}
+
+.relics {
+	& > span {
+		display: block;
+		padding-left: 1em;
+	}
+
+	.relic-rarity-common {
+		color: #9c7344;
+	}
+
+	.relic-rarity-uncommon {
+		color: #d3d3d3;
+	}
+
+	.relic-rarity-rare {
+		color: #d1b962;
+	}
+}
+
+.vaulted-relic-disclaimer {
+	display: block;
+	margin-top: 1em;
+}

@@ -6,8 +6,9 @@ import checkmark from "../../icons/checkmark.svg";
 import { SHARED } from "../../utils/checklist-types";
 import { foundersItems, itemShape } from "../../utils/items";
 import Button from "../Button";
-import Tooltip from "../Tooltip";
+import PaginatedTooltip from "../PaginatedTooltip";
 import ItemGeneralInfoTooltip from "./ItemGeneralInfoTooltip";
+import ItemRelicTooltip from "./ItemRelicTooltip";
 
 function CategoryItem({ name, item }) {
 	const {
@@ -32,9 +33,15 @@ function CategoryItem({ name, item }) {
 	);
 
 	return hidden ? null : (
-		<Tooltip
-			title="Information"
-			content={<ItemGeneralInfoTooltip item={item} />}>
+		<PaginatedTooltip
+			content={
+				<>
+					<ItemGeneralInfoTooltip item={item} />
+					{item.relics && (
+						<ItemRelicTooltip item={item} name={name} />
+					)}
+				</>
+			}>
 			<div
 				className={classNames("item", {
 					"item-mastered": mastered,
@@ -62,7 +69,7 @@ function CategoryItem({ name, item }) {
 					)}
 				</Button>
 			</div>
-		</Tooltip>
+		</PaginatedTooltip>
 	);
 }
 

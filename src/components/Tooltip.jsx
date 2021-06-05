@@ -15,7 +15,7 @@ function Tooltip(props) {
 			width.current = parseFloat(element.current.clientWidth);
 			height.current = parseFloat(element.current.clientHeight);
 		}
-	}, [visible]);
+	}, [visible, props.content]);
 
 	let x = Math.min(
 		mouseX + 20,
@@ -32,8 +32,12 @@ function Tooltip(props) {
 				setMouseX(event.clientX);
 				setMouseY(event.clientY);
 				setVisible(true);
+				if (props.onVisibilityChange) props.onVisibilityChange(true);
 			}}
-			onMouseLeave={() => setVisible(false)}
+			onMouseLeave={() => {
+				setVisible(false);
+				if (props.onVisibilityChange) props.onVisibilityChange(false);
+			}}
 			onMouseMove={event => {
 				setMouseX(event.clientX);
 				setMouseY(event.clientY);
@@ -54,8 +58,9 @@ function Tooltip(props) {
 
 Tooltip.propTypes = {
 	children: PropTypes.node,
-	title: PropTypes.string,
-	content: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
+	title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+	content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+	onVisibilityChange: PropTypes.func
 };
 
 export default Tooltip;

@@ -3,12 +3,13 @@ import credits from "../../icons/credits.png";
 import { itemShape } from "../../utils/items";
 import { detailedTime } from "../../utils/time";
 import GluedComponents from "../GluedComponents";
+import { PaginatedTooltipTitle } from "../PaginatedTooltip";
 import ItemComponent from "./ItemComponent";
 
 function ItemGeneralInfoTooltip({ item }) {
 	return (
 		<div className="item-tooltip">
-			{item.vaulted && <span className="item-vaulted">VAULTED</span>}
+			<PaginatedTooltipTitle title="General Information" />
 			{item.components ? (
 				<div className="item-craftable">
 					{Object.entries(item.components).map(
