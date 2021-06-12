@@ -17,7 +17,7 @@ const OVERWRITES = {
 	CAT: { Venari: {} },
 	MISC: { Plexus: { xp: 6000 } }
 };
-const BLACKLIST = ["Prisma Machete"];
+const BLACKLIST = [];
 
 const fetch = require("node-fetch");
 const FormData = require("form-data");
