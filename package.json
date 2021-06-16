@@ -13,7 +13,7 @@
 		"react-masonry-css": "^1.0.16",
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "4.0.3",
-		"sass": "^1.34.1",
+		"sass": "^1.35.0",
 		"zustand": "^3.5.2"
 	},
 	"devDependencies": {
