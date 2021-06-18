@@ -64,6 +64,7 @@ function PaginatedTooltipWrapper(props) {
 								(value, p) => {
 									return (
 										<div
+											key={p}
 											className={classNames(
 												"pagination-page",
 												{
