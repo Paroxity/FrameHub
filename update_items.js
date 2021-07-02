@@ -24,6 +24,7 @@ const FormData = require("form-data");
 const fs = require("fs/promises");
 const jsonDiff = require("json-diff");
 const lzma = require("lzma");
+const lua = require("lua-json");
 
 const API_URL = "https://content.warframe.com";
 const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
@@ -57,6 +58,7 @@ class ItemUpdater {
 			MISC: {}
 		};
 
+		await this.fetchBaroData();
 		await this.fetchEndpoints();
 		await Promise.all([
 			this.fetchItems(),
@@ -140,6 +142,13 @@ class ItemUpdater {
 						"Mk1-",
 						"MK1-"
 					)}`;
+
+				const baroData = this.baroData[name];
+				if (baroData)
+					processedItem.baro = [
+						baroData.CreditCost,
+						baroData.DucatCost
+					];
 
 				Object.entries(processedItem).forEach(([key, value]) => {
 					if (!value) delete processedItem[key];
@@ -361,6 +370,15 @@ class ItemUpdater {
 				)
 			)
 			.split("\n");
+	}
+
+	async fetchBaroData() {
+		const luaTable = await (
+			await fetch(
+				"https://warframe.fandom.com/wiki/Module:Baro/data?action=raw"
+			)
+		).text();
+		this.baroData = lua.parse(luaTable).Items;
 	}
 
 	parseDamagedJSON(json) {
