@@ -69,4 +69,4 @@ export function masteryRankName(mr) {
 export const totalMissions = 466;
 export const totalMissionXP = 29002;
 export const totalJunctions = 26;
-export const totalIntrinsics = 49;
+export const totalIntrinsics = 50;
