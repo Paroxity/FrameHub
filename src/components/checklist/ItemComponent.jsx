@@ -11,7 +11,7 @@ export default function ItemComponent({
 		<div className={classNames({ "item-subcomponent": isSubcomponent })}>
 			<img
 				className="component-image"
-				src={`https://raw.githubusercontent.com/WFCD/warframe-items/development/data/img/${
+				src={`https://raw.githubusercontent.com/WFCD/warframe-items/master/data/img/${
 					component?.img ||
 					(componentName.includes(" Prime ") ? "prime-" : "") +
 						(component.generic
