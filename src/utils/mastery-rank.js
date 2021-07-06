@@ -10,6 +10,7 @@ export function xpFromItem(item, category) {
 		case "MOA":
 		case "MECH":
 		case "KDRIVE":
+		case "HOUND":
 			return 200 * (item.maxLvl || 30);
 		default:
 			return 100 * (item.maxLvl || 30);

@@ -53,6 +53,7 @@ class ItemUpdater {
 			DOG: {},
 			CAT: {},
 			MOA: {},
+			HOUND: {},
 			KDRIVE: {},
 			MECH: {},
 			MISC: {}
@@ -240,6 +241,11 @@ class ItemUpdater {
 				}
 				if (uniqueName.includes("MoaPets")) {
 					if (uniqueName.includes("MoaPetHead")) type = "MOA";
+					break;
+				}
+				if (uniqueName.includes("ZanukaPets")) {
+					if (uniqueName.includes("ZanukaPetPartHead"))
+						type = "HOUND";
 					break;
 				}
 				if (item.slot === 0) type = "SECONDARY";
