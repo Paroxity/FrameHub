@@ -12,7 +12,7 @@ const OVERWRITES = {
 		}
 	},
 	AW_GUN: {
-		"Prisma Dual Decurions": { mr: 10 }
+		"Prisma Dual Decurions": { mr: 10, baro: [175000, 525] }
 	},
 	MELEE: {
 		"Tenet Agendus": { components: undefined }
@@ -108,6 +108,7 @@ class ItemUpdater {
 				key in target
 			)
 				output[key] = this.mergeObjects(target[key], source[key]);
+			else if (value === undefined) delete output[key];
 			else Object.assign(output, { [key]: value });
 		});
 		return output;
