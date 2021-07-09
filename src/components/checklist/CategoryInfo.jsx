@@ -13,7 +13,6 @@ const fancyCategoryNames = {
 	DOG: "Kubrow",
 	CAT: "Kavat",
 	MOA: "MOA",
-	HOUND: "Hound",
 	MECH: "Necramech",
 	KDRIVE: "K-Drive",
 	MISC: "Miscellaneous"

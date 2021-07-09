@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import shallow from "zustand/shallow";
 import { firestore } from "../App";
@@ -71,10 +71,44 @@ function MasteryChecklist(props) {
 	const itemsLoading = Object.keys(items).length === 0;
 	useEffect(fetchItems, []); //eslint-disable-line
 
+	const [temp, setTemp] = useState(
+		(localStorage.getItem("temp-hound-xp") ?? "false") === "false"
+	);
+
 	return dataLoading || itemsLoading ? (
 		<LoadingScreen />
 	) : (
 		<div className="app">
+			{temp && (
+				<div
+					style={{
+						background: "#ff5c5c",
+						padding: "0.25em 0",
+						margin: "0 0",
+						textAlign: "center",
+						top: 0,
+						left: 0,
+						width: "100%",
+						position: "fixed",
+						zIndex: 3,
+						color: "white"
+					}}>
+					Hounds in-game currently provide 3,000 XP. As it does not
+					seem purposeful, FrameHub will currently stick with 6,000 XP
+					per hound.
+					<button
+						style={{ marginLeft: "1em", color: "white" }}
+						onClick={() => {
+							localStorage.setItem(
+								"temp-hound-xp",
+								temp ? "true" : "false"
+							);
+							setTemp(!temp);
+						}}>
+						Close
+					</button>
+				</div>
+			)}
 			<UnloadWarning />
 			<Sidebar />
 			<div className="content">

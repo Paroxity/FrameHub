@@ -14,6 +14,9 @@ const OVERWRITES = {
 	AW_GUN: {
 		"Prisma Dual Decurions": { mr: 10 }
 	},
+	MELEE: {
+		"Tenet Agendus": { components: undefined }
+	},
 	CAT: { Venari: {} },
 	MISC: { Plexus: { xp: 6000 } }
 };
