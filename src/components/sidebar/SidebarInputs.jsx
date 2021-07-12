@@ -82,7 +82,7 @@ function SidebarInputs() {
 				tooltipTitle="Intrinsics"
 				tooltipContent={
 					<>
-						<p>Max of 10 per intrinsics class, 9 for Command</p>
+						<p>Max of 10 per intrinsics class</p>
 						<p>Maximum Value: {totalIntrinsics}</p>
 					</>
 				}
