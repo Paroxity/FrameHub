@@ -6,9 +6,7 @@ function UnloadWarning() {
 	const { type, changed } = useStore(
 		state => ({
 			type: state.type,
-			changed:
-				Object.keys(state.unsavedChanges).length > 0 ||
-				Object.keys(state.unsavedItemChanges).length > 0
+			changed: state.unsavedChanges.length > 0
 		}),
 		shallow
 	);

@@ -21,17 +21,12 @@ export const useStore = create((set, get) => ({
 	setType: type => set(() => ({ type })),
 	id: undefined,
 	setId: id => set(() => ({ id })),
-	reset: () => set({ unsavedChanges: {}, unsavedItemChanges: {} }),
+	reset: () => set({ unsavedChanges: [] }),
 
-	unsavedChanges: {},
-	unsavedItemChanges: {},
+	unsavedChanges: [],
 	saveImmediate: () => {
-		const { type, id, unsavedChanges, unsavedItemChanges } = get();
-		if (
-			type !== SHARED &&
-			(Object.keys(unsavedChanges).length > 0 ||
-				Object.keys(unsavedItemChanges).length > 0)
-		) {
+		const { type, id, unsavedChanges } = get();
+		if (type !== SHARED && unsavedChanges.length > 0) {
 			let doc = firestore
 				.collection(
 					type === ANONYMOUS ? "anonymousMasteryData" : "masteryData"
@@ -41,19 +36,24 @@ export const useStore = create((set, get) => ({
 
 			batch.set(
 				doc,
-				Object.keys(unsavedChanges).reduce((changes, key) => {
-					changes[key] = unsavedChanges[key].new;
-					return changes;
-				}, {}),
+				unsavedChanges
+					.filter(change => change.type === "field")
+					.reduce((changes, change) => {
+						changes[change.field] = change.new;
+						return changes;
+					}, {}),
 				{ merge: true }
 			);
 			batch.set(
 				doc,
 				{
 					mastered: firebase.firestore.FieldValue.arrayUnion(
-						...Object.keys(unsavedItemChanges).filter(
-							item => unsavedItemChanges[item]
-						)
+						...unsavedChanges
+							.filter(
+								change =>
+									change.type === "item" && change.mastered
+							)
+							.map(change => change.item)
 					)
 				},
 				{ merge: true }
@@ -62,9 +62,12 @@ export const useStore = create((set, get) => ({
 				doc,
 				{
 					mastered: firebase.firestore.FieldValue.arrayRemove(
-						...Object.keys(unsavedItemChanges).filter(
-							item => !unsavedItemChanges[item]
-						)
+						...unsavedChanges
+							.filter(
+								change =>
+									change.type === "item" && !change.mastered
+							)
+							.map(change => change.item)
 					)
 				},
 				{ merge: true }
@@ -72,7 +75,7 @@ export const useStore = create((set, get) => ({
 
 			batch.commit();
 
-			set({ unsavedChanges: {}, unsavedItemChanges: {} });
+			set({ unsavedChanges: [] });
 		}
 	},
 	save: debounce(() => get().saveImmediate(), 2500),
@@ -159,13 +162,15 @@ export const useStore = create((set, get) => ({
 
 	itemsMastered: [],
 	setItemsMastered: itemsMastered => {
-		const unsavedItemChanges = get().unsavedItemChanges;
-		const added = Object.keys(unsavedItemChanges).filter(
-			item => unsavedItemChanges[item] === true
+		const unsavedChanges = get().unsavedChanges.filter(
+			change => change.type === "item"
 		);
-		const removed = Object.keys(unsavedItemChanges).filter(
-			item => unsavedItemChanges[item] === false
-		);
+		const added = unsavedChanges
+			.filter(change => change.mastered)
+			.map(change => change.item);
+		const removed = unsavedChanges
+			.filter(change => !change.mastered)
+			.map(change => change.item);
 		itemsMastered = itemsMastered.filter(item => !removed.includes(item));
 		added.forEach(item => {
 			if (!itemsMastered.includes(item)) itemsMastered.push(item);
@@ -180,12 +185,7 @@ export const useStore = create((set, get) => ({
 			produce(state, draftState => {
 				if (draftState.itemsMastered.includes(name)) return;
 				draftState.itemsMastered.push(name);
-
-				if (draftState.unsavedItemChanges[name] === false) {
-					delete draftState.unsavedItemChanges[name];
-				} else {
-					draftState.unsavedItemChanges[name] = true;
-				}
+				markItemChange(draftState, name, true);
 			})
 		);
 		get().recalculateMasteryRank();
@@ -202,15 +202,7 @@ export const useStore = create((set, get) => ({
 							!foundersItems.includes(item.name)
 						) {
 							draftState.itemsMastered.push(item.name);
-
-							if (
-								draftState.unsavedItemChanges[item.name] ===
-								false
-							) {
-								delete draftState.unsavedItemChanges[item.name];
-							} else {
-								draftState.unsavedItemChanges[item.name] = true;
-							}
+							markItemChange(draftState, item.name, true);
 						}
 					}
 				});
@@ -227,11 +219,7 @@ export const useStore = create((set, get) => ({
 				if (index === -1) return;
 
 				draftState.itemsMastered.splice(index, 1);
-				if (draftState.unsavedItemChanges[name] === true) {
-					delete draftState.unsavedItemChanges[name];
-				} else {
-					draftState.unsavedItemChanges[name] = false;
-				}
+				markItemChange(draftState, name, false);
 			})
 		);
 		get().recalculateMasteryRank();
@@ -241,13 +229,9 @@ export const useStore = create((set, get) => ({
 	unmasterAllItems: () => {
 		set(state =>
 			produce(state, draftState => {
-				state.itemsMastered.forEach(item => {
-					if (draftState.unsavedItemChanges[item] === true) {
-						delete draftState.unsavedItemChanges[item];
-					} else {
-						draftState.unsavedItemChanges[item] = false;
-					}
-				});
+				state.itemsMastered.forEach(item =>
+					markItemChange(draftState, item, false)
+				);
 				draftState.itemsMastered = [];
 			})
 		);
@@ -312,22 +296,50 @@ export const useStore = create((set, get) => ({
 	}
 }));
 
+function markItemChange(state, item, mastered) {
+	const existingChangeIndex = state.unsavedChanges.findIndex(
+		change => change.type === "item" && change.item === item
+	);
+
+	if (existingChangeIndex !== -1) {
+		state.unsavedChanges.splice(existingChangeIndex, 1);
+	} else {
+		state.unsavedChanges.push({
+			type: "item",
+			item,
+			mastered
+		});
+	}
+}
+
 function setAndMarkChange(set, load, key, value) {
 	set(state =>
 		produce(state, draftState => {
 			if (state[key] !== value) {
 				if (!load) {
-					if (draftState.unsavedChanges[key]) {
-						if (draftState.unsavedChanges[key].old === value) {
-							delete draftState.unsavedChanges[key];
+					const existingChangeIndex =
+						draftState.unsavedChanges.findIndex(
+							change =>
+								change.type === "field" && change.field === key
+						);
+					if (existingChangeIndex !== -1) {
+						const existingChange =
+							draftState.unsavedChanges[existingChangeIndex];
+						if (existingChange.old === value) {
+							draftState.unsavedChanges.splice(
+								existingChangeIndex,
+								1
+							);
 						} else {
-							draftState.unsavedChanges[key].new = value;
+							existingChange.new = value;
 						}
 					} else {
-						draftState.unsavedChanges[key] = {
+						draftState.unsavedChanges.push({
+							type: "field",
+							field: key,
 							old: state[key],
 							new: value
-						};
+						});
 						state.save();
 					}
 				}
