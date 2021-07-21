@@ -1,3 +1,4 @@
+import produce from "immer";
 import PropTypes from "prop-types";
 import shallow from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
@@ -30,6 +31,15 @@ function CategoryItem({ name }) {
 		state => state.itemsMastered.filter(item => categoryItems[item]),
 		shallow
 	);
+	const partiallyMasteredItems = useStore(
+		state =>
+			produce(state.partiallyMasteredItems, draftState => {
+				Object.keys(draftState).forEach(item => {
+					if (!categoryItems[item]) delete draftState[item];
+				});
+			}),
+		shallow
+	);
 
 	let masteredCount = 0;
 	let masteredXP = 0;
@@ -47,6 +57,12 @@ function CategoryItem({ name }) {
 		if (itemsMastered.includes(itemName)) {
 			masteredCount++;
 			masteredXP += xpFromItem(item, name);
+		} else if (partiallyMasteredItems[itemName]) {
+			masteredXP += xpFromItem(
+				item,
+				name,
+				partiallyMasteredItems[itemName]
+			);
 		}
 	});
 
@@ -54,14 +70,14 @@ function CategoryItem({ name }) {
 		<div className="category-info">
 			<span className="category-name">
 				{fancyCategoryNames[name] ||
-					name
-						.split(" ")
-						.map(
-							word =>
-								word.charAt(0).toUpperCase() +
-								word.slice(1).toLowerCase()
-						)
-						.join(" ")}
+				name
+					.split(" ")
+					.map(
+						word =>
+							word.charAt(0).toUpperCase() +
+							word.slice(1).toLowerCase()
+					)
+					.join(" ")}
 			</span>
 			<br />
 			<span>

@@ -18,6 +18,7 @@ function MasteryChecklist(props) {
 		setType,
 		reset,
 		setItemsMastered,
+		setPartiallyMasteredItems,
 		setMissions,
 		setJunctions,
 		setIntrinsics,
@@ -29,6 +30,7 @@ function MasteryChecklist(props) {
 			setType: state.setType,
 			reset: state.reset,
 			setItemsMastered: state.setItemsMastered,
+			setPartiallyMasteredItems: state.setPartiallyMasteredItems,
 			setMissions: state.setMissions,
 			setJunctions: state.setJunctions,
 			setIntrinsics: state.setIntrinsics,
@@ -55,6 +57,7 @@ function MasteryChecklist(props) {
 	);
 	useLayoutEffect(() => {
 		setItemsMastered(data?.mastered ?? []);
+		setPartiallyMasteredItems(data?.partiallyMastered ?? {});
 		setMissions(data?.missions ?? 0, true);
 		setJunctions(data?.junctions ?? 0, true);
 		setIntrinsics(data?.intrinsics ?? 0, true);

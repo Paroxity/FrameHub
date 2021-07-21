@@ -72,6 +72,20 @@ export const useStore = create((set, get) => ({
 				},
 				{ merge: true }
 			);
+			batch.set(
+				doc,
+				{
+					partiallyMastered: unsavedChanges
+						.filter(change => change.type === "partialItem")
+						.reduce((partiallyMastered, change) => {
+							partiallyMastered[change.item] =
+								change.new ??
+								firebase.firestore.FieldValue.delete();
+							return partiallyMastered;
+						}, {})
+				},
+				{ merge: true }
+			);
 
 			batch.commit();
 
@@ -120,6 +134,7 @@ export const useStore = create((set, get) => ({
 		const {
 			items,
 			itemsMastered,
+			partiallyMasteredItems,
 			missions,
 			junctions,
 			intrinsics,
@@ -140,6 +155,12 @@ export const useStore = create((set, get) => ({
 			if (itemsMastered.includes(item.name)) {
 				xp += xpFromItem(item, item.type);
 				itemsMasteredCount++;
+			} else if (partiallyMasteredItems[item.name]) {
+				xp += xpFromItem(
+					item,
+					item.type,
+					partiallyMasteredItems[item.name]
+				);
 			}
 			if (
 				hideFounders &&
@@ -193,6 +214,9 @@ export const useStore = create((set, get) => ({
 		get().save();
 	},
 	masterAllItems: () => {
+		Object.keys(get().partiallyMasteredItems).forEach(item =>
+			get().setPartiallyMasteredItem(item, 0)
+		);
 		set(state =>
 			produce(state, draftState => {
 				itemsAsArray(draftState.items).forEach(item => {
@@ -227,6 +251,9 @@ export const useStore = create((set, get) => ({
 		get().save();
 	},
 	unmasterAllItems: () => {
+		Object.keys(get().partiallyMasteredItems).forEach(item =>
+			get().setPartiallyMasteredItem(item, 0)
+		);
 		set(state =>
 			produce(state, draftState => {
 				state.itemsMastered.forEach(item =>
@@ -240,9 +267,69 @@ export const useStore = create((set, get) => ({
 		get().save();
 	},
 
+	partiallyMasteredItems: {},
+	setPartiallyMasteredItems: partiallyMasteredItems => {
+		set(state =>
+			produce(state, draftState => {
+				state.unsavedChanges
+					.filter(change => change.type === "partialItem")
+					.forEach(change => {
+						partiallyMasteredItems[change.item] = change.rank;
+					});
+				draftState.partiallyMasteredItems = partiallyMasteredItems;
+			})
+		);
+		get().recalculateMasteryRank();
+		get().recalculateIngredients();
+		get().save();
+	},
+	setPartiallyMasteredItem: (name, rank, maxRank) => {
+		if (rank === maxRank) get().masterItem(name);
+		else if (get().itemsMastered.includes(name)) get().unmasterItem(name);
+		rank = rank === maxRank || rank === 0 ? undefined : rank;
+
+		set(state =>
+			produce(state, draftState => {
+				const existingChangeIndex = state.unsavedChanges.findIndex(
+					change =>
+						change.type === "partialItem" && change.item === name
+				);
+
+				if (existingChangeIndex !== -1) {
+					const existingChange =
+						draftState.unsavedChanges[existingChangeIndex];
+					if (existingChange.old === rank) {
+						draftState.unsavedChanges.splice(
+							existingChangeIndex,
+							1
+						);
+					} else {
+						existingChange.new = rank;
+					}
+				} else {
+					draftState.unsavedChanges.push({
+						type: "partialItem",
+						item: name,
+						old: draftState.partiallyMasteredItems[name],
+						new: rank
+					});
+				}
+
+				if (rank === 0 || rank === maxRank) {
+					delete draftState.partiallyMasteredItems[name];
+				} else {
+					draftState.partiallyMasteredItems[name] = rank;
+				}
+			})
+		);
+		get().recalculateMasteryRank();
+		get().recalculateIngredients();
+		get().save();
+	},
+
 	ingredients: {},
 	recalculateIngredients: () => {
-		const { items, itemsMastered } = get();
+		const { items, itemsMastered, partiallyMasteredItems } = get();
 		const necessaryComponents = {};
 
 		function calculate(recipe) {
@@ -263,7 +350,11 @@ export const useStore = create((set, get) => ({
 		}
 
 		itemsAsArray(items).forEach(item => {
-			if (!itemsMastered.includes(item.name) && item.components) {
+			if (
+				!itemsMastered.includes(item.name) &&
+				!partiallyMasteredItems[item.name] &&
+				item.components
+			) {
 				calculate(item);
 			}
 		});

@@ -829,3 +829,16 @@ input:disabled {
 	display: block;
 	margin-top: 1em;
 }
+
+.rank-options {
+	display: flex;
+	margin: 0 0.5em;
+}
+
+.rank-option {
+	flex-basis: 100%;
+	margin: 0 0.125em;
+	border-radius: 0.25em;
+	background: #bea966;
+	color: white;
+}
