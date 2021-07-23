@@ -72,18 +72,16 @@ export const useStore = create((set, get) => ({
 				},
 				{ merge: true }
 			);
-			batch.set(
+			batch.update(
 				doc,
-				{
-					partiallyMastered: unsavedChanges
-						.filter(change => change.type === "partialItem")
-						.reduce((partiallyMastered, change) => {
-							partiallyMastered[change.item] =
-								change.new ??
-								firebase.firestore.FieldValue.delete();
-							return partiallyMastered;
-						}, {})
-				},
+				unsavedChanges
+					.filter(change => change.type === "partialItem")
+					.reduce((data, change) => {
+						data["partiallyMastered." + change.item] =
+							change.new ??
+							firebase.firestore.FieldValue.delete();
+						return data;
+					}, {}),
 				{ merge: true }
 			);
 
