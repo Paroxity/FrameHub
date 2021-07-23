@@ -47,7 +47,8 @@ function CategoryItem({ name, item }) {
 							const rank = j === 0 ? 0 : j * 2 + 28;
 							return (
 								<div
-									class="rank-option"
+									key={rank}
+									className="rank-option"
 									onClick={() =>
 										setPartiallyMasteredItem(
 											name,
