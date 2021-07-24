@@ -17,6 +17,7 @@ function PlanetInfoTooltip({ node }) {
 					src={`https://raw.githubusercontent.com/WFCD/warframe-hub/dev/src/assets/img/factions/${factionIndexMap[
 						node.faction
 					].toLowerCase()}.svg`}
+					alt=""
 				/>
 				{factionIndexMap[node.faction]} {missionIndexMap[node.type]}
 			</span>
