@@ -175,9 +175,15 @@ export const useStore = create((set, get) => ({
 			intrinsicsToXP(totalIntrinsics);
 		let totalItems = 0;
 		Object.entries(flattenedItems).forEach(([itemName, item]) => {
+			// Venari gains mastery XP through leveling, but does not show under the Profile. Kitguns show under both Primary
+			// and Secondary tabs in the Profile, contributing 2 to the total count per barrel while only providing the
+			// mastery XP once.
+			const additionalItemCount =
+				itemName === "Venari" ? 0 : item.type === "KITGUN" ? 2 : 1;
+
 			if (itemsMastered.includes(itemName)) {
 				xp += xpFromItem(item, item.type);
-				itemsMasteredCount++;
+				itemsMasteredCount += additionalItemCount;
 			} else if (partiallyMasteredItems[itemName]) {
 				xp += xpFromItem(
 					item,
@@ -192,7 +198,7 @@ export const useStore = create((set, get) => ({
 			)
 				return;
 			totalXP += xpFromItem(item, item.type);
-			totalItems++;
+			totalItems += additionalItemCount;
 		});
 		Object.entries(flattenedNodes).forEach(([id, node]) => {
 			if (node.xp) {
