@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import PropTypes from "prop-types";
 import checkmark from "../icons/checkmark.svg";
 import placeholderIcon from "../icons/placeholder-icon.svg";
@@ -36,7 +37,7 @@ export default Toggle;
 
 export function LabeledToggle(props) {
 	return (
-		<div className="labeled-input">
+		<div className={classNames("labeled-input", props.className)}>
 			<span>{props.label}</span>
 			<Toggle toggled={props.toggled} onToggle={props.onToggle} />
 		</div>
@@ -44,6 +45,7 @@ export function LabeledToggle(props) {
 }
 
 LabeledToggle.propTypes = {
+	className: PropTypes.string,
 	label: PropTypes.string,
 	toggled: PropTypes.bool,
 	disabled: PropTypes.bool,

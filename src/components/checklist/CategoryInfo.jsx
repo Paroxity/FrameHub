@@ -4,6 +4,7 @@ import shallow from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { foundersItems } from "../../utils/items";
 import { xpFromItem } from "../../utils/mastery-rank";
+import BaseCategoryInfo from "./BaseCategoryInfo";
 
 const fancyCategoryNames = {
 	WF: "Warframe",
@@ -67,9 +68,9 @@ function CategoryItem({ name }) {
 	});
 
 	return (
-		<div className="category-info">
-			<span className="category-name">
-				{fancyCategoryNames[name] ||
+		<BaseCategoryInfo
+			name={
+				fancyCategoryNames[name] ||
 				name
 					.split(" ")
 					.map(
@@ -77,17 +78,13 @@ function CategoryItem({ name }) {
 							word.charAt(0).toUpperCase() +
 							word.slice(1).toLowerCase()
 					)
-					.join(" ")}
-			</span>
-			<br />
-			<span>
-				{masteredCount}/{totalCount}
-			</span>
-			<br />
-			<span className="category-xp">
-				{masteredXP.toLocaleString()}/{totalXP.toLocaleString()} XP
-			</span>
-		</div>
+					.join(" ")
+			}
+			mastered={masteredCount}
+			total={totalCount}
+			masteredXP={masteredXP}
+			totalXP={totalXP}
+		/>
 	);
 }
 

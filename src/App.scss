@@ -35,7 +35,8 @@ h6 {
 .items-mastered,
 .xp,
 .mastery-progress,
-.category {
+.category,
+.planet {
 	font-size: 1.1em;
 }
 
@@ -44,7 +45,8 @@ h6 {
 	font-weight: 700;
 }
 
-.category {
+.category,
+.planet {
 	flex: 1 0 auto;
 	margin-top: 1em;
 	overflow: hidden;
@@ -841,4 +843,17 @@ input:disabled {
 	border-radius: 0.25em;
 	background: #bea966;
 	color: white;
+}
+
+.steel-path-toggle {
+	margin-bottom: 1em;
+}
+
+.mission-info {
+	margin-bottom: 2em;
+}
+
+.faction-icon {
+	width: 1em;
+	display: inline-block;
 }

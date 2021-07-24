@@ -1,77 +1,53 @@
 import shallow from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { SHARED } from "../../utils/checklist-types";
-import {
-	totalIntrinsics,
-	totalJunctions,
-	totalMissions
-} from "../../utils/mastery-rank";
+import { totalIntrinsics } from "../../utils/mastery-rank";
+import Button from "../Button";
 import NumberInput from "../NumberInput";
 import { LabeledToggle } from "../Toggle";
 
 function SidebarInputs() {
 	const {
 		type,
-		missions,
-		setMissions,
-		junctions,
-		setJunctions,
 		intrinsics,
 		setIntrinsics,
 		hideMastered,
 		setHideMastered,
 		hideFounders,
-		setHideFounders
+		setHideFounders,
+		displayingNodes,
+		setDisplayingNodes,
+		displayingSteelPath,
+		setDisplayingSteelPath
 	} = useStore(
 		state => ({
 			type: state.type,
-			missions: state.missions,
-			setMissions: state.setMissions,
-			junctions: state.junctions,
-			setJunctions: state.setJunctions,
 			intrinsics: state.intrinsics,
 			setIntrinsics: state.setIntrinsics,
 			hideMastered: state.hideMastered,
 			setHideMastered: state.setHideMastered,
 			hideFounders: state.hideFounders,
-			setHideFounders: state.setHideFounders
+			setHideFounders: state.setHideFounders,
+			displayingNodes: state.displayingNodes,
+			setDisplayingNodes: state.setDisplayingNodes,
+			displayingSteelPath: state.displayingSteelPath,
+			setDisplayingSteelPath: state.setDisplayingSteelPath
 		}),
 		shallow
 	);
 	return (
 		<>
-			<NumberInput
-				name="Missions"
-				disabled={type === SHARED}
-				min={0}
-				max={totalMissions}
-				value={missions.toString()}
-				onChange={setMissions}
-				tooltipTitle="Missions"
-				tooltipContent={
-					<>
-						<p>Normal Missions: {totalMissions / 2}</p>
-						<p>Steel Path Missions: {totalMissions / 2}</p>
-						<p>Maximum Value: {totalMissions}</p>
-					</>
-				}
-			/>
-			<NumberInput
-				name="Junctions"
-				disabled={type === SHARED}
-				min={0}
-				max={totalJunctions}
-				value={junctions.toString()}
-				onChange={setJunctions}
-				tooltipTitle="Junctions"
-				tooltipContent={
-					<>
-						<p>Normal Junctions: {totalJunctions / 2}</p>
-						<p>Steel Path Junctions: {totalJunctions / 2}</p>
-						<p>Maximum Value: {totalJunctions}</p>
-					</>
-				}
-			/>
+			<Button onClick={() => setDisplayingNodes(!displayingNodes)}>
+				{displayingNodes ? "Exit Star Chart" : "Star Chart"}
+			</Button>
+			{displayingNodes && (
+				<LabeledToggle
+					className="steel-path-toggle"
+					label="Steel Path"
+					toggled={displayingSteelPath}
+					onToggle={setDisplayingSteelPath}
+				/>
+			)}
 			<NumberInput
 				name="Intrinsics"
 				disabled={type === SHARED}
@@ -92,11 +68,13 @@ function SidebarInputs() {
 				toggled={hideMastered}
 				onToggle={setHideMastered}
 			/>
-			<LabeledToggle
-				label="Hide Founders"
-				toggled={hideFounders}
-				onToggle={setHideFounders}
-			/>
+			{!displayingNodes && (
+				<LabeledToggle
+					label="Hide Founders"
+					toggled={hideFounders}
+					onToggle={setHideFounders}
+				/>
+			)}
 		</>
 	);
 }

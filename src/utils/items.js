@@ -1,4 +1,3 @@
-import produce from "immer";
 import PropTypes from "prop-types";
 
 export const ingredientSuffixes = [
@@ -79,21 +78,3 @@ export const itemShape = {
 	buildTime: PropTypes.number,
 	buildPrice: PropTypes.number
 };
-
-export function itemsAsArray(items) {
-	return Object.entries(items).reduce(
-		(finalItems, [categoryName, category]) => {
-			Object.entries(category).reduce((finalItems, [itemName, item]) => {
-				finalItems.push(
-					produce(item, draftItem => {
-						draftItem.name = itemName;
-						draftItem.type = categoryName;
-					})
-				);
-				return finalItems;
-			}, finalItems);
-			return finalItems;
-		},
-		[]
-	);
-}

@@ -4,80 +4,88 @@ import produce from "immer";
 import create from "zustand";
 import { firestore } from "../App";
 import { ANONYMOUS, SHARED } from "../utils/checklist-types";
-import { foundersItems, itemsAsArray } from "../utils/items";
+import { foundersItems } from "../utils/items";
 import {
 	intrinsicsToXP,
 	junctionsToXP,
-	missionsToXP,
 	totalIntrinsics,
-	totalJunctions,
-	totalMissions,
 	xpFromItem,
 	xpToMR
 } from "../utils/mastery-rank";
+import { flattenedNodes, planetsWithJunctions } from "../utils/nodes";
 
 export const useStore = create((set, get) => ({
 	type: undefined,
-	setType: type => set(() => ({ type })),
+	setType: type => set({ type }),
 	id: undefined,
-	setId: id => set(() => ({ id })),
+	setId: id => set({ id }),
 	reset: () => set({ unsavedChanges: [] }),
 
 	unsavedChanges: [],
 	saveImmediate: () => {
 		const { type, id, unsavedChanges } = get();
 		if (type !== SHARED && unsavedChanges.length > 0) {
-			let doc = firestore
+			const doc = firestore
 				.collection(
 					type === ANONYMOUS ? "anonymousMasteryData" : "masteryData"
 				)
 				.doc(id);
-			let batch = firestore.batch();
+			const batch = firestore.batch();
 
 			batch.set(
 				doc,
 				unsavedChanges
 					.filter(change => change.type === "field")
 					.reduce((changes, change) => {
-						changes[change.field] = change.new;
+						changes[change.id] = change.new;
 						return changes;
 					}, {}),
 				{ merge: true }
 			);
-			batch.set(
-				doc,
-				{
-					mastered: firebase.firestore.FieldValue.arrayUnion(
-						...unsavedChanges
-							.filter(
-								change =>
-									change.type === "item" && change.mastered
-							)
-							.map(change => change.item)
-					)
-				},
-				{ merge: true }
-			);
-			batch.set(
-				doc,
-				{
-					mastered: firebase.firestore.FieldValue.arrayRemove(
-						...unsavedChanges
-							.filter(
-								change =>
-									change.type === "item" && !change.mastered
-							)
-							.map(change => change.item)
-					)
-				},
-				{ merge: true }
-			);
+			Object.entries({
+				itemsMastered: "mastered",
+				starChart: "starChart",
+				starChartJunctions: "starChartJunctions",
+				steelPath: "steelPath",
+				steelPathJunctions: "steelPathJunctions"
+			}).forEach(([changeType, field]) => {
+				batch.set(
+					doc,
+					{
+						[field]: firebase.firestore.FieldValue.arrayUnion(
+							...unsavedChanges
+								.filter(
+									change =>
+										change.type === changeType &&
+										change.mastered
+								)
+								.map(change => change.id)
+						)
+					},
+					{ merge: true }
+				);
+				batch.set(
+					doc,
+					{
+						[field]: firebase.firestore.FieldValue.arrayRemove(
+							...unsavedChanges
+								.filter(
+									change =>
+										change.type === changeType &&
+										!change.mastered
+								)
+								.map(change => change.id)
+						)
+					},
+					{ merge: true }
+				);
+			});
 			batch.update(
 				doc,
 				unsavedChanges
-					.filter(change => change.type === "partialItem")
+					.filter(change => change.type === "partiallyMasteredItems")
 					.reduce((data, change) => {
-						data["partiallyMastered." + change.item] =
+						data["partiallyMastered." + change.id] =
 							change.new ??
 							firebase.firestore.FieldValue.delete();
 						return data;
@@ -93,21 +101,37 @@ export const useStore = create((set, get) => ({
 	save: debounce(() => get().saveImmediate(), 2500),
 
 	items: {},
+	flattenedItems: {},
 	setItems: items => {
-		set({ items });
+		set({
+			items,
+			flattenedItems: Object.entries(items).reduce(
+				(flattenedItems, [category, categoryItems]) => {
+					Object.entries(categoryItems).reduce(
+						(flattenedItems, [name, item]) => {
+							flattenedItems[name] = produce(item, draftItem => {
+								draftItem.type = category;
+							});
+							return flattenedItems;
+						},
+						flattenedItems
+					);
+					return flattenedItems;
+				},
+				{}
+			)
+		});
 		get().recalculateMasteryRank();
 		get().recalculateIngredients();
 	},
 	fetchItems: async () => {
-		if (localStorage.getItem("items")) {
+		if (localStorage.getItem("items"))
 			get().setItems(JSON.parse(localStorage.getItem("items")));
-		}
 
 		const { updated } = await firebase
 			.storage()
 			.ref("items.json")
 			.getMetadata();
-
 		if (
 			localStorage.getItem("items-updated-at") !== updated ||
 			!localStorage.getItem("items")
@@ -130,44 +154,52 @@ export const useStore = create((set, get) => ({
 	totalItems: 0,
 	recalculateMasteryRank: () => {
 		const {
-			items,
+			flattenedItems,
 			itemsMastered,
 			partiallyMasteredItems,
-			missions,
-			junctions,
 			intrinsics,
-			hideFounders
+			hideFounders,
+			starChart,
+			starChartJunctions,
+			steelPath,
+			steelPathJunctions
 		} = get();
 
 		let xp =
-			missionsToXP(missions) +
-			junctionsToXP(junctions) +
-			intrinsicsToXP(intrinsics);
+			junctionsToXP(
+				starChartJunctions.length + steelPathJunctions.length
+			) + intrinsicsToXP(intrinsics);
 		let itemsMasteredCount = 0;
 		let totalXP =
-			missionsToXP(totalMissions) +
-			junctionsToXP(totalJunctions) +
+			junctionsToXP(planetsWithJunctions.length * 2) +
 			intrinsicsToXP(totalIntrinsics);
 		let totalItems = 0;
-		itemsAsArray(items).forEach(item => {
-			if (itemsMastered.includes(item.name)) {
+		Object.entries(flattenedItems).forEach(([itemName, item]) => {
+			if (itemsMastered.includes(itemName)) {
 				xp += xpFromItem(item, item.type);
 				itemsMasteredCount++;
-			} else if (partiallyMasteredItems[item.name]) {
+			} else if (partiallyMasteredItems[itemName]) {
 				xp += xpFromItem(
 					item,
 					item.type,
-					partiallyMasteredItems[item.name]
+					partiallyMasteredItems[itemName]
 				);
 			}
 			if (
 				hideFounders &&
-				foundersItems.includes(item.name) &&
-				!itemsMastered.includes(item.name)
+				foundersItems.includes(itemName) &&
+				!itemsMastered.includes(itemName)
 			)
 				return;
 			totalXP += xpFromItem(item, item.type);
 			totalItems++;
+		});
+		Object.entries(flattenedNodes).forEach(([id, node]) => {
+			if (node.xp) {
+				totalXP += node.xp * 2;
+				if (starChart.includes(id)) xp += node.xp;
+				if (steelPath.includes(id)) xp += node.xp;
+			}
 		});
 
 		set({
@@ -181,88 +213,28 @@ export const useStore = create((set, get) => ({
 
 	itemsMastered: [],
 	setItemsMastered: itemsMastered => {
-		const unsavedChanges = get().unsavedChanges.filter(
-			change => change.type === "item"
-		);
-		const added = unsavedChanges
-			.filter(change => change.mastered)
-			.map(change => change.item);
-		const removed = unsavedChanges
-			.filter(change => !change.mastered)
-			.map(change => change.item);
-		itemsMastered = itemsMastered.filter(item => !removed.includes(item));
-		added.forEach(item => {
-			if (!itemsMastered.includes(item)) itemsMastered.push(item);
-		});
-
-		set(() => ({ itemsMastered }));
-		get().recalculateMasteryRank();
+		setMastered("itemsMastered", itemsMastered);
 		get().recalculateIngredients();
 	},
-	masterItem: name => {
-		set(state =>
-			produce(state, draftState => {
-				if (draftState.itemsMastered.includes(name)) return;
-				draftState.itemsMastered.push(name);
-				markItemChange(draftState, name, true);
-			})
-		);
-		get().recalculateMasteryRank();
+	masterItem: (name, mastered) => {
+		master("itemsMastered", name, mastered);
 		get().recalculateIngredients();
-		get().save();
 	},
-	masterAllItems: () => {
+	masterAllItems: mastered => {
 		Object.keys(get().partiallyMasteredItems).forEach(item =>
 			get().setPartiallyMasteredItem(item, 0)
 		);
-		set(state =>
-			produce(state, draftState => {
-				itemsAsArray(draftState.items).forEach(item => {
-					if (!draftState.itemsMastered.includes(item.name)) {
-						if (
-							!state.hideFounders ||
-							!foundersItems.includes(item.name)
-						) {
-							draftState.itemsMastered.push(item.name);
-							markItemChange(draftState, item.name, true);
-						}
-					}
-				});
-				draftState.ingredients = {};
-			})
+		masterAll(
+			"itemsMastered",
+			Object.keys(get().flattenedItems).filter(
+				i =>
+					!get().hideFounders ||
+					!foundersItems.includes(i) ||
+					get().itemsMastered.includes(i)
+			),
+			mastered
 		);
-		get().recalculateMasteryRank();
-		get().save();
-	},
-	unmasterItem: name => {
-		set(state =>
-			produce(state, draftState => {
-				let index = draftState.itemsMastered.indexOf(name);
-				if (index === -1) return;
-
-				draftState.itemsMastered.splice(index, 1);
-				markItemChange(draftState, name, false);
-			})
-		);
-		get().recalculateMasteryRank();
 		get().recalculateIngredients();
-		get().save();
-	},
-	unmasterAllItems: () => {
-		Object.keys(get().partiallyMasteredItems).forEach(item =>
-			get().setPartiallyMasteredItem(item, 0)
-		);
-		set(state =>
-			produce(state, draftState => {
-				state.itemsMastered.forEach(item =>
-					markItemChange(draftState, item, false)
-				);
-				draftState.itemsMastered = [];
-			})
-		);
-		get().recalculateMasteryRank();
-		get().recalculateIngredients();
-		get().save();
 	},
 
 	partiallyMasteredItems: {},
@@ -282,37 +254,20 @@ export const useStore = create((set, get) => ({
 		get().save();
 	},
 	setPartiallyMasteredItem: (name, rank, maxRank) => {
-		if (rank === maxRank) get().masterItem(name);
-		else if (get().itemsMastered.includes(name)) get().unmasterItem(name);
+		if (rank === maxRank) get().masterItem(name, true);
+		else if (get().itemsMastered.includes(name))
+			get().masterItem(name, false);
 		rank = rank === maxRank || rank === 0 ? undefined : rank;
 
 		set(state =>
 			produce(state, draftState => {
-				const existingChangeIndex = state.unsavedChanges.findIndex(
-					change =>
-						change.type === "partialItem" && change.item === name
+				markOldNewChange(
+					draftState,
+					"partiallyMasteredItems",
+					name,
+					draftState.partiallyMasteredItems[name],
+					rank
 				);
-
-				if (existingChangeIndex !== -1) {
-					const existingChange =
-						draftState.unsavedChanges[existingChangeIndex];
-					if (existingChange.old === rank) {
-						draftState.unsavedChanges.splice(
-							existingChangeIndex,
-							1
-						);
-					} else {
-						existingChange.new = rank;
-					}
-				} else {
-					draftState.unsavedChanges.push({
-						type: "partialItem",
-						item: name,
-						old: draftState.partiallyMasteredItems[name],
-						new: rank
-					});
-				}
-
 				if (rank === 0 || rank === maxRank) {
 					delete draftState.partiallyMasteredItems[name];
 				} else {
@@ -325,9 +280,45 @@ export const useStore = create((set, get) => ({
 		get().save();
 	},
 
+	displayingNodes: false,
+	setDisplayingNodes: displayingNodes => set({ displayingNodes }),
+	displayingSteelPath: false,
+	setDisplayingSteelPath: displayingSteelPath => set({ displayingSteelPath }),
+	starChart: [],
+	starChartJunctions: [],
+	steelPath: [],
+	steelPathJunctions: [],
+	setNodesMastered: (nodesMastered, steelPath) =>
+		setMastered(steelPath ? "steelPath" : "starChart", nodesMastered),
+	masterNode: (id, steelPath, mastered) =>
+		master(steelPath ? "steelPath" : "starChart", id, mastered),
+	masterAllNodes: (steelPath, mastered) =>
+		masterAll(
+			steelPath ? "steelPath" : "starChart",
+			Object.keys(flattenedNodes),
+			mastered
+		),
+	setJunctionsMastered: (junctionsMastered, steelPath) =>
+		setMastered(
+			(steelPath ? "steelPath" : "starChart") + "Junctions",
+			junctionsMastered
+		),
+	masterJunction: (id, steelPath, mastered) =>
+		master(
+			(steelPath ? "steelPath" : "starChart") + "Junctions",
+			id,
+			mastered
+		),
+	masterAllJunctions: (steelPath, mastered) =>
+		masterAll(
+			(steelPath ? "steelPath" : "starChart") + "Junctions",
+			planetsWithJunctions,
+			mastered
+		),
+
 	ingredients: {},
 	recalculateIngredients: () => {
-		const { items, itemsMastered, partiallyMasteredItems } = get();
+		const { flattenedItems, itemsMastered, partiallyMasteredItems } = get();
 		const necessaryComponents = {};
 
 		function calculate(recipe) {
@@ -347,10 +338,10 @@ export const useStore = create((set, get) => ({
 			);
 		}
 
-		itemsAsArray(items).forEach(item => {
+		Object.entries(flattenedItems).forEach(([itemName, item]) => {
 			if (
-				!itemsMastered.includes(item.name) &&
-				!partiallyMasteredItems[item.name] &&
+				!itemsMastered.includes(itemName) &&
+				!partiallyMasteredItems[itemName] &&
 				item.components
 			) {
 				calculate(item);
@@ -360,80 +351,126 @@ export const useStore = create((set, get) => ({
 	},
 
 	hideMastered: true,
-	setHideMastered: (hideMastered, load) =>
-		setAndMarkChange(set, load, "hideMastered", hideMastered),
+	setHideMastered: firestoreFieldSetter("hideMastered", get, set),
 	hideFounders: true,
-	setHideFounders: (hideFounders, load) => {
-		setAndMarkChange(set, load, "hideFounders", hideFounders);
-		get().recalculateMasteryRank();
-	},
+	setHideFounders: firestoreFieldSetter("hideFounders", get, set),
 
-	missions: 0,
-	setMissions: (missions, load) => {
-		setAndMarkChange(set, load, "missions", missions);
-		get().recalculateMasteryRank();
-	},
-	junctions: 0,
-	setJunctions: (junctions, load) => {
-		setAndMarkChange(set, load, "junctions", junctions);
-		get().recalculateMasteryRank();
-	},
 	intrinsics: 0,
-	setIntrinsics: (intrinsics, load) => {
-		setAndMarkChange(set, load, "intrinsics", intrinsics);
-		get().recalculateMasteryRank();
-	}
+	setIntrinsics: firestoreFieldSetter("intrinsics", get, set)
 }));
 
-function markItemChange(state, item, mastered) {
-	const existingChangeIndex = state.unsavedChanges.findIndex(
-		change => change.type === "item" && change.item === item
-	);
+const get = () => useStore.getState();
+const set = value => useStore.setState(value);
 
+function firestoreFieldSetter(key) {
+	return (value, load) => {
+		set(state =>
+			produce(state, draftState => {
+				if (state[key] !== value) {
+					if (!load)
+						markOldNewChange(
+							draftState,
+							"field",
+							key,
+							state[key],
+							value
+						);
+					draftState[key] = value;
+				}
+			})
+		);
+		get().recalculateMasteryRank();
+	};
+}
+
+function markOldNewChange(draftState, type, id, old, _new) {
+	const unsavedChanges = draftState.unsavedChanges;
+
+	const existingChangeIndex = unsavedChanges.findIndex(
+		change => change.type === type && change.id === id
+	);
 	if (existingChangeIndex !== -1) {
-		state.unsavedChanges.splice(existingChangeIndex, 1);
+		const existingChange = unsavedChanges[existingChangeIndex];
+		if (existingChange.old === _new) {
+			unsavedChanges.splice(existingChangeIndex, 1);
+		} else {
+			existingChange.new = _new;
+		}
 	} else {
-		state.unsavedChanges.push({
-			type: "item",
-			item,
-			mastered
+		unsavedChanges.push({
+			type,
+			id,
+			old,
+			new: _new
 		});
+		get().save();
 	}
 }
 
-function setAndMarkChange(set, load, key, value) {
+function setMastered(key, mastered) {
+	const unsavedChanges = get().unsavedChanges.filter(
+		change => change.type === key
+	);
+	const added = unsavedChanges
+		.filter(change => change.mastered)
+		.map(change => change.id);
+	const removed = unsavedChanges
+		.filter(change => !change.mastered)
+		.map(change => change.id);
+	mastered = mastered.filter(item => !removed.includes(item));
+	added.forEach(item => {
+		if (!mastered.includes(item)) mastered.push(item);
+	});
+
+	set(() => ({ [key]: mastered }));
+	get().recalculateMasteryRank();
+}
+
+function master(key, id, mastered) {
 	set(state =>
 		produce(state, draftState => {
-			if (state[key] !== value) {
-				if (!load) {
-					const existingChangeIndex =
-						draftState.unsavedChanges.findIndex(
-							change =>
-								change.type === "field" && change.field === key
-						);
-					if (existingChangeIndex !== -1) {
-						const existingChange =
-							draftState.unsavedChanges[existingChangeIndex];
-						if (existingChange.old === value) {
-							draftState.unsavedChanges.splice(
-								existingChangeIndex,
-								1
-							);
-						} else {
-							existingChange.new = value;
-						}
-					} else {
-						draftState.unsavedChanges.push({
-							type: "field",
-							field: key,
-							old: state[key],
-							new: value
-						});
-						state.save();
-					}
-				}
-				draftState[key] = value;
+			if (mastered) {
+				if (!draftState[key].includes(id)) draftState[key].push(id);
+			} else {
+				let index = draftState[key].indexOf(id);
+				if (index !== -1) draftState[key].splice(index, 1);
 			}
+			markMasteryChange(draftState, key, id, mastered);
 		})
 	);
+	get().recalculateMasteryRank();
+	get().save();
+}
+
+function masterAll(key, all, mastered) {
+	set(state =>
+		produce(state, draftState => {
+			all.forEach(id => {
+				if (mastered && !draftState[key].includes(id)) {
+					draftState[key].push(id);
+					markMasteryChange(draftState, key, id, mastered);
+				} else if (!mastered && draftState[key].includes(id)) {
+					markMasteryChange(draftState, key, id, mastered);
+				}
+			});
+			if (!mastered) draftState[key] = [];
+		})
+	);
+	get().recalculateMasteryRank();
+	get().save();
+}
+
+function markMasteryChange(draftState, key, id, mastered) {
+	const existingChangeIndex = draftState.unsavedChanges.findIndex(
+		change => change.type === key && change.id === id
+	);
+	if (existingChangeIndex !== -1) {
+		draftState.unsavedChanges.splice(existingChangeIndex, 1);
+	} else {
+		draftState.unsavedChanges.push({
+			type: key,
+			id,
+			mastered
+		});
+	}
 }

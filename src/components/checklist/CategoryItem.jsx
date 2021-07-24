@@ -15,7 +15,6 @@ function CategoryItem({ name, item }) {
 	const {
 		type,
 		masterItem,
-		unmasterItem,
 		mastered,
 		masteryRankLocked,
 		partialRank,
@@ -25,7 +24,6 @@ function CategoryItem({ name, item }) {
 		state => ({
 			type: state.type,
 			masterItem: state.masterItem,
-			unmasterItem: state.unmasterItem,
 			mastered: state.itemsMastered.includes(name),
 			masteryRankLocked: (item.mr || 0) > state.masteryRank,
 			partialRank: state.partiallyMasteredItems[name],
@@ -91,10 +89,7 @@ function CategoryItem({ name, item }) {
 										setRankSelectToggled(
 											!rankSelectToggled
 										);
-									else
-										mastered
-											? unmasterItem(name)
-											: masterItem(name);
+									else masterItem(name, !mastered);
 								}
 							}
 						}}>

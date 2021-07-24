@@ -4,6 +4,7 @@ import { useDocumentData } from "react-firebase-hooks/firestore";
 import shallow from "zustand/shallow";
 import { firestore } from "../App";
 import Checklist from "../components/checklist/Checklist";
+import PlanetChecklist from "../components/checklist/planets/PlanetChecklist";
 import MissingIngredients from "../components/foundry/MissingIngredients";
 import FrameHubLogo from "../components/FrameHubLogo";
 import LoadingScreen from "../components/LoadingScreen";
@@ -19,11 +20,12 @@ function MasteryChecklist(props) {
 		reset,
 		setItemsMastered,
 		setPartiallyMasteredItems,
-		setMissions,
-		setJunctions,
+		setNodesMastered,
+		setJunctionsMastered,
 		setIntrinsics,
 		setHideMastered,
-		setHideFounders
+		setHideFounders,
+		displayingNodes
 	} = useStore(
 		state => ({
 			setId: state.setId,
@@ -31,11 +33,12 @@ function MasteryChecklist(props) {
 			reset: state.reset,
 			setItemsMastered: state.setItemsMastered,
 			setPartiallyMasteredItems: state.setPartiallyMasteredItems,
-			setMissions: state.setMissions,
-			setJunctions: state.setJunctions,
+			setNodesMastered: state.setNodesMastered,
+			setJunctionsMastered: state.setJunctionsMastered,
 			setIntrinsics: state.setIntrinsics,
 			setHideMastered: state.setHideMastered,
-			setHideFounders: state.setHideFounders
+			setHideFounders: state.setHideFounders,
+			displayingNodes: state.displayingNodes
 		}),
 		shallow
 	);
@@ -58,11 +61,14 @@ function MasteryChecklist(props) {
 	useLayoutEffect(() => {
 		setItemsMastered(data?.mastered ?? []);
 		setPartiallyMasteredItems(data?.partiallyMastered ?? {});
-		setMissions(data?.missions ?? 0, true);
-		setJunctions(data?.junctions ?? 0, true);
 		setIntrinsics(data?.intrinsics ?? 0, true);
 		setHideMastered(data?.hideMastered ?? false, true);
 		setHideFounders(data?.hideFounders ?? true, true);
+		setNodesMastered(data?.starChart ?? [], false);
+		setNodesMastered(data?.steelPath ?? [], true);
+		setJunctionsMastered(data?.starChartJunctions ?? [], false);
+		setJunctionsMastered(data?.steelPathJunctions ?? [], true);
+		console.log(data);
 	}, [data]); //eslint-disable-line
 	const { items, fetchItems } = useStore(
 		state => ({
@@ -82,8 +88,14 @@ function MasteryChecklist(props) {
 			<Sidebar />
 			<div className="content">
 				<FrameHubLogo />
-				<Checklist />
-				<MissingIngredients />
+				{displayingNodes ? (
+					<PlanetChecklist />
+				) : (
+					<>
+						<Checklist />
+						<MissingIngredients />
+					</>
+				)}
 			</div>
 		</div>
 	);

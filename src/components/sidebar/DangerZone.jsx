@@ -6,18 +6,20 @@ import Button from "../Button";
 function DangerZone() {
 	const {
 		type,
+		displayingNodes,
+		displayingSteelPath,
 		masterAllItems,
-		unmasterAllItems,
-		setMissions,
-		setJunctions,
+		masterAllNodes,
+		masterAllJunctions,
 		setIntrinsics
 	} = useStore(
 		state => ({
 			type: state.type,
+			displayingNodes: state.displayingNodes,
+			displayingSteelPath: state.displayingSteelPath,
 			masterAllItems: state.masterAllItems,
-			unmasterAllItems: state.unmasterAllItems,
-			setMissions: state.setMissions,
-			setJunctions: state.setJunctions,
+			masterAllNodes: state.masterAllNodes,
+			masterAllJunctions: state.masterAllJunctions,
 			setIntrinsics: state.setIntrinsics
 		}),
 		shallow
@@ -27,16 +29,29 @@ function DangerZone() {
 		<>
 			<span className="danger-text">Danger zone</span>
 			<div className="danger">
-				<Button centered onClick={masterAllItems}>
+				<Button
+					centered
+					onClick={() => {
+						if (displayingNodes) {
+							masterAllNodes(displayingSteelPath, true);
+							masterAllJunctions(displayingSteelPath, true);
+						} else {
+							masterAllItems(true);
+						}
+					}}>
 					Mark All as Mastered
 				</Button>
 				<Button
 					centered
 					onClick={() => {
-						setMissions(0);
-						setJunctions(0);
 						setIntrinsics(0);
-						unmasterAllItems();
+
+						if (displayingNodes) {
+							masterAllNodes(displayingSteelPath);
+							masterAllJunctions(displayingSteelPath);
+						} else {
+							masterAllItems();
+						}
 					}}>
 					Reset
 				</Button>

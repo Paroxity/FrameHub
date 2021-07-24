@@ -35,10 +35,6 @@ export function mrToXP(mr) {
 	return 2500 * Math.pow(mr, 2);
 }
 
-export function missionsToXP(missions) {
-	return missions * (totalMissionXP / totalMissions);
-}
-
 export function junctionsToXP(junctions) {
 	return junctions * 1000;
 }
@@ -73,7 +69,4 @@ export function masteryRankName(mr) {
 	}
 }
 
-export const totalMissions = 466;
-export const totalMissionXP = 29002;
-export const totalJunctions = 26;
 export const totalIntrinsics = 50;
