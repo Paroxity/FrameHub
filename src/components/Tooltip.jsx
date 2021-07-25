@@ -28,6 +28,7 @@ function Tooltip(props) {
 
 	return (
 		<div
+			className={props.className}
 			onMouseEnter={event => {
 				setMouseX(event.clientX);
 				setMouseY(event.clientY);
@@ -57,6 +58,7 @@ function Tooltip(props) {
 }
 
 Tooltip.propTypes = {
+	className: PropTypes.string,
 	children: PropTypes.node,
 	title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 	content: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),

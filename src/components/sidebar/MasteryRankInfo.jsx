@@ -1,6 +1,7 @@
 import shallow from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { masteryRankName, mrToXP } from "../../utils/mastery-rank";
+import MasteryBreakdownTooltip from "./MasteryBreakdownTooltip";
 
 function MasteryRankInfo() {
 	const { itemsMasteredCount, totalItems, xp, totalXP, masteryRank } =
@@ -16,7 +17,7 @@ function MasteryRankInfo() {
 		);
 
 	return (
-		<>
+		<MasteryBreakdownTooltip>
 			<span className="mastery-rank">{`Mastery Rank ${masteryRank}`}</span>{" "}
 			<span className="items-mastered">
 				{itemsMasteredCount.toLocaleString()}/
@@ -41,7 +42,7 @@ function MasteryRankInfo() {
 					{Math.ceil(mrToXP(masteryRank + 1) - xp).toLocaleString()}
 				</span>
 			</span>
-		</>
+		</MasteryBreakdownTooltip>
 	);
 }
 

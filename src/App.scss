@@ -697,7 +697,7 @@ input:disabled {
 	background: rgb(75, 85, 90);
 	appearance: none;
 	border: none;
-	width: 90%;
+	width: 100%;
 }
 
 .mastery-progress-bar::-webkit-progress-bar {
@@ -721,6 +721,24 @@ input:disabled {
 
 .mastery-progress {
 	padding-top: 5px;
+}
+
+.mastery-info > span {
+	display: block;
+}
+
+.mastery-breakdown-entry {
+	display: block;
+}
+
+.mastery-breakdown-xp {
+	font-weight: bold;
+	margin-right: 0.25em;
+}
+
+.mastery-breakdown-name {
+	color: #bea966;
+	text-transform: none;
 }
 
 .bold {

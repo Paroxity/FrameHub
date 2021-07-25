@@ -148,6 +148,7 @@ export const useStore = create((set, get) => ({
 	},
 
 	masteryRank: 0,
+	masteryBreakdown: {},
 	xp: 0,
 	itemsMasteredCount: 0,
 	totalXP: 0,
@@ -165,15 +166,31 @@ export const useStore = create((set, get) => ({
 			steelPathJunctions
 		} = get();
 
-		let xp =
-			junctionsToXP(
-				starChartJunctions.length + steelPathJunctions.length
-			) + intrinsicsToXP(intrinsics);
+		let masteryBreakdown = {
+			STAR_CHART: junctionsToXP(starChartJunctions.length),
+			STEEL_PATH: junctionsToXP(steelPathJunctions.length),
+			INTRINSICS: intrinsicsToXP(intrinsics)
+		};
+
+		let xp = Object.values(masteryBreakdown).reduce(
+			(xp, categoryXP) => xp + categoryXP,
+			0
+		);
+
+		function addItemXP(item, rank) {
+			const additionalXP = xpFromItem(item, item.type, rank);
+			if (!masteryBreakdown[item.type]) masteryBreakdown[item.type] = 0;
+			masteryBreakdown[item.type] += additionalXP;
+			xp += additionalXP;
+		}
+
 		let itemsMasteredCount = 0;
+
 		let totalXP =
 			junctionsToXP(planetsWithJunctions.length * 2) +
 			intrinsicsToXP(totalIntrinsics);
 		let totalItems = 0;
+
 		Object.entries(flattenedItems).forEach(([itemName, item]) => {
 			// Venari gains mastery XP through leveling, but does not show under the Profile. Kitguns show under both Primary
 			// and Secondary tabs in the Profile, contributing 2 to the total count per barrel while only providing the
@@ -182,14 +199,10 @@ export const useStore = create((set, get) => ({
 				itemName === "Venari" ? 0 : item.type === "KITGUN" ? 2 : 1;
 
 			if (itemsMastered.includes(itemName)) {
-				xp += xpFromItem(item, item.type);
+				addItemXP(item);
 				itemsMasteredCount += additionalItemCount;
 			} else if (partiallyMasteredItems[itemName]) {
-				xp += xpFromItem(
-					item,
-					item.type,
-					partiallyMasteredItems[itemName]
-				);
+				addItemXP(item, partiallyMasteredItems[itemName]);
 			}
 			if (
 				hideFounders &&
@@ -200,16 +213,24 @@ export const useStore = create((set, get) => ({
 			totalXP += xpFromItem(item, item.type);
 			totalItems += additionalItemCount;
 		});
+
 		Object.entries(flattenedNodes).forEach(([id, node]) => {
 			if (node.xp) {
 				totalXP += node.xp * 2;
-				if (starChart.includes(id)) xp += node.xp;
-				if (steelPath.includes(id)) xp += node.xp;
+				if (starChart.includes(id)) {
+					xp += node.xp;
+					masteryBreakdown.STAR_CHART += node.xp;
+				}
+				if (steelPath.includes(id)) {
+					xp += node.xp;
+					masteryBreakdown.STEEL_PATH += node.xp;
+				}
 			}
 		});
 
 		set({
 			masteryRank: Math.floor(xpToMR(xp)),
+			masteryBreakdown,
 			xp,
 			itemsMasteredCount,
 			totalXP,
