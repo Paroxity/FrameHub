@@ -68,7 +68,6 @@ function MasteryChecklist(props) {
 		setNodesMastered(data?.steelPath ?? [], true);
 		setJunctionsMastered(data?.starChartJunctions ?? [], false);
 		setJunctionsMastered(data?.steelPathJunctions ?? [], true);
-		console.log(data);
 	}, [data]); //eslint-disable-line
 	const { items, fetchItems } = useStore(
 		state => ({
