@@ -11,9 +11,6 @@ const OVERWRITES = {
 			buildPrice: 1000
 		}
 	},
-	AW_GUN: {
-		"Prisma Dual Decurions": { mr: 10, baro: [175000, 525] }
-	},
 	MELEE: {
 		"Tenet Agendus": { components: undefined }
 	},
