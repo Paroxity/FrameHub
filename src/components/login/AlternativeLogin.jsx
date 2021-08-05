@@ -1,6 +1,7 @@
-import firebase from "firebase/app";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
 import { useHistory } from "react-router-dom";
-import { auth } from "../../App";
+import { auth, firestore } from "../../App";
 import Button from "../Button";
 
 function AlternativeLogin() {
@@ -9,9 +10,7 @@ function AlternativeLogin() {
 	return (
 		<div className="alternative-login">
 			<Button
-				onClick={() =>
-					auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-				}>
+				onClick={() => signInWithPopup(auth, new GoogleAuthProvider())}>
 				Sign in with Google
 			</Button>
 			<Button
@@ -19,18 +18,23 @@ function AlternativeLogin() {
 					history.push(
 						`/user/${
 							(
-								await firebase
-									.app("paroxity")
-									.firestore()
-									.collection("anonymousMasteryData")
-									.add({
+								await addDoc(
+									collection(
+										firestore,
+										"anonymousMasteryData"
+									),
+									{
 										hideFounders: true,
 										hideMastered: false,
-										missions: 0,
-										junctions: 0,
+										mastered: [],
+										partiallyMastered: {},
 										intrinsics: 0,
-										mastered: []
-									})
+										starChart: [],
+										steelPath: [],
+										starChartJunctions: [],
+										steelPathJunctions: []
+									}
+								)
 							).id
 						}`
 					);

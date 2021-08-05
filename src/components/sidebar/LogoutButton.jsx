@@ -1,3 +1,4 @@
+import { signOut } from "firebase/auth";
 import shallow from "zustand/shallow";
 import { auth } from "../../App";
 import { useStore } from "../../hooks/useStore";
@@ -17,7 +18,7 @@ function LogoutButton() {
 			centered
 			onClick={() => {
 				saveImmediately();
-				auth.signOut();
+				signOut(auth);
 			}}>
 			Logout
 		</Button>

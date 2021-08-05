@@ -1,8 +1,16 @@
 import debounce from "debounce";
-import firebase from "firebase/app";
+import {
+	arrayRemove,
+	arrayUnion,
+	collection,
+	deleteField,
+	doc,
+	writeBatch
+} from "firebase/firestore";
+import { getMetadata, ref } from "firebase/storage";
 import produce from "immer";
 import create from "zustand";
-import { firestore } from "../App";
+import { firestore, storage } from "../App";
 import { ANONYMOUS, SHARED } from "../utils/checklist-types";
 import { foundersItems } from "../utils/items";
 import {
@@ -25,15 +33,17 @@ export const useStore = create((set, get) => ({
 	saveImmediate: () => {
 		const { type, id, unsavedChanges } = get();
 		if (type !== SHARED && unsavedChanges.length > 0) {
-			const doc = firestore
-				.collection(
+			const docRef = doc(
+				collection(
+					firestore,
 					type === ANONYMOUS ? "anonymousMasteryData" : "masteryData"
-				)
-				.doc(id);
-			const batch = firestore.batch();
+				),
+				id
+			);
+			const batch = writeBatch(firestore);
 
 			batch.set(
-				doc,
+				docRef,
 				unsavedChanges
 					.filter(change => change.type === "field")
 					.reduce((changes, change) => {
@@ -50,9 +60,9 @@ export const useStore = create((set, get) => ({
 				steelPathJunctions: "steelPathJunctions"
 			}).forEach(([changeType, field]) => {
 				batch.set(
-					doc,
+					docRef,
 					{
-						[field]: firebase.firestore.FieldValue.arrayUnion(
+						[field]: arrayUnion(
 							...unsavedChanges
 								.filter(
 									change =>
@@ -65,9 +75,9 @@ export const useStore = create((set, get) => ({
 					{ merge: true }
 				);
 				batch.set(
-					doc,
+					docRef,
 					{
-						[field]: firebase.firestore.FieldValue.arrayRemove(
+						[field]: arrayRemove(
 							...unsavedChanges
 								.filter(
 									change =>
@@ -81,13 +91,12 @@ export const useStore = create((set, get) => ({
 				);
 			});
 			batch.update(
-				doc,
+				docRef,
 				unsavedChanges
 					.filter(change => change.type === "partiallyMasteredItems")
 					.reduce((data, change) => {
 						data["partiallyMastered." + change.id] =
-							change.new ??
-							firebase.firestore.FieldValue.delete();
+							change.new ?? deleteField();
 						return data;
 					}, {}),
 				{ merge: true }
@@ -128,10 +137,7 @@ export const useStore = create((set, get) => ({
 		if (localStorage.getItem("items"))
 			get().setItems(JSON.parse(localStorage.getItem("items")));
 
-		const { updated } = await firebase
-			.storage()
-			.ref("items.json")
-			.getMetadata();
+		const { updated } = await getMetadata(ref(storage, "items.json"));
 		if (
 			localStorage.getItem("items-updated-at") !== updated ||
 			!localStorage.getItem("items")

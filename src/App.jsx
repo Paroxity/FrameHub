@@ -1,10 +1,10 @@
-import "firebase/analytics";
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
-import "firebase/functions";
-import "firebase/performance";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { getAnalytics } from "firebase/analytics";
+import { initializeApp } from "firebase/app";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getPerformance } from "firebase/performance";
+import { getStorage } from "firebase/storage";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.scss";
 import LoadingScreen from "./components/LoadingScreen";
@@ -12,7 +12,7 @@ import Login from "./pages/Login";
 import MasteryChecklist from "./pages/MasteryChecklist";
 import { ANONYMOUS, AUTHENTICATED, SHARED } from "./utils/checklist-types";
 
-firebase.initializeApp({
+const framehubFirebase = initializeApp({
 	apiKey: "AIzaSyBMGwuSb8vwSboz8DiPimsCu4KRfXkx-C4",
 	authDomain: "framehub-f9cfb.firebaseapp.com",
 	projectId: "framehub-f9cfb",
@@ -21,7 +21,7 @@ firebase.initializeApp({
 	appId: "1:333211073610:web:9f5f3eed9a5e1c11dbbab3",
 	measurementId: "G-32XJ3FSZB9"
 });
-firebase.initializeApp(
+const paroxityFirebase = initializeApp(
 	{
 		apiKey: "AIzaSyC30ZiFA2z0WXcIQzRxB0Q3FW9hYjSMD1k",
 		authDomain: "paroxity-adfa8.firebaseapp.com",
@@ -34,11 +34,22 @@ firebase.initializeApp(
 	},
 	"paroxity"
 ); //TODO: Combine into one Firebase project
-firebase.analytics();
-firebase.performance();
+export const auth = getAuth(paroxityFirebase);
+export const firestore = getFirestore(paroxityFirebase);
+export const storage = getStorage(framehubFirebase);
+getAnalytics(framehubFirebase);
+getPerformance(framehubFirebase);
 
 function App() {
-	const [user, authLoading] = useAuthState(auth);
+	const [user, setUser] = useState(auth.currentUser);
+	const [authLoading, setAuthLoading] = useState(auth.currentUser === null);
+	useEffect(() => {
+		return onAuthStateChanged(auth, user => {
+			setAuthLoading(false);
+			setUser(user);
+		});
+	}, []);
+
 	return (
 		<BrowserRouter>
 			<Switch>
@@ -79,5 +90,3 @@ function App() {
 }
 
 export default App;
-export const auth = firebase.app("paroxity").auth();
-export const firestore = firebase.app("paroxity").firestore();

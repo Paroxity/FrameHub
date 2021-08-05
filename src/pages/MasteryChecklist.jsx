@@ -1,6 +1,6 @@
+import { collection, doc, onSnapshot } from "firebase/firestore";
 import PropTypes from "prop-types";
-import { useEffect, useLayoutEffect } from "react";
-import { useDocumentData } from "react-firebase-hooks/firestore";
+import { useEffect, useState } from "react";
 import shallow from "zustand/shallow";
 import { firestore } from "../App";
 import Checklist from "../components/checklist/Checklist";
@@ -43,32 +43,41 @@ function MasteryChecklist(props) {
 		shallow
 	);
 
+	const [dataLoading, setDataLoading] = useState(true);
 	useEffect(() => {
 		setId(props.id);
 		setType(props.type);
+		setDataLoading(true);
 		reset();
+
+		return onSnapshot(
+			doc(
+				collection(
+					firestore,
+					props.type === ANONYMOUS
+						? "anonymousMasteryData"
+						: "masteryData"
+				),
+				props.id
+			),
+			snapshot => {
+				const data = snapshot.data();
+
+				setItemsMastered(data?.mastered ?? []);
+				setPartiallyMasteredItems(data?.partiallyMastered ?? {});
+				setIntrinsics(data?.intrinsics ?? 0, true);
+				setHideMastered(data?.hideMastered ?? false, true);
+				setHideFounders(data?.hideFounders ?? true, true);
+				setNodesMastered(data?.starChart ?? [], false);
+				setNodesMastered(data?.steelPath ?? [], true);
+				setJunctionsMastered(data?.starChartJunctions ?? [], false);
+				setJunctionsMastered(data?.steelPathJunctions ?? [], true);
+
+				setDataLoading(false);
+			}
+		);
 	}, [props.id, props.type]); //eslint-disable-line
 
-	const [data, dataLoading] = useDocumentData(
-		firestore
-			.collection(
-				props.type === ANONYMOUS
-					? "anonymousMasteryData"
-					: "masteryData"
-			)
-			.doc(props.id)
-	);
-	useLayoutEffect(() => {
-		setItemsMastered(data?.mastered ?? []);
-		setPartiallyMasteredItems(data?.partiallyMastered ?? {});
-		setIntrinsics(data?.intrinsics ?? 0, true);
-		setHideMastered(data?.hideMastered ?? false, true);
-		setHideFounders(data?.hideFounders ?? true, true);
-		setNodesMastered(data?.starChart ?? [], false);
-		setNodesMastered(data?.steelPath ?? [], true);
-		setJunctionsMastered(data?.starChartJunctions ?? [], false);
-		setJunctionsMastered(data?.steelPathJunctions ?? [], true);
-	}, [data]); //eslint-disable-line
 	const { items, fetchItems } = useStore(
 		state => ({
 			items: state.items,

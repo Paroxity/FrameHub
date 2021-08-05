@@ -1,3 +1,7 @@
+import {
+	createUserWithEmailAndPassword,
+	signInWithEmailAndPassword
+} from "firebase/auth";
 import create from "zustand";
 import { auth } from "../App";
 
@@ -23,7 +27,7 @@ export const useLoginFormStore = create((set, get) => ({
 				set({ error: "Passwords do not match.", errorDisplayed: true });
 				return;
 			}
-			auth.createUserWithEmailAndPassword(email, password)
+			createUserWithEmailAndPassword(auth, email, password)
 				.then(() =>
 					set({
 						signUp: false,
@@ -35,7 +39,7 @@ export const useLoginFormStore = create((set, get) => ({
 				.catch(e => set({ error: e.code, errorDisplayed: true }));
 			return;
 		}
-		auth.signInWithEmailAndPassword(email, password)
+		signInWithEmailAndPassword(auth, email, password)
 			.then(() => set({ password: "", confirmPassword: "", email: "" }))
 			.catch(e => set({ error: e.code, errorDisplayed: true }));
 	}
