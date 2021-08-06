@@ -46,7 +46,7 @@ function MasteryBreakdownTooltip({ children }) {
 						name={"Sentinel Weapons"}
 					/>
 					<BreakdownEntry
-						categories={["DOG", "CAT", "MOA", "HOUND", "MISC"]} //TODO: MISC = Plexus, in-game bug displays it under Companions
+						categories={["DOG", "CAT", "MOA", "HOUND", "PLEXUS"]} //TODO: in-game bug displays Plexus under Companions
 						name={"Companions"}
 					/>
 					<span

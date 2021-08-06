@@ -15,6 +15,7 @@ export function xpFromItem(item, category, rank) {
 		case "MECH":
 		case "KDRIVE":
 		case "HOUND":
+		case "PLEXUS":
 			xpPerRank = 200;
 			break;
 		default:

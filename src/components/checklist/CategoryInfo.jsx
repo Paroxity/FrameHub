@@ -16,8 +16,7 @@ const fancyCategoryNames = {
 	CAT: "Kavat",
 	MOA: "MOA",
 	MECH: "Necramech",
-	KDRIVE: "K-Drive",
-	MISC: "Miscellaneous"
+	KDRIVE: "K-Drive"
 };
 
 function CategoryItem({ name }) {

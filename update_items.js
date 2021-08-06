@@ -15,7 +15,7 @@ const OVERWRITES = {
 		"Tenet Agendus": { components: undefined }
 	},
 	CAT: { Venari: {} },
-	MISC: { Plexus: { xp: 6000 } }
+	PLEXUS: { Plexus: {} }
 };
 const BLACKLIST = [];
 
@@ -56,7 +56,7 @@ class ItemUpdater {
 			HOUND: {},
 			KDRIVE: {},
 			MECH: {},
-			MISC: {}
+			PLEXUS: {}
 		};
 
 		await this.fetchBaroData();
