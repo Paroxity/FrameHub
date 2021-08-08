@@ -144,6 +144,11 @@ class ItemUpdater {
 						"Mk1-",
 						"MK1-"
 					)}`;
+				else if (type === "MOA")
+					processedItem.wiki = `${WIKI_URL}/Model#${name.substr(
+						0,
+						name.length - 4
+					)}`;
 
 				const baroData = this.baroData[name];
 				if (baroData)
