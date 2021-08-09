@@ -30,7 +30,9 @@ function CategoryItem({ name, item }) {
 			setPartiallyMasteredItem: state.setPartiallyMasteredItem,
 			hidden:
 				(state.hideMastered && state.itemsMastered.includes(name)) ||
-				(state.hideFounders && foundersItems.includes(name))
+				(state.hideFounders &&
+					foundersItems.includes(name) &&
+					!state.itemsMastered.includes(name))
 		}),
 		shallow
 	);
