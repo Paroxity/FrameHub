@@ -17,11 +17,11 @@ function Tooltip(props) {
 		}
 	}, [visible, props.content]);
 
-	let x = Math.min(
+	const x = Math.min(
 		mouseX + 20,
 		document.documentElement.clientWidth - width.current
 	);
-	let y = Math.min(
+	const y = Math.min(
 		mouseY + 30,
 		document.documentElement.clientHeight - height.current
 	);

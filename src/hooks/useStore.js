@@ -142,7 +142,7 @@ export const useStore = create((set, get) => ({
 			localStorage.getItem("items-updated-at") !== updated ||
 			!localStorage.getItem("items")
 		) {
-			let items = await (
+			const items = await (
 				await fetch(
 					"https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media"
 				)
@@ -172,7 +172,7 @@ export const useStore = create((set, get) => ({
 			steelPathJunctions
 		} = get();
 
-		let masteryBreakdown = {
+		const masteryBreakdown = {
 			STAR_CHART: junctionsToXP(starChartJunctions.length),
 			STEEL_PATH: junctionsToXP(steelPathJunctions.length),
 			INTRINSICS: intrinsicsToXP(intrinsics)
@@ -465,7 +465,7 @@ function master(key, id, mastered) {
 			if (mastered) {
 				if (!draftState[key].includes(id)) draftState[key].push(id);
 			} else {
-				let index = draftState[key].indexOf(id);
+				const index = draftState[key].indexOf(id);
 				if (index !== -1) draftState[key].splice(index, 1);
 			}
 			markMasteryChange(draftState, key, id, mastered);

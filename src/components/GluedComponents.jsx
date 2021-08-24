@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 
 function GluedComponents(props) {
-	let children = props.children.filter(child => child !== undefined);
+	const children = props.children.filter(child => child !== undefined);
 	return children.length === 0 ? null : (
 		<div>
 			{children.map((child, i) => {

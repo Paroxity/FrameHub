@@ -21,7 +21,7 @@ function Planet({ name }) {
 			<Toggle
 				toggled={visible}
 				onToggle={value => {
-					let planetShown =
+					const planetShown =
 						JSON.parse(localStorage.getItem("planetShown")) || {};
 					planetShown[name] = value;
 					localStorage.setItem(

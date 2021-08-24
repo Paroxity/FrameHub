@@ -19,7 +19,7 @@ function Category({ name }) {
 			<Toggle
 				toggled={visible}
 				onToggle={value => {
-					let categoryShown =
+					const categoryShown =
 						JSON.parse(localStorage.getItem("categoryShown")) || {};
 					categoryShown[name] = value;
 					localStorage.setItem(
