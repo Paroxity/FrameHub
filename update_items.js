@@ -144,10 +144,10 @@ class ItemUpdater {
 						"Mk1-",
 						"MK1-"
 					)}`;
-				else if (type === "MOA")
+				else if (type === "MOA" || type === "HOUND")
 					processedItem.wiki = `${WIKI_URL}/Model#${name.substr(
 						0,
-						name.length - 4
+						name.length - type.length - 1
 					)}`;
 
 				const baroData = this.baroData[name];
