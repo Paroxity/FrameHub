@@ -1,3 +1,4 @@
+import { sendPasswordResetEmail } from "firebase/firebase-auth";
 import shallow from "zustand/shallow";
 import { auth } from "../../App";
 import { useLoginFormStore } from "../../hooks/useLoginFormStore";
@@ -20,8 +21,7 @@ function AdditionalActions() {
 		<div className="actions">
 			<Button
 				onClick={() =>
-					auth
-						.sendPasswordResetEmail(email)
+					sendPasswordResetEmail(auth, email)
 						.then(() => setError("Email sent. Check your inbox."))
 						.catch(e => setError(e.code))
 						.finally(() => displayError(true))
