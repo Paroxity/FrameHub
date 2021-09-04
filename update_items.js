@@ -1,3 +1,10 @@
+import FormData from "form-data";
+import fs from "fs/promises";
+import jsonDiff from "json-diff";
+import lua from "lua-json";
+import lzma from "lzma";
+import fetch from "node-fetch";
+
 const OVERWRITES = {
 	AMP: {
 		"Mote Prism": {
@@ -18,13 +25,6 @@ const OVERWRITES = {
 	PLEXUS: { Plexus: {} }
 };
 const BLACKLIST = [];
-
-const fetch = require("node-fetch");
-const FormData = require("form-data");
-const fs = require("fs/promises");
-const jsonDiff = require("json-diff");
-const lzma = require("lzma");
-const lua = require("lua-json");
 
 const API_URL = "https://content.warframe.com";
 const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
