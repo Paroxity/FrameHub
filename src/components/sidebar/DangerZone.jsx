@@ -1,7 +1,9 @@
+import { useState } from "react";
 import shallow from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { SHARED } from "../../utils/checklist-types";
 import Button from "../Button";
+import ConfirmationPrompt from "./ConfirmationPrompt";
 
 function DangerZone() {
 	const {
@@ -25,6 +27,9 @@ function DangerZone() {
 		shallow
 	);
 
+	const [confirmationCallback, setConfirmationCallback] = useState();
+	const [confirmationMessage, setConfirmationMessage] = useState("");
+
 	return type === SHARED ? null : (
 		<>
 			<span className="danger-text">Danger zone</span>
@@ -33,10 +38,24 @@ function DangerZone() {
 					centered
 					onClick={() => {
 						if (displayingNodes) {
-							masterAllNodes(displayingSteelPath, true);
-							masterAllJunctions(displayingSteelPath, true);
+							setConfirmationCallback(() => () => {
+								masterAllNodes(displayingSteelPath, true);
+								masterAllJunctions(displayingSteelPath, true);
+							});
+							setConfirmationMessage(
+								`Are you sure you would like to master all ${
+									displayingSteelPath
+										? "Steel Path"
+										: "Star Chart"
+								} nodes?`
+							);
 						} else {
-							masterAllItems(true);
+							setConfirmationCallback(
+								() => () => masterAllItems(true)
+							);
+							setConfirmationMessage(
+								"Are you sure you would like to master all items?"
+							);
 						}
 					}}>
 					Mark All as Mastered
@@ -47,15 +66,32 @@ function DangerZone() {
 						setIntrinsics(0);
 
 						if (displayingNodes) {
-							masterAllNodes(displayingSteelPath);
-							masterAllJunctions(displayingSteelPath);
+							setConfirmationCallback(() => () => {
+								masterAllNodes(displayingSteelPath);
+								masterAllJunctions(displayingSteelPath);
+							});
+							setConfirmationMessage(
+								`Are you sure you would like to reset all ${
+									displayingSteelPath
+										? "Steel Path"
+										: "Star Chart"
+								} nodes?`
+							);
 						} else {
-							masterAllItems();
+							setConfirmationCallback(() => masterAllItems);
+							setConfirmationMessage(
+								"Are you sure you would like to reset all items?"
+							);
 						}
 					}}>
 					Reset
 				</Button>
 			</div>
+			<ConfirmationPrompt
+				message={confirmationMessage}
+				callback={confirmationCallback}
+				close={setConfirmationCallback}
+			/>
 		</>
 	);
 }
