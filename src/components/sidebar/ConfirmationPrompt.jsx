@@ -12,7 +12,7 @@ function ConfirmationPrompt({ message, callback, close }) {
 						close();
 						callback();
 					}}>
-					Okay
+					Confirm
 				</Button>
 				<Button centered onClick={() => close()}>
 					Cancel
