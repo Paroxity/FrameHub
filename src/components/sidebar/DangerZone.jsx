@@ -12,8 +12,7 @@ function DangerZone() {
 		displayingSteelPath,
 		masterAllItems,
 		masterAllNodes,
-		masterAllJunctions,
-		setIntrinsics
+		masterAllJunctions
 	} = useStore(
 		state => ({
 			type: state.type,
@@ -21,8 +20,7 @@ function DangerZone() {
 			displayingSteelPath: state.displayingSteelPath,
 			masterAllItems: state.masterAllItems,
 			masterAllNodes: state.masterAllNodes,
-			masterAllJunctions: state.masterAllJunctions,
-			setIntrinsics: state.setIntrinsics
+			masterAllJunctions: state.masterAllJunctions
 		}),
 		shallow
 	);
@@ -58,13 +56,11 @@ function DangerZone() {
 							);
 						}
 					}}>
-					Mark All as Mastered
+					Master All {displayingNodes ? "Nodes" : "Items"}
 				</Button>
 				<Button
 					centered
 					onClick={() => {
-						setIntrinsics(0);
-
 						if (displayingNodes) {
 							setConfirmationCallback(() => () => {
 								masterAllNodes(displayingSteelPath);
@@ -84,7 +80,7 @@ function DangerZone() {
 							);
 						}
 					}}>
-					Reset
+					Reset {displayingNodes ? "Nodes" : "Items"}
 				</Button>
 			</div>
 			<ConfirmationPrompt
