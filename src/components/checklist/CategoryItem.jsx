@@ -80,7 +80,8 @@ function CategoryItem({ name, item }) {
 					<Button
 						className="item-name"
 						onClick={e => {
-							// Meta is MacOS CMD key, ctrl + click on MacOS and chrome ends up in a 'right click' being sent.
+							// The meta key (MacOS command/⌘ key) is used as an alternative to the Ctrl key as
+							// default macOS settings convert Ctrl + Left Click to a Right Click.
 							if (e.ctrlKey || e.metaKey) {
 								window.open(
 									item.wiki ||
