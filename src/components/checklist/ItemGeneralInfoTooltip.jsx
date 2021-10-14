@@ -7,6 +7,8 @@ import { PaginatedTooltipTitle } from "../PaginatedTooltip";
 import ItemComponent from "./ItemComponent";
 
 function ItemGeneralInfoTooltip({ item }) {
+	// Platform is soon to be deprecated but most browsers don't support new standard.
+	const isMacOS = window.navigator.platform == "MacIntel";
 	return (
 		<div className="item-tooltip">
 			<PaginatedTooltipTitle title="General Information" />
@@ -48,7 +50,7 @@ function ItemGeneralInfoTooltip({ item }) {
 				)}
 				{item.mr && <span>{`Mastery Rank ${item.mr}`}</span>}
 			</GluedComponents>
-			<span>Ctrl + Left Click for Wiki</span>
+			<span>{isMacOS ? "CMD" : "Ctrl"} + Left Click for Wiki</span>
 		</div>
 	);
 }

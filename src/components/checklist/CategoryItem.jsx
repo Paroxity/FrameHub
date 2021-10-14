@@ -80,7 +80,8 @@ function CategoryItem({ name, item }) {
 					<Button
 						className="item-name"
 						onClick={e => {
-							if (e.ctrlKey) {
+							// Meta is MacOS CMD key, ctrl + click on MacOS and chrome ends up in a 'right click' being sent.
+							if (e.ctrlKey || e.metaKey) {
 								window.open(
 									item.wiki ||
 										`https://warframe.fandom.com/wiki/${name}`
