@@ -80,7 +80,9 @@ function CategoryItem({ name, item }) {
 					<Button
 						className="item-name"
 						onClick={e => {
-							if (e.ctrlKey) {
+							// The meta key (MacOS command/⌘ key) is used as an alternative to the Ctrl key as
+							// default macOS settings convert Ctrl + Left Click to a Right Click.
+							if (e.ctrlKey || e.metaKey) {
 								window.open(
 									item.wiki ||
 										`https://warframe.fandom.com/wiki/${name}`
