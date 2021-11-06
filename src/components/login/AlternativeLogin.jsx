@@ -1,11 +1,11 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { addDoc, collection } from "firebase/firestore";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { auth, firestore } from "../../App";
 import Button from "../Button";
 
 function AlternativeLogin() {
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	return (
 		<div className="alternative-login">
@@ -15,7 +15,7 @@ function AlternativeLogin() {
 			</Button>
 			<Button
 				onClick={async () => {
-					history.push(
+					navigate(
 						`/user/${
 							(
 								await addDoc(

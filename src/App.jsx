@@ -5,7 +5,7 @@ import { getFirestore } from "firebase/firestore";
 import { getPerformance } from "firebase/performance";
 import { getStorage } from "firebase/storage";
 import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.scss";
 import LoadingScreen from "./components/LoadingScreen";
 import Login from "./pages/Login";
@@ -52,39 +52,23 @@ function App() {
 
 	return (
 		<BrowserRouter>
-			<Switch>
+			<Routes>
 				<Route
 					path="/share/:id"
-					render={params => {
-						return (
-							<MasteryChecklist
-								id={params.match.params.id}
-								type={SHARED}
-							/>
-						);
-					}}
+					element={<MasteryChecklist type={SHARED} />}
 				/>
 				<Route
 					path="/user/:id"
-					render={params => {
-						return (
-							<MasteryChecklist
-								id={params.match.params.id}
-								type={ANONYMOUS}
-							/>
-						);
-					}}
+					element={<MasteryChecklist type={ANONYMOUS} />}
 				/>
-				<Route path="/">
-					{authLoading ? (
-						<LoadingScreen />
-					) : user ? (
+				<Route path="*" element={authLoading ?
+					<LoadingScreen />
+					: user ?
 						<MasteryChecklist id={user.uid} type={AUTHENTICATED} />
-					) : (
+						:
 						<Login />
-					)}
-				</Route>
-			</Switch>
+				} />
+			</Routes>
 		</BrowserRouter>
 	);
 }
