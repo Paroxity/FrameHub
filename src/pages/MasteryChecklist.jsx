@@ -12,8 +12,12 @@ import Sidebar from "../components/sidebar/Sidebar";
 import UnloadWarning from "../components/sidebar/UnloadWarning";
 import { useStore } from "../hooks/useStore";
 import { ANONYMOUS, AUTHENTICATED, SHARED } from "../utils/checklist-types";
+import { useParams } from "react-router-dom";
 
 function MasteryChecklist(props) {
+	let { id } = useParams();
+	id = props.id ?? id;
+
 	const {
 		setId,
 		setType,
@@ -45,7 +49,7 @@ function MasteryChecklist(props) {
 
 	const [dataLoading, setDataLoading] = useState(true);
 	useEffect(() => {
-		setId(props.id);
+		setId(id);
 		setType(props.type);
 		setDataLoading(true);
 		reset();
@@ -58,7 +62,7 @@ function MasteryChecklist(props) {
 						? "anonymousMasteryData"
 						: "masteryData"
 				),
-				props.id
+				id
 			),
 			snapshot => {
 				const data = snapshot.data();
@@ -76,7 +80,7 @@ function MasteryChecklist(props) {
 				setDataLoading(false);
 			}
 		);
-	}, [props.id, props.type]); //eslint-disable-line
+	}, [id, props.type]); //eslint-disable-line
 
 	const { items, fetchItems } = useStore(
 		state => ({
