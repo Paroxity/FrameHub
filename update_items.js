@@ -16,7 +16,8 @@ const OVERWRITES = {
 			},
 			buildTime: 600,
 			buildPrice: 1000
-		}
+		},
+		Sirocco: {}
 	},
 	MELEE: {
 		"Tenet Agendus": { components: undefined }
