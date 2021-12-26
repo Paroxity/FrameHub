@@ -15,7 +15,7 @@
 		"react-router-dom": "^6.2.1",
 		"react-scripts": "^4.0.3",
 		"sass": "^1.45.1",
-		"zustand": "^3.6.7"
+		"zustand": "^3.6.8"
 	},
 	"devDependencies": {
 		"eslint": "^7.32.0",
