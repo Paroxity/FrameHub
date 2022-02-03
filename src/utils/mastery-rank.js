@@ -10,7 +10,9 @@ export function xpFromItem(item, category, rank) {
 		case "AW":
 		case "SENTINEL":
 		case "DOG":
+		case "INFESTED_DOG":
 		case "CAT":
+		case "INFESTED_CAT":
 		case "MOA":
 		case "MECH":
 		case "KDRIVE":

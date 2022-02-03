@@ -13,7 +13,9 @@ const fancyCategoryNames = {
 	AW_GUN: "Archwing Primary",
 	AW_MELEE: "Archwing Melee",
 	DOG: "Kubrow",
+	INFESTED_DOG: "Predasite",
 	CAT: "Kavat",
+	INFESTED_CAT: "Vulpaphyla",
 	MOA: "MOA",
 	MECH: "Necramech",
 	KDRIVE: "K-Drive"

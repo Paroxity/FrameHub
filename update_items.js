@@ -52,7 +52,9 @@ class ItemUpdater {
 			AW_GUN: {},
 			AW_MELEE: {},
 			DOG: {},
+			INFESTED_DOG: {},
 			CAT: {},
+			INFESTED_CAT: {},
 			MOA: {},
 			HOUND: {},
 			KDRIVE: {},
@@ -258,7 +260,13 @@ class ItemUpdater {
 				if (item.slot === 0) type = "SECONDARY";
 				break;
 			case "KubrowPets":
-				type = uniqueName.includes("Catbrow") ? "CAT" : "DOG";
+				type = uniqueName.includes("InfestedCatbrow")
+					? "INFESTED_CAT"
+					: uniqueName.includes("Catbrow")
+					? "CAT"
+					: uniqueName.includes("PredatorKubrow")
+					? "INFESTED_DOG"
+					: "DOG";
 				break;
 			default:
 				type = {
