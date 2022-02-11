@@ -16,8 +16,7 @@ const OVERWRITES = {
 			},
 			buildTime: 600,
 			buildPrice: 1000
-		},
-		Sirocco: {}
+		}
 	},
 	MELEE: {
 		"Tenet Agendus": { components: undefined }
@@ -278,7 +277,8 @@ class ItemUpdater {
 					LongGuns: "PRIMARY",
 					Melee: "MELEE",
 					Sentinels: "SENTINEL",
-					SentinelWeapons: "SENTINEL_WEAPON"
+					SentinelWeapons: "SENTINEL_WEAPON",
+					OperatorAmps: "AMP"
 				}[item.productCategory];
 		}
 		return type;
