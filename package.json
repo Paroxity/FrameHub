@@ -22,7 +22,7 @@
 		"eslint-config-prettier": "^8.4.0",
 		"eslint-plugin-react": "^7.29.2",
 		"form-data": "^4.0.0",
-		"json-diff": "^0.7.1",
+		"json-diff": "^0.7.2",
 		"lzma": "^2.3.2",
 		"node-fetch": "^3.2.1",
 		"prettier": "^2.5.1"
