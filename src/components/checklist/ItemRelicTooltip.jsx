@@ -35,7 +35,7 @@ function ItemRelicTooltip({ item, name }) {
 															)
 															.toLowerCase()}-radiant.png`}
 														alt=""
-														width="30px"
+														width="24px"
 													/>
 													{relicName} (
 													<span

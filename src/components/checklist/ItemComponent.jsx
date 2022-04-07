@@ -25,7 +25,7 @@ export default function ItemComponent({
 							: componentName.toLowerCase().split(" ").join("-"))
 				}.png`}
 				alt=""
-				width="30px"
+				width="24px"
 			/>
 			<span className="component-name">
 				{(component?.count || component).toLocaleString()}x{" "}

@@ -43,7 +43,7 @@ function MissingIngredients() {
 											.split(" ")
 											.join("-")}.png`}
 										alt=""
-										width="30px"
+										width="24px"
 										onDragStart={e => e.preventDefault()}
 									/>
 									<span className="component-name">
