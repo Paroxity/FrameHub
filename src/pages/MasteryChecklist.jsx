@@ -90,7 +90,9 @@ function MasteryChecklist(props) {
 		shallow
 	);
 	const itemsLoading = Object.keys(items).length === 0;
-	useEffect(fetchItems, []); //eslint-disable-line
+	useEffect(() => {
+		fetchItems();
+	}, []); //eslint-disable-line
 
 	return dataLoading || itemsLoading ? (
 		<LoadingScreen />
