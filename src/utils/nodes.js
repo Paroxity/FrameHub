@@ -64,7 +64,10 @@ export const missionIndexMap = [
 	undefined,
 	undefined,
 	undefined,
-	"Disruption"
+	"Disruption",
+	"Void Flood",
+	"Void Cascade",
+	"Void Armageddon"
 ];
 
 export const factionIndexMap = [
