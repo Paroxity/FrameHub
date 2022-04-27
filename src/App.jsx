@@ -1,7 +1,10 @@
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import {
+	getFirestore,
+	enableMultiTabIndexedDbPersistence
+} from "firebase/firestore";
 import { getPerformance } from "firebase/performance";
 import { getStorage } from "firebase/storage";
 import { useEffect, useState } from "react";
@@ -36,6 +39,7 @@ const paroxityFirebase = initializeApp(
 ); //TODO: Combine into one Firebase project
 export const auth = getAuth(paroxityFirebase);
 export const firestore = getFirestore(paroxityFirebase);
+enableMultiTabIndexedDbPersistence(firestore);
 export const storage = getStorage(framehubFirebase);
 getAnalytics(framehubFirebase);
 getPerformance(framehubFirebase);
@@ -61,13 +65,21 @@ function App() {
 					path="/user/:id"
 					element={<MasteryChecklist type={ANONYMOUS} />}
 				/>
-				<Route path="*" element={authLoading ?
-					<LoadingScreen />
-					: user ?
-						<MasteryChecklist id={user.uid} type={AUTHENTICATED} />
-						:
-						<Login />
-				} />
+				<Route
+					path="*"
+					element={
+						authLoading ? (
+							<LoadingScreen />
+						) : user ? (
+							<MasteryChecklist
+								id={user.uid}
+								type={AUTHENTICATED}
+							/>
+						) : (
+							<Login />
+						)
+					}
+				/>
 			</Routes>
 		</BrowserRouter>
 	);
