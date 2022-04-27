@@ -11,17 +11,18 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v2.3.2
-      - name: Cache Node Modules
-        id: node-modules-cache
+      - name: Cache pnpm Modules
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: node-modules-build-deploy-${{ hashFiles('package-lock.json') }}
-      - name: Install Dependencies
-        if: steps.node-modules-cache.outputs.cache-hit != 'true'
-        run: npm install
+          path: ~/.pnpm-store
+          key: pnpm-cache-${{ hashFiles('pnpm-lock.yaml') }}
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 6.32.10
+          run_install: true
       - name: Build
-        run: npm run build
+        run: pnpm run build
       - name: Deploy to Firebase
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:

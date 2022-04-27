@@ -39,7 +39,7 @@ function MissingIngredients() {
 								<div key={name}>
 									<img
 										className="component-image"
-										src={`https://raw.githubusercontent.com/WFCD/warframe-items/master/data/img/${name
+										src={`https://cdn.warframestat.us/img/${name
 											.toLowerCase()
 											.split(" ")
 											.join("-")}.png`}
