@@ -14,9 +14,9 @@ function PlanetInfoTooltip({ node }) {
 				Level {node.lvl.join("-")}{" "}
 				<img
 					className="faction-icon"
-					src={`https://raw.githubusercontent.com/WFCD/warframe-hub/dev/src/assets/img/factions/${factionIndexMap[
-						node.faction
-					].toLowerCase()}.svg`}
+					src={`https://cdn.warframestat.us/genesis/svg/factions/${
+						factionIndexMap[node.faction]
+					}.svg`}
 					alt=""
 				/>
 				{factionIndexMap[node.faction]} {missionIndexMap[node.type]}

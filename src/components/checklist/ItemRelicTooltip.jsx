@@ -27,7 +27,7 @@ function ItemRelicTooltip({ item, name }) {
 											return (
 												<span key={relicName}>
 													<img
-														src={`https://raw.githubusercontent.com/wfcd/warframe-items/master/data/img/${relicTiers
+														src={`https:/cdn.warframestat.us/img/${relicTiers
 															.find(tier =>
 																relicName.startsWith(
 																	tier
