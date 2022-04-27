@@ -39,7 +39,8 @@ function ItemRelicTooltip({ item, name }) {
 													/>
 													{relicName} (
 													<span
-														className={`relic relic-rarity-${rarity.toLowerCase()}`}>
+														className={`relic relic-rarity-${rarity.toLowerCase()}`}
+													>
 														{rarity}
 													</span>
 													)

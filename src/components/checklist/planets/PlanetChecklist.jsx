@@ -39,7 +39,8 @@ function PlanetChecklist() {
 				1348: 3,
 				1152: 2,
 				640: 1
-			}}>
+			}}
+		>
 			{visiblePlanets.map(planet => {
 				return <Planet key={planet} name={planet} />;
 			})}

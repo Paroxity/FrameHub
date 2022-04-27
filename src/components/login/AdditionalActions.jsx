@@ -25,7 +25,8 @@ function AdditionalActions() {
 						.then(() => setError("Email sent. Check your inbox."))
 						.catch(e => setError(e.code))
 						.finally(() => displayError(true))
-				}>
+				}
+			>
 				Forgot Password
 			</Button>
 			<Button onClick={() => setSignUp(!signUp)}>

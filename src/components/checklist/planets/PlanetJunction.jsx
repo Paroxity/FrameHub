@@ -33,14 +33,16 @@ function PlanetJunction({ planet }) {
 		<div
 			className={classNames("item", {
 				"item-mastered": mastered
-			})}>
+			})}
+		>
 			<Button
 				className="item-name"
 				onClick={() => {
 					if (type !== SHARED) {
 						masterJunction(planet, displayingSteelPath, !mastered);
 					}
-				}}>
+				}}
+			>
 				Junction
 				{mastered && (
 					<img src={checkmark} className="checkmark" alt="" />

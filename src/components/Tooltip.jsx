@@ -42,13 +42,15 @@ function Tooltip(props) {
 			onMouseMove={event => {
 				setMouseX(event.clientX);
 				setMouseY(event.clientY);
-			}}>
+			}}
+		>
 			{props.children}
 			{visible && (
 				<div
 					className="tooltip"
 					style={{ top: `${y}px`, left: `${x}px` }}
-					ref={element}>
+					ref={element}
+				>
 					{props.title}
 					<div className="info">{props.content}</div>
 				</div>

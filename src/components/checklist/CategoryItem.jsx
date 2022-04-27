@@ -55,7 +55,8 @@ function CategoryItem({ name, item }) {
 											rank,
 											item.maxLvl
 										)
-									}>
+									}
+								>
 									{rank}
 								</div>
 							);
@@ -71,12 +72,14 @@ function CategoryItem({ name, item }) {
 							<ItemRelicTooltip item={item} name={name} />
 						)}
 					</>
-				}>
+				}
+			>
 				<div
 					className={classNames("item", {
 						"item-mastered": mastered,
 						"item-locked": masteryRankLocked
-					})}>
+					})}
+				>
 					<Button
 						className="item-name"
 						onClick={e => {
@@ -96,7 +99,8 @@ function CategoryItem({ name, item }) {
 									else masterItem(name, !mastered);
 								}
 							}
-						}}>
+						}}
+					>
 						{name +
 							((item.maxLvl || 30) !== 30
 								? ` [${

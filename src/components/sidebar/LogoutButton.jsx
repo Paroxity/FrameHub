@@ -19,7 +19,8 @@ function LogoutButton() {
 			onClick={() => {
 				saveImmediately();
 				signOut(auth);
-			}}>
+			}}
+		>
 			Logout
 		</Button>
 	) : null;

@@ -30,7 +30,8 @@ function Checklist() {
 				1348: 3,
 				1152: 2,
 				640: 1
-			}}>
+			}}
+		>
 			{visibleColumns.map(category => {
 				return <Category key={category} name={category} />;
 			})}

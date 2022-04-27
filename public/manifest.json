@@ -1,25 +1,25 @@
 {
-  "short_name": "FrameHub",
-  "name": "Mastery Checklist for Warframe",
-  "icons": [
-	{
-	  "src": "favicon.ico",
-	  "type": "image/x-icon",
-	  "sizes": "48x48"
-	},
-	{
-	  "src": "favicon-32x32.png",
-	  "type": "image/png",
-	  "sizes": "32x32"
-	},
-	{
-	  "src": "favicon-16x16.png",
-	  "type": "image/png",
-	  "sizes": "16x16"
-	}
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#373E5D",
-  "background_color": "#000000"
+	"short_name": "FrameHub",
+	"name": "FrameHub",
+	"icons": [
+		{
+			"src": "favicon.ico",
+			"type": "image/x-icon",
+			"sizes": "48x48"
+		},
+		{
+			"src": "favicon-32x32.png",
+			"type": "image/png",
+			"sizes": "32x32"
+		},
+		{
+			"src": "favicon-16x16.png",
+			"type": "image/png",
+			"sizes": "16x16"
+		}
+	],
+	"start_url": ".",
+	"display": "standalone",
+	"theme_color": "#373E5D",
+	"background_color": "#000000"
 }

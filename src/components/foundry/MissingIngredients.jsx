@@ -24,7 +24,8 @@ function MissingIngredients() {
 						1348: 3,
 						1152: 2,
 						640: 1
-					}}>
+					}}
+				>
 					{Object.entries(ingredients)
 						.sort(([nameA, countA], [nameB, countB]) =>
 							countA > countB

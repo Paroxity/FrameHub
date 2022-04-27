@@ -11,7 +11,8 @@ function ConfirmationPrompt({ message, callback, close }) {
 					onClick={() => {
 						close();
 						callback();
-					}}>
+					}}
+				>
 					Confirm
 				</Button>
 				<Button centered onClick={() => close()}>

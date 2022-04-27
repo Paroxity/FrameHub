@@ -4,148 +4,103 @@
 			"name": "Mantle",
 			"type": 5,
 			"faction": 0,
-			"lvl": [
-				2,
-				4
-			],
+			"lvl": [2, 4],
 			"xp": 24
 		},
 		"SolNode27": {
 			"name": "E Prime",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				1,
-				3
-			],
+			"lvl": [1, 3],
 			"xp": 24
 		},
 		"SolNode79": {
 			"name": "Cambria",
 			"type": 7,
 			"faction": 0,
-			"lvl": [
-				2,
-				4
-			],
+			"lvl": [2, 4],
 			"xp": 24
 		},
 		"SolNode39": {
 			"name": "Everest",
 			"type": 17,
 			"faction": 0,
-			"lvl": [
-				1,
-				6
-			],
+			"lvl": [1, 6],
 			"xp": 24
 		},
 		"SolNode15": {
 			"name": "Pacific",
 			"type": 3,
 			"faction": 0,
-			"lvl": [
-				3,
-				6
-			],
+			"lvl": [3, 6],
 			"xp": 24
 		},
 		"SolNode26": {
 			"name": "Lith",
 			"type": 8,
 			"faction": 0,
-			"lvl": [
-				1,
-				6
-			],
+			"lvl": [1, 6],
 			"xp": 24
 		},
 		"SolNode89": {
 			"name": "Mariana",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				1,
-				3
-			],
+			"lvl": [1, 3],
 			"xp": 24
 		},
 		"SolNode85": {
 			"name": "Gaia",
 			"type": 13,
 			"faction": 0,
-			"lvl": [
-				1,
-				6
-			],
+			"lvl": [1, 6],
 			"xp": 20
 		},
 		"SolNode59": {
 			"name": "Eurasia",
 			"type": 9,
 			"faction": 0,
-			"lvl": [
-				3,
-				5
-			],
+			"lvl": [3, 5],
 			"xp": 24
 		},
 		"SolNode75": {
 			"name": "Cervantes",
 			"type": 4,
 			"faction": 0,
-			"lvl": [
-				4,
-				6
-			],
+			"lvl": [4, 6],
 			"xp": 24
 		},
 		"SolNode24": {
 			"name": "Oro",
 			"type": 0,
 			"faction": 0,
-			"lvl": [
-				20,
-				25
-			],
+			"lvl": [20, 25],
 			"xp": 24
 		},
 		"ClanNode2": {
 			"name": "Coba",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				6,
-				16
-			]
+			"lvl": [6, 16]
 		},
 		"SolNode903": {
 			"name": "Erpo",
 			"type": 9,
 			"faction": 0,
-			"lvl": [
-				1,
-				6
-			],
+			"lvl": [1, 6],
 			"xp": 24
 		},
 		"ClanNode3": {
 			"name": "Tikal",
 			"type": 17,
 			"faction": 2,
-			"lvl": [
-				6,
-				16
-			]
+			"lvl": [6, 16]
 		},
 		"SolNode228": {
 			"name": "Plains of Eidolon",
 			"type": 28,
 			"faction": 0,
-			"lvl": [
-				10,
-				30
-			],
+			"lvl": [10, 30],
 			"xp": 24
 		}
 	},
@@ -154,148 +109,103 @@
 			"name": "Orb Vallis",
 			"type": 28,
 			"faction": 1,
-			"lvl": [
-				10,
-				30
-			],
+			"lvl": [10, 30],
 			"xp": 24
 		},
 		"SolNode123": {
 			"name": "V Prime",
 			"type": 2,
 			"faction": 1,
-			"lvl": [
-				3,
-				8
-			],
+			"lvl": [3, 8],
 			"xp": 18
 		},
 		"SolNode61": {
 			"name": "Ishtar",
 			"type": 4,
 			"faction": 1,
-			"lvl": [
-				6,
-				8
-			],
+			"lvl": [6, 8],
 			"xp": 24
 		},
 		"SolNode2": {
 			"name": "Aphrodite",
 			"type": 9,
 			"faction": 1,
-			"lvl": [
-				6,
-				8
-			],
+			"lvl": [6, 8],
 			"xp": 18
 		},
 		"SolNode23": {
 			"name": "Cytherean",
 			"type": 13,
 			"faction": 1,
-			"lvl": [
-				3,
-				8
-			],
+			"lvl": [3, 8],
 			"xp": 18
 		},
 		"SolNode128": {
 			"name": "E Gate",
 			"type": 1,
 			"faction": 1,
-			"lvl": [
-				3,
-				5
-			],
+			"lvl": [3, 5],
 			"xp": 18
 		},
 		"SolNode109": {
 			"name": "Linea",
 			"type": 3,
 			"faction": 1,
-			"lvl": [
-				5,
-				7
-			],
+			"lvl": [5, 7],
 			"xp": 18
 		},
 		"SolNode104": {
 			"name": "Fossa",
 			"type": 0,
 			"faction": 1,
-			"lvl": [
-				6,
-				8
-			],
+			"lvl": [6, 8],
 			"xp": 41
 		},
 		"SolNode66": {
 			"name": "Unda",
 			"type": 7,
 			"faction": 1,
-			"lvl": [
-				4,
-				6
-			],
+			"lvl": [4, 6],
 			"xp": 18
 		},
 		"ClanNode1": {
 			"name": "Malva",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				8,
-				18
-			]
+			"lvl": [8, 18]
 		},
 		"SolNode107": {
 			"name": "Venera",
 			"type": 5,
 			"faction": 1,
-			"lvl": [
-				5,
-				7
-			],
+			"lvl": [5, 7],
 			"xp": 18
 		},
 		"SolNode22": {
 			"name": "Tessera",
 			"type": 8,
 			"faction": 1,
-			"lvl": [
-				3,
-				8
-			],
+			"lvl": [3, 8],
 			"xp": 18
 		},
 		"SolNode101": {
 			"name": "Kiliken",
 			"type": 17,
 			"faction": 1,
-			"lvl": [
-				3,
-				8
-			],
+			"lvl": [3, 8],
 			"xp": 18
 		},
 		"ClanNode0": {
 			"name": "Romula",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				8,
-				18
-			]
+			"lvl": [8, 18]
 		},
 		"SolNode902": {
 			"name": "Montes",
 			"type": 1,
 			"faction": 1,
-			"lvl": [
-				3,
-				8
-			],
+			"lvl": [3, 8],
 			"xp": 18
 		}
 	},
@@ -304,108 +214,75 @@
 			"name": "Apollodorus",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				6,
-				11
-			]
+			"lvl": [6, 11]
 		},
 		"SolNode130": {
 			"name": "Lares",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				6,
-				11
-			],
+			"lvl": [6, 11],
 			"xp": 3
 		},
 		"SolNode119": {
 			"name": "Caloris",
 			"type": 3,
 			"faction": 0,
-			"lvl": [
-				6,
-				8
-			],
+			"lvl": [6, 8],
 			"xp": 3
 		},
 		"SolNode12": {
 			"name": "Elion",
 			"type": 5,
 			"faction": 0,
-			"lvl": [
-				7,
-				9
-			],
+			"lvl": [7, 9],
 			"xp": 3
 		},
 		"SolNode103": {
 			"name": "M Prime",
 			"type": 1,
 			"faction": 2,
-			"lvl": [
-				7,
-				9
-			],
+			"lvl": [7, 9],
 			"xp": 3
 		},
 		"SolNode28": {
 			"name": "Terminus",
 			"type": 4,
 			"faction": 2,
-			"lvl": [
-				8,
-				10
-			]
+			"lvl": [8, 10]
 		},
 		"SolNode108": {
 			"name": "Tolstoj",
 			"type": 0,
 			"faction": 0,
-			"lvl": [
-				8,
-				10
-			],
+			"lvl": [8, 10],
 			"xp": 25
 		},
 		"SolNode223": {
 			"name": "Boethius",
 			"type": 9,
 			"faction": 2,
-			"lvl": [
-				8,
-				10
-			],
+			"lvl": [8, 10],
 			"xp": 3
 		},
 		"SolNode224": {
 			"name": "Odin",
 			"type": 13,
 			"faction": 0,
-			"lvl": [
-				6,
-				11
-			],
+			"lvl": [6, 11],
 			"xp": 3
 		},
 		"SolNode225": {
 			"name": "Suisei",
 			"type": 7,
 			"faction": 0,
-			"lvl": [
-				8,
-				10
-			],
+			"lvl": [8, 10],
 			"xp": 3
 		},
 		"SolNode226": {
 			"name": "Pantheon",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				6,
-				8
-			],
+			"lvl": [6, 8],
 			"xp": 3
 		}
 	},
@@ -414,168 +291,117 @@
 			"name": "Olympus",
 			"type": 32,
 			"faction": 0,
-			"lvl": [
-				15,
-				20
-			],
+			"lvl": [15, 20],
 			"xp": 51
 		},
 		"SolNode113": {
 			"name": "Ares",
 			"type": 4,
 			"faction": 0,
-			"lvl": [
-				9,
-				11
-			],
+			"lvl": [9, 11],
 			"xp": 51
 		},
 		"SolNode46": {
 			"name": "Spear",
 			"type": 8,
 			"faction": 0,
-			"lvl": [
-				8,
-				13
-			],
+			"lvl": [8, 13],
 			"xp": 51
 		},
 		"SolNode68": {
 			"name": "Vallis",
 			"type": 9,
 			"faction": 0,
-			"lvl": [
-				11,
-				13
-			],
+			"lvl": [11, 13],
 			"xp": 51
 		},
 		"SolNode58": {
 			"name": "Hellas",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				8,
-				10
-			],
+			"lvl": [8, 10],
 			"xp": 51
 		},
 		"SolNode106": {
 			"name": "Alator",
 			"type": 13,
 			"faction": 0,
-			"lvl": [
-				8,
-				13
-			],
+			"lvl": [8, 13],
 			"xp": 51
 		},
 		"SolNode41": {
 			"name": "Arval",
 			"type": 7,
 			"faction": 0,
-			"lvl": [
-				9,
-				11
-			],
+			"lvl": [9, 11],
 			"xp": 51
 		},
 		"SolNode14": {
 			"name": "Ultor",
 			"type": 1,
 			"faction": 1,
-			"lvl": [
-				11,
-				13
-			],
+			"lvl": [11, 13],
 			"xp": 51
 		},
 		"SolNode16": {
 			"name": "Augustus",
 			"type": 17,
 			"faction": 0,
-			"lvl": [
-				9,
-				14
-			],
+			"lvl": [9, 14],
 			"xp": 51
 		},
 		"SolNode45": {
 			"name": "Ara",
 			"type": 5,
 			"faction": 0,
-			"lvl": [
-				10,
-				12
-			],
+			"lvl": [10, 12],
 			"xp": 51
 		},
 		"SolNode36": {
 			"name": "Martialis",
 			"type": 3,
 			"faction": 0,
-			"lvl": [
-				10,
-				12
-			],
+			"lvl": [10, 12],
 			"xp": 51
 		},
 		"ClanNode8": {
 			"name": "Kadesh",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				10,
-				20
-			]
+			"lvl": [10, 20]
 		},
 		"SolNode99": {
 			"name": "War",
 			"type": 0,
 			"faction": 0,
-			"lvl": [
-				11,
-				13
-			],
+			"lvl": [11, 13],
 			"xp": 51
 		},
 		"SolNode65": {
 			"name": "Gradivus",
 			"type": 4,
 			"faction": 1,
-			"lvl": [
-				9,
-				11
-			],
+			"lvl": [9, 11],
 			"xp": 45
 		},
 		"ClanNode9": {
 			"name": "Wahiba",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				10,
-				20
-			]
+			"lvl": [10, 20]
 		},
 		"SolNode11": {
 			"name": "Tharsis",
 			"type": 9,
 			"faction": 0,
-			"lvl": [
-				8,
-				10
-			],
+			"lvl": [8, 10],
 			"xp": 51
 		},
 		"SolNode904": {
 			"name": "Syrtis",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				8,
-				13
-			],
+			"lvl": [8, 13],
 			"xp": 51
 		}
 	},
@@ -584,82 +410,55 @@
 			"name": "Horend",
 			"type": 5,
 			"faction": 2,
-			"lvl": [
-				12,
-				14
-			]
+			"lvl": [12, 14]
 		},
 		"SolNode707": {
 			"name": "Hyf",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				15,
-				20
-			]
+			"lvl": [15, 20]
 		},
 		"SolNode708": {
 			"name": "Phlegyas",
 			"type": 1,
 			"faction": 2,
-			"lvl": [
-				13,
-				15
-			]
+			"lvl": [13, 15]
 		},
 		"SolNode709": {
 			"name": "Dirus",
 			"type": 9,
 			"faction": 2,
-			"lvl": [
-				15,
-				17
-			]
+			"lvl": [15, 17]
 		},
 		"SolNode710": {
 			"name": "Formido",
 			"type": 4,
 			"faction": 2,
-			"lvl": [
-				14,
-				16
-			]
+			"lvl": [14, 16]
 		},
 		"SolNode711": {
 			"name": "Terrorem",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				25,
-				35
-			]
+			"lvl": [25, 35]
 		},
 		"SolNode712": {
 			"name": "Magnacidium",
 			"type": 0,
 			"faction": 2,
-			"lvl": [
-				20,
-				25
-			]
+			"lvl": [20, 25]
 		},
 		"SolNode713": {
 			"name": "Exequias",
 			"type": 0,
 			"faction": 2,
-			"lvl": [
-				30,
-				35
-			]
+			"lvl": [30, 35]
 		},
 		"SolNode229": {
 			"name": "Cambion Drift",
 			"type": 28,
 			"faction": 2,
-			"lvl": [
-				15,
-				30
-			]
+			"lvl": [15, 30]
 		}
 	},
 	"Phobos": {
@@ -667,109 +466,76 @@
 			"name": "Roche",
 			"type": 1,
 			"faction": 1,
-			"lvl": [
-				10,
-				12
-			],
+			"lvl": [10, 12],
 			"xp": 157
 		},
 		"SettlementNode3": {
 			"name": "Stickney",
 			"type": 2,
 			"faction": 1,
-			"lvl": [
-				10,
-				15
-			],
+			"lvl": [10, 15],
 			"xp": 157
 		},
 		"SettlementNode2": {
 			"name": "Skyresh",
 			"type": 5,
 			"faction": 1,
-			"lvl": [
-				12,
-				14
-			],
+			"lvl": [12, 14],
 			"xp": 157
 		},
 		"SettlementNode12": {
 			"name": "Monolith",
 			"type": 3,
 			"faction": 1,
-			"lvl": [
-				13,
-				15
-			],
+			"lvl": [13, 15],
 			"xp": 157
 		},
 		"SettlementNode10": {
 			"name": "Kepler",
 			"type": 25,
 			"faction": 1,
-			"lvl": [
-				12,
-				14
-			],
+			"lvl": [12, 14],
 			"xp": 157
 		},
 		"SettlementNode15": {
 			"name": "Sharpless",
 			"type": 9,
 			"faction": 1,
-			"lvl": [
-				11,
-				13
-			],
+			"lvl": [11, 13],
 			"xp": 157
 		},
 		"SettlementNode11": {
 			"name": "Gulliver",
 			"type": 8,
 			"faction": 1,
-			"lvl": [
-				10,
-				15
-			],
+			"lvl": [10, 15],
 			"xp": 157
 		},
 		"SettlementNode14": {
 			"name": "Shklovsky",
 			"type": 7,
 			"faction": 1,
-			"lvl": [
-				11,
-				13
-			],
+			"lvl": [11, 13],
 			"xp": 157
 		},
 		"ClanNode10": {
 			"name": "Memphis",
 			"type": 27,
 			"faction": 2,
-			"lvl": [
-				15,
-				25
-			]
+			"lvl": [15, 25]
 		},
 		"SettlementNode20": {
 			"name": "Iliad",
 			"type": 0,
 			"faction": 1,
-			"lvl": [
-				13,
-				15
-			],
+			"lvl": [13, 15],
 			"xp": 100
 		},
 		"ClanNode11": {
 			"name": "Zeugma",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				15,
-				25
-			]
+			"lvl": [15, 25]
 		}
 	},
 	"Ceres": {
@@ -777,139 +543,97 @@
 			"name": "Pallas",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				12,
-				14
-			],
+			"lvl": [12, 14],
 			"xp": 163
 		},
 		"SolNode135": {
 			"name": "Thon",
 			"type": 4,
 			"faction": 0,
-			"lvl": [
-				15,
-				17
-			],
+			"lvl": [15, 17],
 			"xp": 163
 		},
 		"SolNode132": {
 			"name": "Bode",
 			"type": 7,
 			"faction": 0,
-			"lvl": [
-				12,
-				14
-			],
+			"lvl": [12, 14],
 			"xp": 163
 		},
 		"SolNode139": {
 			"name": "Lex",
 			"type": 5,
 			"faction": 0,
-			"lvl": [
-				14,
-				16
-			],
+			"lvl": [14, 16],
 			"xp": 163
 		},
 		"SolNode141": {
 			"name": "Ker",
 			"type": 4,
 			"faction": 0,
-			"lvl": [
-				14,
-				16
-			],
+			"lvl": [14, 16],
 			"xp": 163
 		},
 		"SolNode137": {
 			"name": "Nuovo",
 			"type": 3,
 			"faction": 0,
-			"lvl": [
-				13,
-				15
-			],
+			"lvl": [13, 15],
 			"xp": 163
 		},
 		"SolNode140": {
 			"name": "Kiste",
 			"type": 9,
 			"faction": 0,
-			"lvl": [
-				13,
-				15
-			],
+			"lvl": [13, 15],
 			"xp": 163
 		},
 		"SolNode138": {
 			"name": "Ludi",
 			"type": 14,
 			"faction": 0,
-			"lvl": [
-				15,
-				17
-			],
+			"lvl": [15, 17],
 			"xp": 163
 		},
 		"SolNode144": {
 			"name": "Exta",
 			"type": 0,
 			"faction": 0,
-			"lvl": [
-				14,
-				16
-			],
+			"lvl": [14, 16],
 			"xp": 163
 		},
 		"SolNode149": {
 			"name": "Casta",
 			"type": 8,
 			"faction": 0,
-			"lvl": [
-				12,
-				17
-			],
+			"lvl": [12, 17],
 			"xp": 163
 		},
 		"SolNode147": {
 			"name": "Cinxia",
 			"type": 13,
 			"faction": 0,
-			"lvl": [
-				12,
-				17
-			],
+			"lvl": [12, 17],
 			"xp": 163
 		},
 		"SolNode146": {
 			"name": "Draco",
 			"type": 2,
 			"faction": 0,
-			"lvl": [
-				12,
-				17
-			],
+			"lvl": [12, 17],
 			"xp": 163
 		},
 		"ClanNode23": {
 			"name": "Gabii",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				15,
-				25
-			]
+			"lvl": [15, 25]
 		},
 		"ClanNode22": {
 			"name": "Seimeni",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				15,
-				25
-			]
+			"lvl": [15, 25]
 		}
 	},
 	"Jupiter": {
@@ -917,159 +641,111 @@
 			"name": "Ganymede",
 			"type": 32,
 			"faction": 1,
-			"lvl": [
-				30,
-				35
-			],
+			"lvl": [30, 35],
 			"xp": 51
 		},
 		"SolNode88": {
 			"name": "Adrastea",
 			"type": 4,
 			"faction": 1,
-			"lvl": [
-				18,
-				20
-			],
+			"lvl": [18, 20],
 			"xp": 51
 		},
 		"SolNode97": {
 			"name": "Amalthea",
 			"type": 7,
 			"faction": 1,
-			"lvl": [
-				17,
-				19
-			],
+			"lvl": [17, 19],
 			"xp": 51
 		},
 		"SolNode126": {
 			"name": "Metis",
 			"type": 3,
 			"faction": 1,
-			"lvl": [
-				15,
-				17
-			],
+			"lvl": [15, 17],
 			"xp": 51
 		},
 		"SolNode125": {
 			"name": "Io",
 			"type": 8,
 			"faction": 1,
-			"lvl": [
-				15,
-				20
-			],
+			"lvl": [15, 20],
 			"xp": 51
 		},
 		"SolNode100": {
 			"name": "Elara",
 			"type": 2,
 			"faction": 1,
-			"lvl": [
-				15,
-				20
-			],
+			"lvl": [15, 20],
 			"xp": 51
 		},
 		"SolNode10": {
 			"name": "Thebe",
 			"type": 4,
 			"faction": 1,
-			"lvl": [
-				18,
-				20
-			],
+			"lvl": [18, 20],
 			"xp": 51
 		},
 		"SolNode25": {
 			"name": "Callisto",
 			"type": 13,
 			"faction": 1,
-			"lvl": [
-				15,
-				20
-			],
+			"lvl": [15, 20],
 			"xp": 51
 		},
 		"SolNode121": {
 			"name": "Carpo",
 			"type": 1,
 			"faction": 1,
-			"lvl": [
-				17,
-				19
-			],
+			"lvl": [17, 19],
 			"xp": 51
 		},
 		"SolNode53": {
 			"name": "Themisto",
 			"type": 0,
 			"faction": 1,
-			"lvl": [
-				18,
-				20
-			],
+			"lvl": [18, 20],
 			"xp": 51
 		},
 		"SolNode74": {
 			"name": "Carme",
 			"type": 9,
 			"faction": 1,
-			"lvl": [
-				16,
-				18
-			],
+			"lvl": [16, 18],
 			"xp": 51
 		},
 		"SolNode740": {
 			"name": "The Ropalolyst",
 			"type": 0,
 			"faction": 5,
-			"lvl": [
-				40,
-				40
-			],
+			"lvl": [40, 40],
 			"xp": 55
 		},
 		"ClanNode4": {
 			"name": "Sinai",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				20,
-				30
-			]
+			"lvl": [20, 30]
 		},
 		"SolNode73": {
 			"name": "Ananke",
 			"type": 5,
 			"faction": 1,
-			"lvl": [
-				16,
-				18
-			],
+			"lvl": [16, 18],
 			"xp": 51
 		},
 		"SolNode905": {
 			"name": "Galilea",
 			"type": 4,
 			"faction": 1,
-			"lvl": [
-				15,
-				20
-			],
+			"lvl": [15, 20],
 			"xp": 51
 		},
 		"ClanNode5": {
 			"name": "Cameria",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				20,
-				30
-			]
+			"lvl": [20, 30]
 		}
 	},
 	"Europa": {
@@ -1077,139 +753,97 @@
 			"name": "Abaddon",
 			"type": 5,
 			"faction": 1,
-			"lvl": [
-				21,
-				23
-			],
+			"lvl": [21, 23],
 			"xp": 138
 		},
 		"SolNode204": {
 			"name": "Armaros",
 			"type": 1,
 			"faction": 2,
-			"lvl": [
-				18,
-				20
-			],
+			"lvl": [18, 20],
 			"xp": 138
 		},
 		"SolNode209": {
 			"name": "Morax",
 			"type": 9,
 			"faction": 1,
-			"lvl": [
-				18,
-				20
-			],
+			"lvl": [18, 20],
 			"xp": 138
 		},
 		"SolNode210": {
 			"name": "Naamah",
 			"type": 0,
 			"faction": 1,
-			"lvl": [
-				21,
-				23
-			],
+			"lvl": [21, 23],
 			"xp": 138
 		},
 		"SolNode205": {
 			"name": "Baal",
 			"type": 1,
 			"faction": 1,
-			"lvl": [
-				21,
-				23
-			],
+			"lvl": [21, 23],
 			"xp": 138
 		},
 		"SolNode216": {
 			"name": "Valefor",
 			"type": 17,
 			"faction": 1,
-			"lvl": [
-				18,
-				23
-			],
+			"lvl": [18, 23],
 			"xp": 138
 		},
 		"SolNode214": {
 			"name": "Sorath",
 			"type": 14,
 			"faction": 1,
-			"lvl": [
-				19,
-				21
-			],
+			"lvl": [19, 21],
 			"xp": 138
 		},
 		"SolNode211": {
 			"name": "Ose",
 			"type": 13,
 			"faction": 1,
-			"lvl": [
-				18,
-				23
-			],
+			"lvl": [18, 23],
 			"xp": 138
 		},
 		"SolNode215": {
 			"name": "Valac",
 			"type": 7,
 			"faction": 1,
-			"lvl": [
-				18,
-				20
-			],
+			"lvl": [18, 20],
 			"xp": 138
 		},
 		"SolNode212": {
 			"name": "Paimon",
 			"type": 8,
 			"faction": 1,
-			"lvl": [
-				18,
-				23
-			],
+			"lvl": [18, 23],
 			"xp": 138
 		},
 		"SolNode217": {
 			"name": "Orias",
 			"type": 3,
 			"faction": 1,
-			"lvl": [
-				20,
-				22
-			],
+			"lvl": [20, 22],
 			"xp": 138
 		},
 		"ClanNode6": {
 			"name": "Larzac",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				23,
-				33
-			]
+			"lvl": [23, 33]
 		},
 		"SolNode220": {
 			"name": "Kokabiel",
 			"type": 4,
 			"faction": 1,
-			"lvl": [
-				20,
-				22
-			],
+			"lvl": [20, 22],
 			"xp": 138
 		},
 		"ClanNode7": {
 			"name": "Cholistan",
 			"type": 17,
 			"faction": 2,
-			"lvl": [
-				23,
-				33
-			]
+			"lvl": [23, 33]
 		}
 	},
 	"Saturn": {
@@ -1217,149 +851,104 @@
 			"name": "Helene",
 			"type": 8,
 			"faction": 0,
-			"lvl": [
-				21,
-				26
-			],
+			"lvl": [21, 26],
 			"xp": 55
 		},
 		"SolNode19": {
 			"name": "Enceladus",
 			"type": 4,
 			"faction": 0,
-			"lvl": [
-				23,
-				25
-			],
+			"lvl": [23, 25],
 			"xp": 49
 		},
 		"SolNode96": {
 			"name": "Titan",
 			"type": 2,
 			"faction": 0,
-			"lvl": [
-				21,
-				26
-			],
+			"lvl": [21, 26],
 			"xp": 55
 		},
 		"SolNode67": {
 			"name": "Dione",
 			"type": 7,
 			"faction": 0,
-			"lvl": [
-				21,
-				23
-			],
+			"lvl": [21, 23],
 			"xp": 55
 		},
 		"SolNode93": {
 			"name": "Keeler",
 			"type": 9,
 			"faction": 0,
-			"lvl": [
-				23,
-				25
-			],
+			"lvl": [23, 25],
 			"xp": 55
 		},
 		"SolNode32": {
 			"name": "Tethys",
 			"type": 0,
 			"faction": 0,
-			"lvl": [
-				24,
-				26
-			],
+			"lvl": [24, 26],
 			"xp": 55
 		},
 		"SolNode18": {
 			"name": "Rhea",
 			"type": 13,
 			"faction": 0,
-			"lvl": [
-				21,
-				26
-			],
+			"lvl": [21, 26],
 			"xp": 55
 		},
 		"SolNode20": {
 			"name": "Telesto",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				22,
-				24
-			],
+			"lvl": [22, 24],
 			"xp": 55
 		},
 		"SolNode70": {
 			"name": "Cassini",
 			"type": 5,
 			"faction": 0,
-			"lvl": [
-				21,
-				23
-			],
+			"lvl": [21, 23],
 			"xp": 55
 		},
 		"SolNode31": {
 			"name": "Anthe",
 			"type": 3,
 			"faction": 0,
-			"lvl": [
-				22,
-				24
-			],
+			"lvl": [22, 24],
 			"xp": 55
 		},
 		"SolNode50": {
 			"name": "Numa",
 			"type": 3,
 			"faction": 0,
-			"lvl": [
-				22,
-				24
-			],
+			"lvl": [22, 24],
 			"xp": 55
 		},
 		"SolNode82": {
 			"name": "Calypso",
 			"type": 4,
 			"faction": 0,
-			"lvl": [
-				24,
-				26
-			],
+			"lvl": [24, 26],
 			"xp": 55
 		},
 		"SolNode906": {
 			"name": "Pandora",
 			"type": 24,
 			"faction": 0,
-			"lvl": [
-				21,
-				23
-			],
+			"lvl": [21, 23],
 			"xp": 55
 		},
 		"ClanNode13": {
 			"name": "Piscinas",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				26,
-				36
-			]
+			"lvl": [26, 36]
 		},
 		"ClanNode12": {
 			"name": "Caracol",
 			"type": 27,
 			"faction": 2,
-			"lvl": [
-				26,
-				36
-			]
+			"lvl": [26, 36]
 		}
 	},
 	"Uranus": {
@@ -1367,139 +956,97 @@
 			"name": "Ariel",
 			"type": 5,
 			"faction": 0,
-			"lvl": [
-				25,
-				27
-			],
+			"lvl": [25, 27],
 			"xp": 69
 		},
 		"SolNode105": {
 			"name": "Titania",
 			"type": 0,
 			"faction": 0,
-			"lvl": [
-				27,
-				29
-			],
+			"lvl": [27, 29],
 			"xp": 69
 		},
 		"SolNode64": {
 			"name": "Umbriel",
 			"type": 13,
 			"faction": 0,
-			"lvl": [
-				24,
-				29
-			],
+			"lvl": [24, 29],
 			"xp": 69
 		},
 		"SolNode69": {
 			"name": "Ophelia",
 			"type": 2,
 			"faction": 0,
-			"lvl": [
-				24,
-				29
-			],
+			"lvl": [24, 29],
 			"xp": 69
 		},
 		"SolNode83": {
 			"name": "Cressida",
 			"type": 9,
 			"faction": 0,
-			"lvl": [
-				27,
-				29
-			],
+			"lvl": [27, 29],
 			"xp": 69
 		},
 		"SolNode98": {
 			"name": "Desdemona",
 			"type": 4,
 			"faction": 0,
-			"lvl": [
-				26,
-				28
-			],
+			"lvl": [26, 28],
 			"xp": 69
 		},
 		"SolNode9": {
 			"name": "Rosalind",
 			"type": 7,
 			"faction": 0,
-			"lvl": [
-				27,
-				29
-			],
+			"lvl": [27, 29],
 			"xp": 69
 		},
 		"SolNode60": {
 			"name": "Caliban",
 			"type": 3,
 			"faction": 0,
-			"lvl": [
-				25,
-				27
-			],
+			"lvl": [25, 27],
 			"xp": 69
 		},
 		"SolNode114": {
 			"name": "Puck",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				27,
-				29
-			],
+			"lvl": [27, 29],
 			"xp": 44
 		},
 		"ClanNode16": {
 			"name": "Ur",
 			"type": 32,
 			"faction": 2,
-			"lvl": [
-				30,
-				35
-			]
+			"lvl": [30, 35]
 		},
 		"SolNode34": {
 			"name": "Sycorax",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				24,
-				26
-			],
+			"lvl": [24, 26],
 			"xp": 69
 		},
 		"SolNode122": {
 			"name": "Stephano",
 			"type": 8,
 			"faction": 0,
-			"lvl": [
-				24,
-				29
-			],
+			"lvl": [24, 29],
 			"xp": 69
 		},
 		"SolNode907": {
 			"name": "Caelus",
 			"type": 13,
 			"faction": 0,
-			"lvl": [
-				24,
-				29
-			],
+			"lvl": [24, 29],
 			"xp": 69
 		},
 		"ClanNode17": {
 			"name": "Assur",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				25,
-				35
-			]
+			"lvl": [25, 35]
 		}
 	},
 	"Neptune": {
@@ -1507,129 +1054,90 @@
 			"name": "Larissa",
 			"type": 9,
 			"faction": 1,
-			"lvl": [
-				29,
-				31
-			],
+			"lvl": [29, 31],
 			"xp": 52
 		},
 		"SolNode1": {
 			"name": "Galatea",
 			"type": 5,
 			"faction": 1,
-			"lvl": [
-				27,
-				29
-			],
+			"lvl": [27, 29],
 			"xp": 52
 		},
 		"SolNode17": {
 			"name": "Proteus",
 			"type": 8,
 			"faction": 1,
-			"lvl": [
-				27,
-				32
-			],
+			"lvl": [27, 32],
 			"xp": 52
 		},
 		"SolNode78": {
 			"name": "Triton",
 			"type": 3,
 			"faction": 1,
-			"lvl": [
-				28,
-				30
-			],
+			"lvl": [28, 30],
 			"xp": 52
 		},
 		"SolNode6": {
 			"name": "Despina",
 			"type": 17,
 			"faction": 1,
-			"lvl": [
-				27,
-				32
-			],
+			"lvl": [27, 32],
 			"xp": 52
 		},
 		"SolNode57": {
 			"name": "Sao",
 			"type": 4,
 			"faction": 1,
-			"lvl": [
-				29,
-				31
-			],
+			"lvl": [29, 31],
 			"xp": 52
 		},
 		"SolNode62": {
 			"name": "Neso",
 			"type": 1,
 			"faction": 1,
-			"lvl": [
-				29,
-				31
-			],
+			"lvl": [29, 31],
 			"xp": 52
 		},
 		"SolNode908": {
 			"name": "Salacia",
 			"type": 9,
 			"faction": 1,
-			"lvl": [
-				27,
-				32
-			],
+			"lvl": [27, 32],
 			"xp": 52
 		},
 		"SolNode127": {
 			"name": "Psamathe",
 			"type": 0,
 			"faction": 1,
-			"lvl": [
-				30,
-				32
-			],
+			"lvl": [30, 32],
 			"xp": 52
 		},
 		"SolNode118": {
 			"name": "Laomedeia",
 			"type": 32,
 			"faction": 1,
-			"lvl": [
-				25,
-				30
-			],
+			"lvl": [25, 30],
 			"xp": 52
 		},
 		"SolNode84": {
 			"name": "Nereid",
 			"type": 7,
 			"faction": 1,
-			"lvl": [
-				30,
-				32
-			],
+			"lvl": [30, 32],
 			"xp": 52
 		},
 		"ClanNode20": {
 			"name": "Yursa",
 			"type": 27,
 			"faction": 2,
-			"lvl": [
-				30,
-				40
-			]
+			"lvl": [30, 40]
 		},
 		"ClanNode21": {
 			"name": "Kelashin",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				30,
-				40
-			]
+			"lvl": [30, 40]
 		}
 	},
 	"Pluto": {
@@ -1637,129 +1145,90 @@
 			"name": "Acheron",
 			"type": 1,
 			"faction": 1,
-			"lvl": [
-				34,
-				38
-			],
+			"lvl": [34, 38],
 			"xp": 51
 		},
 		"SolNode72": {
 			"name": "Outer Terminus",
 			"type": 8,
 			"faction": 1,
-			"lvl": [
-				30,
-				40
-			],
+			"lvl": [30, 40],
 			"xp": 51
 		},
 		"SolNode48": {
 			"name": "Regna",
 			"type": 3,
 			"faction": 1,
-			"lvl": [
-				34,
-				38
-			],
+			"lvl": [34, 38],
 			"xp": 51
 		},
 		"SolNode21": {
 			"name": "Narcissus",
 			"type": 1,
 			"faction": 1,
-			"lvl": [
-				32,
-				36
-			],
+			"lvl": [32, 36],
 			"xp": 51
 		},
 		"SolNode76": {
 			"name": "Hydra",
 			"type": 5,
 			"faction": 1,
-			"lvl": [
-				30,
-				34
-			],
+			"lvl": [30, 34],
 			"xp": 51
 		},
 		"SolNode51": {
 			"name": "Hades",
 			"type": 0,
 			"faction": 1,
-			"lvl": [
-				35,
-				45
-			],
+			"lvl": [35, 45],
 			"xp": 51
 		},
 		"SolNode38": {
 			"name": "Minthe",
 			"type": 9,
 			"faction": 1,
-			"lvl": [
-				30,
-				34
-			],
+			"lvl": [30, 34],
 			"xp": 51
 		},
 		"SolNode56": {
 			"name": "Cypress",
 			"type": 4,
 			"faction": 1,
-			"lvl": [
-				34,
-				38
-			],
+			"lvl": [34, 38],
 			"xp": 51
 		},
 		"SolNode43": {
 			"name": "Cerberus",
 			"type": 13,
 			"faction": 1,
-			"lvl": [
-				30,
-				40
-			],
+			"lvl": [30, 40],
 			"xp": 51
 		},
 		"SolNode81": {
 			"name": "Palus",
 			"type": 2,
 			"faction": 1,
-			"lvl": [
-				30,
-				40
-			],
+			"lvl": [30, 40],
 			"xp": 51
 		},
 		"ClanNode24": {
 			"name": "Sechura",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				35,
-				45
-			]
+			"lvl": [35, 45]
 		},
 		"SolNode102": {
 			"name": "Oceanum",
 			"type": 7,
 			"faction": 1,
-			"lvl": [
-				32,
-				36
-			],
+			"lvl": [32, 36],
 			"xp": 51
 		},
 		"ClanNode25": {
 			"name": "Hieracon",
 			"type": 17,
 			"faction": 2,
-			"lvl": [
-				35,
-				45
-			]
+			"lvl": [35, 45]
 		}
 	},
 	"Eris": {
@@ -1767,108 +1236,75 @@
 			"name": "Brugia",
 			"type": 3,
 			"faction": 2,
-			"lvl": [
-				32,
-				36
-			],
+			"lvl": [32, 36],
 			"xp": 279
 		},
 		"SolNode164": {
 			"name": "Kala-azar",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				30,
-				40
-			],
+			"lvl": [30, 40],
 			"xp": 279
 		},
 		"SolNode162": {
 			"name": "Isos",
 			"type": 5,
 			"faction": 2,
-			"lvl": [
-				32,
-				36
-			],
+			"lvl": [32, 36],
 			"xp": 279
 		},
 		"SolNode171": {
 			"name": "Saxis",
 			"type": 1,
 			"faction": 2,
-			"lvl": [
-				34,
-				38
-			],
+			"lvl": [34, 38],
 			"xp": 279
 		},
 		"SolNode167": {
 			"name": "Oestrus",
 			"type": 21,
 			"faction": 2,
-			"lvl": [
-				34,
-				38
-			],
+			"lvl": [34, 38],
 			"xp": 279
 		},
 		"SolNode166": {
 			"name": "Nimus",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				30,
-				40
-			],
+			"lvl": [30, 40],
 			"xp": 279
 		},
 		"SolNode173": {
 			"name": "Solium",
 			"type": 9,
 			"faction": 2,
-			"lvl": [
-				34,
-				38
-			],
+			"lvl": [34, 38],
 			"xp": 279
 		},
 		"ClanNode18": {
 			"name": "Akkad",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				35,
-				45
-			]
+			"lvl": [35, 45]
 		},
 		"SolNode172": {
 			"name": "Xini",
 			"type": 13,
 			"faction": 2,
-			"lvl": [
-				30,
-				40
-			],
+			"lvl": [30, 40],
 			"xp": 279
 		},
 		"ClanNode19": {
 			"name": "Zabala",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				35,
-				45
-			]
+			"lvl": [35, 45]
 		},
 		"SolNode175": {
 			"name": "Naeglar",
 			"type": 15,
 			"faction": 2,
-			"lvl": [
-				30,
-				34
-			],
+			"lvl": [30, 34],
 			"xp": 279
 		}
 	},
@@ -1877,159 +1313,111 @@
 			"name": "Kappa",
 			"type": 32,
 			"faction": 0,
-			"lvl": [
-				34,
-				38
-			],
+			"lvl": [34, 38],
 			"xp": 177
 		},
 		"SolNode184": {
 			"name": "Rusalka",
 			"type": 4,
 			"faction": 0,
-			"lvl": [
-				32,
-				36
-			],
+			"lvl": [32, 36],
 			"xp": 100
 		},
 		"SolNode181": {
 			"name": "Adaro",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				32,
-				36
-			],
+			"lvl": [32, 36],
 			"xp": 177
 		},
 		"SolNode183": {
 			"name": "Vodyanoi",
 			"type": 22,
 			"faction": 0,
-			"lvl": [
-				85,
-				85
-			],
+			"lvl": [85, 85],
 			"xp": 177
 		},
 		"SolNode190": {
 			"name": "Nakki",
 			"type": 22,
 			"faction": 0,
-			"lvl": [
-				40,
-				40
-			],
+			"lvl": [40, 40],
 			"xp": 177
 		},
 		"SolNode185": {
 			"name": "Berehynia",
 			"type": 13,
 			"faction": 0,
-			"lvl": [
-				30,
-				40
-			],
+			"lvl": [30, 40],
 			"xp": 50
 		},
 		"SolNode187": {
 			"name": "Selkie",
 			"type": 2,
 			"faction": 0,
-			"lvl": [
-				30,
-				40
-			],
+			"lvl": [30, 40],
 			"xp": 177
 		},
 		"SolNode191": {
 			"name": "Marid",
 			"type": 14,
 			"faction": 0,
-			"lvl": [
-				34,
-				38
-			],
+			"lvl": [34, 38],
 			"xp": 177
 		},
 		"SolNode188": {
 			"name": "Kelpie",
 			"type": 7,
 			"faction": 0,
-			"lvl": [
-				35,
-				40
-			],
+			"lvl": [35, 40],
 			"xp": 177
 		},
 		"SolNode189": {
 			"name": "Naga",
 			"type": 3,
 			"faction": 0,
-			"lvl": [
-				30,
-				34
-			],
+			"lvl": [30, 34],
 			"xp": 177
 		},
 		"SolNode199": {
 			"name": "Yam",
 			"type": 22,
 			"faction": 0,
-			"lvl": [
-				60,
-				60
-			],
+			"lvl": [60, 60],
 			"xp": 177
 		},
 		"SolNode193": {
 			"name": "Merrow",
 			"type": 0,
 			"faction": 0,
-			"lvl": [
-				35,
-				40
-			],
+			"lvl": [35, 40],
 			"xp": 177
 		},
 		"SolNode196": {
 			"name": "Charybdis",
 			"type": 9,
 			"faction": 0,
-			"lvl": [
-				34,
-				38
-			],
+			"lvl": [34, 38],
 			"xp": 177
 		},
 		"SolNode195": {
 			"name": "Hydron",
 			"type": 8,
 			"faction": 0,
-			"lvl": [
-				30,
-				40
-			],
+			"lvl": [30, 40],
 			"xp": 177
 		},
 		"ClanNode14": {
 			"name": "Amarna",
 			"type": 2,
 			"faction": 2,
-			"lvl": [
-				35,
-				45
-			]
+			"lvl": [35, 45]
 		},
 		"ClanNode15": {
 			"name": "Sangeru",
 			"type": 8,
 			"faction": 2,
-			"lvl": [
-				35,
-				45
-			]
+			"lvl": [35, 45]
 		}
 	},
 	"Lua": {
@@ -2037,73 +1425,49 @@
 			"name": "Plato",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				25,
-				30
-			]
+			"lvl": [25, 30]
 		},
 		"SolNode306": {
 			"name": "Pavlov",
 			"type": 7,
 			"faction": 1,
-			"lvl": [
-				25,
-				30
-			]
+			"lvl": [25, 30]
 		},
 		"SolNode302": {
 			"name": "Tycho",
 			"type": 2,
 			"faction": 1,
-			"lvl": [
-				25,
-				30
-			]
+			"lvl": [25, 30]
 		},
 		"SolNode305": {
 			"name": "Stöfler",
 			"type": 8,
 			"faction": 0,
-			"lvl": [
-				25,
-				30
-			]
+			"lvl": [25, 30]
 		},
 		"SolNode304": {
 			"name": "Copernicus",
 			"type": 5,
 			"faction": 1,
-			"lvl": [
-				25,
-				30
-			]
+			"lvl": [25, 30]
 		},
 		"SolNode301": {
 			"name": "Grimaldi",
 			"type": 9,
 			"faction": 0,
-			"lvl": [
-				25,
-				30
-			]
+			"lvl": [25, 30]
 		},
 		"SolNode307": {
 			"name": "Zeipel",
 			"type": 3,
 			"faction": 1,
-			"lvl": [
-				25,
-				30
-			]
+			"lvl": [25, 30]
 		},
 		"SolNode308": {
 			"name": "Apollo",
 			"type": 32,
 			"faction": 1,
-			"lvl": [
-				35,
-				40
-			]
+			"lvl": [35, 40]
 		}
 	},
 	"Kuva Fortress": {
@@ -2111,73 +1475,49 @@
 			"name": "Koro",
 			"type": 26,
 			"faction": 0,
-			"lvl": [
-				29,
-				31
-			]
+			"lvl": [29, 31]
 		},
 		"SolNode742": {
 			"name": "Nabuk",
 			"type": 8,
 			"faction": 0,
-			"lvl": [
-				30,
-				32
-			]
+			"lvl": [30, 32]
 		},
 		"SolNode743": {
 			"name": "Rotuma",
 			"type": 9,
 			"faction": 0,
-			"lvl": [
-				30,
-				32
-			]
+			"lvl": [30, 32]
 		},
 		"SolNode744": {
 			"name": "Taveuni",
 			"type": 2,
 			"faction": 0,
-			"lvl": [
-				32,
-				37
-			]
+			"lvl": [32, 37]
 		},
 		"SolNode745": {
 			"name": "Tamu",
 			"type": 32,
 			"faction": 0,
-			"lvl": [
-				35,
-				40
-			]
+			"lvl": [35, 40]
 		},
 		"SolNode746": {
 			"name": "Dakata",
 			"type": 1,
 			"faction": 0,
-			"lvl": [
-				28,
-				30
-			]
+			"lvl": [28, 30]
 		},
 		"SolNode747": {
 			"name": "Pago",
 			"type": 7,
 			"faction": 0,
-			"lvl": [
-				31,
-				33
-			]
+			"lvl": [31, 33]
 		},
 		"SolNode748": {
 			"name": "Garus",
 			"type": 3,
 			"faction": 0,
-			"lvl": [
-				31,
-				33
-			]
+			"lvl": [31, 33]
 		}
 	},
 	"Void": {
@@ -2185,118 +1525,79 @@
 			"name": "Teshub",
 			"type": 1,
 			"faction": 3,
-			"lvl": [
-				10,
-				15
-			]
+			"lvl": [10, 15]
 		},
 		"SolNode401": {
 			"name": "Hepit",
 			"type": 5,
 			"faction": 3,
-			"lvl": [
-				10,
-				15
-			]
+			"lvl": [10, 15]
 		},
 		"SolNode402": {
 			"name": "Taranis",
 			"type": 8,
 			"faction": 3,
-			"lvl": [
-				10,
-				15
-			]
+			"lvl": [10, 15]
 		},
 		"SolNode403": {
 			"name": "Tiwaz",
 			"type": 9,
 			"faction": 3,
-			"lvl": [
-				20,
-				25
-			]
+			"lvl": [20, 25]
 		},
 		"SolNode404": {
 			"name": "Stribog",
 			"type": 4,
 			"faction": 3,
-			"lvl": [
-				20,
-				25
-			]
+			"lvl": [20, 25]
 		},
 		"SolNode405": {
 			"name": "Ani",
 			"type": 2,
 			"faction": 3,
-			"lvl": [
-				20,
-				25
-			]
+			"lvl": [20, 25]
 		},
 		"SolNode406": {
 			"name": "Ukko",
 			"type": 5,
 			"faction": 3,
-			"lvl": [
-				30,
-				35
-			]
+			"lvl": [30, 35]
 		},
 		"SolNode407": {
 			"name": "Oxomoco",
 			"type": 1,
 			"faction": 3,
-			"lvl": [
-				30,
-				35
-			]
+			"lvl": [30, 35]
 		},
 		"SolNode408": {
 			"name": "Belenus",
 			"type": 8,
 			"faction": 3,
-			"lvl": [
-				30,
-				35
-			]
+			"lvl": [30, 35]
 		},
 		"SolNode409": {
 			"name": "Mot",
 			"type": 2,
 			"faction": 3,
-			"lvl": [
-				40,
-				45
-			]
+			"lvl": [40, 45]
 		},
 		"SolNode410": {
 			"name": "Aten",
 			"type": 9,
 			"faction": 3,
-			"lvl": [
-				40,
-				45
-			]
+			"lvl": [40, 45]
 		},
 		"SolNode411": {
 			"name": "Marduk",
 			"type": 4,
 			"faction": 3,
-			"lvl": [
-				40,
-				45
-			]
+			"lvl": [40, 45]
 		},
 		"SolNode412": {
 			"name": "Mithra",
 			"type": 13,
 			"faction": 3,
-			"lvl": [
-				40,
-				45
-			]
+			"lvl": [40, 45]
 		}
 	}
 }

@@ -55,7 +55,8 @@ function DangerZone() {
 								"Are you sure you would like to master all items?"
 							);
 						}
-					}}>
+					}}
+				>
 					Master All {displayingNodes ? "Nodes" : "Items"}
 				</Button>
 				<Button
@@ -79,7 +80,8 @@ function DangerZone() {
 								"Are you sure you would like to reset all items?"
 							);
 						}
-					}}>
+					}}
+				>
 					Reset {displayingNodes ? "Nodes" : "Items"}
 				</Button>
 			</div>

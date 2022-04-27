@@ -12,7 +12,10 @@ function SaveStatus() {
 	);
 	return type !== SHARED ? (
 		<div className="autosave-text">
-			{changed ? "Your changes are unsaved." : "Changes auto-saved." + (window.navigator.onLine ? "" : " (OFFLINE)")}
+			{changed
+				? "Your changes are unsaved."
+				: "Changes auto-saved." +
+				  (window.navigator.onLine ? "" : " (OFFLINE)")}
 		</div>
 	) : null;
 }

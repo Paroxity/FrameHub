@@ -63,7 +63,8 @@ function MasteryBreakdownTooltip({ children }) {
 							fontSize: "0.45em",
 							fontWeight: "normal",
 							color: "orange"
-						}}>
+						}}
+					>
 						Companions currently includes Plexus XP to reflect
 						in-game.
 					</span>
@@ -78,7 +79,8 @@ function MasteryBreakdownTooltip({ children }) {
 					<BreakdownEntry categories={["KDRIVE"]} name={"K-Drives"} />
 					<BreakdownEntry categories={["MECH"]} name={"Necramech"} />
 				</>
-			}>
+			}
+		>
 			{children}
 		</Tooltip>
 	);

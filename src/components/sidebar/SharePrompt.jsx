@@ -27,7 +27,8 @@ function SharePrompt({ showLink, setShowLink }) {
 								showLinkRef.current.select();
 								document.execCommand("copy");
 								setShowLink(false);
-							}}>
+							}}
+						>
 							Copy
 						</Button>
 					)}

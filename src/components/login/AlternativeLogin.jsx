@@ -10,7 +10,8 @@ function AlternativeLogin() {
 	return (
 		<div className="alternative-login">
 			<Button
-				onClick={() => signInWithPopup(auth, new GoogleAuthProvider())}>
+				onClick={() => signInWithPopup(auth, new GoogleAuthProvider())}
+			>
 				Sign in with Google
 			</Button>
 			<Button
@@ -38,7 +39,8 @@ function AlternativeLogin() {
 							).id
 						}`
 					);
-				}}>
+				}}
+			>
 				Sign in anonymously
 			</Button>
 		</div>
