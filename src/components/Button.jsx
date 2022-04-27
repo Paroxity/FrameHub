@@ -7,12 +7,14 @@ function Button(props) {
 			className={classNames("button", {
 				center: props.centered,
 				disabled: props.disabled
-			})}>
+			})}
+		>
 			<button
 				className={props.className}
 				onClick={props.onClick}
 				type={props.submit ? "submit" : "button"}
-				disabled={props.disabled}>
+				disabled={props.disabled}
+			>
 				{props.children}
 			</button>
 		</div>

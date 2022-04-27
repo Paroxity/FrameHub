@@ -82,7 +82,8 @@ function PaginatedTooltipWrapper(props) {
 				)
 			}
 			content={content[page]}
-			onVisibilityChange={setVisible}>
+			onVisibilityChange={setVisible}
+		>
 			{props.children}
 		</Tooltip>
 	);

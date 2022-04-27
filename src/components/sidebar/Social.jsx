@@ -11,13 +11,15 @@ export default function Social() {
 			<a
 				href="https://github.com/Paroxity/FrameHub"
 				target="_blank"
-				rel="noreferrer">
+				rel="noreferrer"
+			>
 				<img src={githubIcon} alt="github" width="20px" />
 			</a>
 			<a
 				href="https://discord.gg/CNZUgwy"
 				target="_blank"
-				rel="noreferrer">
+				rel="noreferrer"
+			>
 				<img src={discordIcon} alt="discord" width="20px" />
 			</a>
 		</div>

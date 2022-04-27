@@ -35,18 +35,21 @@ function PlanetNode({ id, node }) {
 				<>
 					<PlanetInfoTooltip node={node} />
 				</>
-			}>
+			}
+		>
 			<div
 				className={classNames("item", {
 					"item-mastered": mastered
-				})}>
+				})}
+			>
 				<Button
 					className="item-name"
 					onClick={() => {
 						if (type !== SHARED) {
 							masterNode(id, displayingSteelPath, !mastered);
 						}
-					}}>
+					}}
+				>
 					{node.name}
 					{mastered && (
 						<img src={checkmark} className="checkmark" alt="" />

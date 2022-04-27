@@ -24,7 +24,8 @@ function MissingIngredients() {
 						1348: 3,
 						1152: 2,
 						640: 1
-					}}>
+					}}
+				>
 					{Object.entries(ingredients)
 						.sort(([nameA, countA], [nameB, countB]) =>
 							countA > countB
@@ -38,7 +39,7 @@ function MissingIngredients() {
 								<div key={name}>
 									<img
 										className="component-image"
-										src={`https:/cdn.warframestat.us/img/${name
+										src={`https://cdn.warframestat.us/img/${name
 											.toLowerCase()
 											.split(" ")
 											.join("-")}.png`}
