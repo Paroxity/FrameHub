@@ -19,6 +19,8 @@ jobs:
         with:
           path: ~/.pnpm-store
           key: pnpm-cache-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-cache-
       - name: Setup pnpm
         uses: pnpm/action-setup@v2.2.1
         with:
