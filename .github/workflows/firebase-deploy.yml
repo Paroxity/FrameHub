@@ -14,7 +14,7 @@ jobs:
       - name: Cache pnpm Modules
         uses: actions/cache@v3
         with:
-          path: ~/.pnpm-store
+          path: ~/.local/share/pnpm/store
           key: pnpm-cache-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             pnpm-cache-
