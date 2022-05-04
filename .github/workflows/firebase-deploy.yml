@@ -10,18 +10,18 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2.3.2
+        uses: actions/checkout@v3
       - name: Cache pnpm Modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.pnpm-store
           key: pnpm-cache-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             pnpm-cache-
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.1
+        uses: pnpm/action-setup@v2
         with:
-          version: 6.32.10
+          version: 7.0.0
           run_install: true
       - name: Build
         run: pnpm run build
