@@ -309,7 +309,7 @@ class ItemUpdater {
 									? 1
 									: 2
 						};
-						if (!this.unvaultedRelics.includes(relic.name))
+						if (this.vaultedRelics.includes(relic.name))
 							processedRelic.vaulted = true;
 
 						const rewardName = reward.rewardName.replace("/StoreItems", "");
@@ -385,9 +385,15 @@ class ItemUpdater {
 
 	async fetchVaultStatus() {
 		const document = (await JSDOM.fromURL(DROP_TABLE_URL)).window.document;
-		this.unvaultedRelics = Array.from(document.querySelectorAll("td"))
+		const relics = Array.from(document.querySelectorAll("th"))
+			.filter(e => e.innerHTML.includes(" Relic (Intact)"))
+			.map(e => e.innerHTML.replace(" (Intact)", ""));
+		const unvaultedRelics = Array.from(document.querySelectorAll("td"))
 			.map(e => e.innerHTML)
 			.filter(i => i.includes(" Relic"));
+		this.vaultedRelics = relics.filter(
+			relic => !unvaultedRelics.includes(relic)
+		);
 	}
 
 	parseDamagedJSON(json) {
