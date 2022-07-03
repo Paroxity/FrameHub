@@ -4,6 +4,7 @@ import jsonDiff from "json-diff";
 import lua from "lua-json";
 import lzma from "lzma";
 import fetch from "node-fetch";
+import { JSDOM } from "jsdom";
 
 const OVERWRITES = {
 	AMP: {
@@ -29,6 +30,7 @@ const BLACKLIST = [];
 const API_URL = "https://content.warframe.com";
 const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
 const WIKI_URL = "https://warframe.fandom.com/wiki";
+const DROP_TABLE_URL = "https://www.warframe.com/droptables";
 
 class ItemUpdater {
 	constructor(overwrites, blacklist) {
@@ -62,6 +64,7 @@ class ItemUpdater {
 		};
 
 		await this.fetchBaroData();
+		await this.fetchVaultStatus();
 		await this.fetchEndpoints();
 		await Promise.all([
 			this.fetchItems(),
@@ -129,8 +132,7 @@ class ItemUpdater {
 							this.relics[recipe.uniqueName]
 						).every(relic => relic.vaulted);
 						processedItem.relics = {
-							[`${name} Blueprint`]:
-								this.relics[recipe.uniqueName]
+							[`${name} Blueprint`]: this.relics[recipe.uniqueName]
 						};
 					}
 					if (recipe.ingredients?.length > 0)
@@ -142,10 +144,7 @@ class ItemUpdater {
 					processedItem.buildPrice = recipe.buildPrice;
 				}
 				if (name.startsWith("Mk1-"))
-					processedItem.wiki = `${WIKI_URL}/${name.replace(
-						"Mk1-",
-						"MK1-"
-					)}`;
+					processedItem.wiki = `${WIKI_URL}/${name.replace("Mk1-", "MK1-")}`;
 				else if (type === "MOA" || type === "HOUND")
 					processedItem.wiki = `${WIKI_URL}/Model#${name.substr(
 						0,
@@ -154,10 +153,7 @@ class ItemUpdater {
 
 				const baroData = this.baroData[name];
 				if (baroData)
-					processedItem.baro = [
-						baroData.CreditCost,
-						baroData.DucatCost
-					];
+					processedItem.baro = [baroData.CreditCost, baroData.DucatCost];
 
 				Object.entries(processedItem).forEach(([key, value]) => {
 					if (!value) delete processedItem[key];
@@ -187,9 +183,7 @@ class ItemUpdater {
 
 					const relics =
 						this.relics[ingredientRawName] ||
-						this.relics[
-							ingredientRawName.replace("Component", "Blueprint")
-						];
+						this.relics[ingredientRawName.replace("Component", "Blueprint")];
 					if (relics) item.relics[ingredientName] = relics;
 				}
 
@@ -211,9 +205,7 @@ class ItemUpdater {
 			}, {})
 		).reduce((ingredients, [ingredientName, ingredient]) => {
 			ingredients[ingredientName] =
-				Object.keys(ingredient).length <= 1
-					? ingredient.count
-					: ingredient;
+				Object.keys(ingredient).length <= 1 ? ingredient.count : ingredient;
 			return ingredients;
 		}, {});
 	}
@@ -224,10 +216,7 @@ class ItemUpdater {
 		switch (item.productCategory) {
 			case "Pistols":
 				if (uniqueName.includes("ModularMelee")) {
-					if (
-						uniqueName.includes("Tip") &&
-						!uniqueName.includes("PvPVariant")
-					)
+					if (uniqueName.includes("Tip") && !uniqueName.includes("PvPVariant"))
 						type = "ZAW";
 					break;
 				}
@@ -252,8 +241,7 @@ class ItemUpdater {
 					break;
 				}
 				if (uniqueName.includes("ZanukaPets")) {
-					if (uniqueName.includes("ZanukaPetPartHead"))
-						type = "HOUND";
+					if (uniqueName.includes("ZanukaPetPartHead")) type = "HOUND";
 					break;
 				}
 				if (item.slot === 0) type = "SECONDARY";
@@ -290,9 +278,7 @@ class ItemUpdater {
 		Object.values(Array.from(arguments)).forEach(items => {
 			items.forEach(item => {
 				if (item.uniqueName && item.name)
-					this.itemNames[item.uniqueName] = this.processItemName(
-						item.name
-					);
+					this.itemNames[item.uniqueName] = this.processItemName(item.name);
 			});
 		});
 	}
@@ -323,39 +309,34 @@ class ItemUpdater {
 									? 1
 									: 2
 						};
-						if (relic.codexSecret) processedRelic.vaulted = true;
+						if (!this.unvaultedRelics.includes(relic.name))
+							processedRelic.vaulted = true;
 
-						const rewardName = reward.rewardName.replace(
-							"/StoreItems",
-							""
-						);
-						if (!this.relics[rewardName])
-							this.relics[rewardName] = {};
-						this.relics[rewardName][
-							this.processItemName(
-								relic.name.replace(" RELIC", "")
-							)
-						] = processedRelic;
+						const rewardName = reward.rewardName.replace("/StoreItems", "");
+						if (!this.relics[rewardName]) this.relics[rewardName] = {};
+						this.relics[rewardName][this.processItemName(relic.name)] =
+							processedRelic;
 					});
 			}
 		);
 	}
 
 	async fetchRecipes() {
-		this.recipes = (
-			await this.fetchEndpoint("Recipes")
-		).ExportRecipes.reduce((recipes, recipe) => {
-			const invalidBPs = [
-				"/Lotus/Types/Recipes/Weapons/CorpusHandcannonBlueprint",
-				"/Lotus/Types/Recipes/Weapons/GrineerCombatKnifeBlueprint"
-			];
-			if (
-				!invalidBPs.includes(recipe.uniqueName) &&
-				!recipes[recipe.resultType]
-			)
-				recipes[recipe.resultType] = recipe;
-			return recipes;
-		}, {});
+		this.recipes = (await this.fetchEndpoint("Recipes")).ExportRecipes.reduce(
+			(recipes, recipe) => {
+				const invalidBPs = [
+					"/Lotus/Types/Recipes/Weapons/CorpusHandcannonBlueprint",
+					"/Lotus/Types/Recipes/Weapons/GrineerCombatKnifeBlueprint"
+				];
+				if (
+					!invalidBPs.includes(recipe.uniqueName) &&
+					!recipes[recipe.resultType]
+				)
+					recipes[recipe.resultType] = recipe;
+				return recipes;
+			},
+			{}
+		);
 	}
 
 	async fetchItems() {
@@ -402,6 +383,13 @@ class ItemUpdater {
 		this.baroData = lua.parse(luaTable).Items;
 	}
 
+	async fetchVaultStatus() {
+		const document = (await JSDOM.fromURL(DROP_TABLE_URL)).window.document;
+		this.unvaultedRelics = Array.from(document.querySelectorAll("td"))
+			.map(e => e.innerHTML)
+			.filter(i => i.includes(" Relic"));
+	}
+
 	parseDamagedJSON(json) {
 		return JSON.parse(json.replace(/\\r|\r?\n/g, ""));
 	}
@@ -424,20 +412,12 @@ class ItemUpdater {
 	const updater = new ItemUpdater(OVERWRITES, BLACKLIST);
 	await updater.run();
 
-	const difference = jsonDiff.diffString(
-		existingItems,
-		updater.processedItems
-	);
+	const difference = jsonDiff.diffString(existingItems, updater.processedItems);
 	if (difference || process.env.FORCE_UPLOAD === "true") {
-		await fs.writeFile(
-			"items.json",
-			JSON.stringify(updater.processedItems)
-		);
+		await fs.writeFile("items.json", JSON.stringify(updater.processedItems));
 		console.log(difference);
 		console.log(
-			`File size: ${((await fs.stat("items.json")).size / 1024).toFixed(
-				3
-			)}KB`
+			`File size: ${((await fs.stat("items.json")).size / 1024).toFixed(3)}KB`
 		);
 
 		if (process.env.DISCORD_WEBHOOK && process.env.DISCORD_ADMIN_IDS) {
