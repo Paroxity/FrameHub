@@ -22,7 +22,7 @@ const OVERWRITES = {
 	MELEE: {
 		"Tenet Agendus": { components: undefined }
 	},
-	CAT: { Venari: {} },
+	CAT: { Venari: {}, "Venari Prime": {} },
 	PLEXUS: { Plexus: {} }
 };
 const BLACKLIST = [];
