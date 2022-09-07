@@ -299,6 +299,17 @@ class ItemUpdater {
 		this.relics = {};
 		(await this.fetchEndpoint("RelicArcane")).ExportRelicArcane.forEach(
 			relic => {
+				if (this.processItemName(relic.name) === "Lith N13 Relic") {
+					relic.relicRewards.forEach(({ rewardName }, i) => {
+						if (
+							rewardName ===
+							"/Lotus/StoreItems/Types/Recipes/WarframeRecipes/WukongChassisBlueprint"
+						) {
+							relic.relicRewards[i].rewardName =
+								"/Lotus/StoreItems/Types/Recipes/WarframeRecipes/WukongPrimeChassisBlueprint";
+						}
+					});
+				}
 				if (relic.relicRewards)
 					relic.relicRewards.forEach(reward => {
 						const processedRelic = {
