@@ -184,7 +184,7 @@ class ItemUpdater {
 					const relics =
 						this.relics[ingredientRawName] ||
 						this.relics[ingredientRawName.replace("Component", "Blueprint")];
-					if (relics) item.relics[ingredientName] = relics;
+					if (relics && item.relics) item.relics[ingredientName] = relics;
 				}
 
 				if (this.recipes[ingredientRawName]?.ingredients.length > 0) {
@@ -299,17 +299,6 @@ class ItemUpdater {
 		this.relics = {};
 		(await this.fetchEndpoint("RelicArcane")).ExportRelicArcane.forEach(
 			relic => {
-				if (this.processItemName(relic.name) === "Lith N13 Relic") {
-					relic.relicRewards.forEach(({ rewardName }, i) => {
-						if (
-							rewardName ===
-							"/Lotus/StoreItems/Types/Recipes/WarframeRecipes/WukongChassisBlueprint"
-						) {
-							relic.relicRewards[i].rewardName =
-								"/Lotus/StoreItems/Types/Recipes/WarframeRecipes/WukongPrimeChassisBlueprint";
-						}
-					});
-				}
 				if (relic.relicRewards)
 					relic.relicRewards.forEach(reward => {
 						const processedRelic = {
