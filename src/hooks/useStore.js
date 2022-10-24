@@ -202,7 +202,7 @@ export const useStore = create((set, get) => ({
 			// and Secondary tabs in the Profile, contributing 2 to the total count per barrel while only providing the
 			// mastery XP once.
 			const additionalItemCount =
-				itemName === "Venari" ? 0 : item.type === "KITGUN" ? 2 : 1;
+				itemName.includes("Venari") ? 0 : item.type === "KITGUN" ? 2 : 1;
 
 			if (itemsMastered.includes(itemName)) {
 				addItemXP(item);
