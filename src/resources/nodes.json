@@ -412,7 +412,7 @@
 	"Mars": {
 		"SolNode30": {
 			"name": "Olympus",
-			"type": 32,
+			"type": 33,
 			"faction": 0,
 			"lvl": [
 				15,
@@ -577,6 +577,16 @@
 				13
 			],
 			"xp": 51
+		},
+		"SolNode450": {
+			"name": "Tyana Pass",
+			"type": 8,
+			"faction": 1,
+			"lvl": [
+				25,
+				30
+			],
+			"xp": 18
 		}
 	},
 	"Deimos": {
@@ -915,7 +925,7 @@
 	"Jupiter": {
 		"SolNode87": {
 			"name": "Ganymede",
-			"type": 32,
+			"type": 33,
 			"faction": 1,
 			"lvl": [
 				30,
@@ -1455,7 +1465,7 @@
 		},
 		"ClanNode16": {
 			"name": "Ur",
-			"type": 32,
+			"type": 33,
 			"faction": 2,
 			"lvl": [
 				30,
@@ -1595,7 +1605,7 @@
 		},
 		"SolNode118": {
 			"name": "Laomedeia",
-			"type": 32,
+			"type": 33,
 			"faction": 1,
 			"lvl": [
 				25,
@@ -1875,7 +1885,7 @@
 	"Sedna": {
 		"SolNode177": {
 			"name": "Kappa",
-			"type": 32,
+			"type": 33,
 			"faction": 0,
 			"lvl": [
 				34,
@@ -2098,7 +2108,7 @@
 		},
 		"SolNode308": {
 			"name": "Apollo",
-			"type": 32,
+			"type": 33,
 			"faction": 1,
 			"lvl": [
 				35,
@@ -2163,7 +2173,7 @@
 		},
 		"SolNode745": {
 			"name": "Tamu",
-			"type": 32,
+			"type": 33,
 			"faction": 0,
 			"lvl": [
 				35,
@@ -2201,7 +2211,7 @@
 	"Zariman": {
 		"SolNode230": {
 			"name": "Everview Arc",
-			"type": 33,
+			"type": 34,
 			"faction": 0,
 			"lvl": [
 				50,
@@ -2219,7 +2229,7 @@
 		},
 		"SolNode232": {
 			"name": "Tuvul Commons",
-			"type": 34,
+			"type": 35,
 			"faction": 0,
 			"lvl": [
 				50,
@@ -2228,7 +2238,7 @@
 		},
 		"SolNode233": {
 			"name": "Oro Works",
-			"type": 35,
+			"type": 36,
 			"faction": 0,
 			"lvl": [
 				50,

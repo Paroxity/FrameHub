@@ -64,6 +64,7 @@ export const missionIndexMap = [
 	undefined,
 	undefined,
 	undefined,
+	undefined,
 	"Disruption",
 	"Void Flood",
 	"Void Cascade",
