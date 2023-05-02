@@ -27,6 +27,7 @@ function MasteryChecklist(props) {
 		setNodesMastered,
 		setJunctionsMastered,
 		setRailjackIntrinsics,
+		setDrifterIntrinsics,
 		setHideMastered,
 		setHideFounders,
 		displayingNodes
@@ -40,6 +41,7 @@ function MasteryChecklist(props) {
 			setNodesMastered: state.setNodesMastered,
 			setJunctionsMastered: state.setJunctionsMastered,
 			setRailjackIntrinsics: state.setRailjackIntrinsics,
+			setDrifterIntrinsics: state.setDrifterIntrinsics,
 			setHideMastered: state.setHideMastered,
 			setHideFounders: state.setHideFounders,
 			displayingNodes: state.displayingNodes
@@ -70,6 +72,7 @@ function MasteryChecklist(props) {
 				setItemsMastered(data?.mastered ?? []);
 				setPartiallyMasteredItems(data?.partiallyMastered ?? {});
 				setRailjackIntrinsics(data?.intrinsics ?? 0, true);
+				setDrifterIntrinsics(data?.drifterIntrinsics ?? 0, true);
 				setHideMastered(data?.hideMastered ?? false, true);
 				setHideFounders(data?.hideFounders ?? true, true);
 				setNodesMastered(data?.starChart ?? [], false);

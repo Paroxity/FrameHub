@@ -1,7 +1,10 @@
 import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { SHARED } from "../../utils/checklist-types";
-import { totalRailjackIntrinsics } from "../../utils/mastery-rank";
+import {
+	totalDrifterIntrinsics,
+	totalRailjackIntrinsics
+} from "../../utils/mastery-rank";
 import Button from "../Button";
 import NumberInput from "../NumberInput";
 import { LabeledToggle } from "../Toggle";
@@ -11,6 +14,8 @@ function SidebarInputs() {
 		type,
 		railjackIntrinsics,
 		setRailjackIntrinsics,
+		drifterIntrinsics,
+		setDrifterIntrinsics,
 		hideMastered,
 		setHideMastered,
 		hideFounders,
@@ -24,6 +29,8 @@ function SidebarInputs() {
 			type: state.type,
 			railjackIntrinsics: state.railjackIntrinsics,
 			setRailjackIntrinsics: state.setRailjackIntrinsics,
+			drifterIntrinsics: state.drifterIntrinsics,
+			setDrifterIntrinsics: state.setDrifterIntrinsics,
 			hideMastered: state.hideMastered,
 			setHideMastered: state.setHideMastered,
 			hideFounders: state.hideFounders,
@@ -63,6 +70,21 @@ function SidebarInputs() {
 					</>
 				}
 			/>
+			<NumberInput
+				name="Drifter Intrinsics"
+				disabled={type === SHARED}
+				min={0}
+				max={totalDrifterIntrinsics}
+				value={drifterIntrinsics.toString()}
+				onChange={setDrifterIntrinsics}
+				tooltipTitle="Drifter Intrinsics"
+				tooltipContent={
+					<>
+						<p>Max of 10 per intrinsics class</p>
+						<p>Maximum Value: {totalDrifterIntrinsics}</p>
+					</>
+				}
+			/>
 			<LabeledToggle
 				label="Hide Mastered"
 				toggled={hideMastered}
@@ -80,3 +102,4 @@ function SidebarInputs() {
 }
 
 export default SidebarInputs;
+

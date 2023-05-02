@@ -17,6 +17,7 @@ import {
 	intrinsicsToXP,
 	junctionsToXP,
 	totalRailjackIntrinsics,
+	totalDrifterIntrinsics,
 	xpFromItem,
 	xpToMR
 } from "../utils/mastery-rank";
@@ -165,6 +166,7 @@ export const useStore = create((set, get) => ({
 			itemsMastered,
 			partiallyMasteredItems,
 			railjackIntrinsics,
+			drifterIntrinsics,
 			hideFounders,
 			starChart,
 			starChartJunctions,
@@ -175,7 +177,7 @@ export const useStore = create((set, get) => ({
 		const masteryBreakdown = {
 			STAR_CHART: junctionsToXP(starChartJunctions.length),
 			STEEL_PATH: junctionsToXP(steelPathJunctions.length),
-			INTRINSICS: intrinsicsToXP(railjackIntrinsics)
+			INTRINSICS: intrinsicsToXP(railjackIntrinsics + drifterIntrinsics)
 		};
 
 		let xp = Object.values(masteryBreakdown).reduce(
@@ -194,15 +196,18 @@ export const useStore = create((set, get) => ({
 
 		let totalXP =
 			junctionsToXP(planetsWithJunctions.length * 2) +
-			intrinsicsToXP(totalRailjackIntrinsics);
+			intrinsicsToXP(totalRailjackIntrinsics + totalDrifterIntrinsics);
 		let totalItems = 0;
 
 		Object.entries(flattenedItems).forEach(([itemName, item]) => {
 			// Venari gains mastery XP through leveling, but does not show under the Profile. Kitguns show under both Primary
 			// and Secondary tabs in the Profile, contributing 2 to the total count per barrel while only providing the
 			// mastery XP once.
-			const additionalItemCount =
-				itemName.includes("Venari") ? 0 : item.type === "KITGUN" ? 2 : 1;
+			const additionalItemCount = itemName.includes("Venari")
+				? 0
+				: item.type === "KITGUN"
+				? 2
+				: 1;
 
 			if (itemsMastered.includes(itemName)) {
 				addItemXP(item);
@@ -389,7 +394,9 @@ export const useStore = create((set, get) => ({
 	setHideFounders: firestoreFieldSetter("hideFounders"),
 
 	railjackIntrinsics: 0,
-	setRailjackIntrinsics: firestoreFieldSetter("railjackIntrinsics")
+	setRailjackIntrinsics: firestoreFieldSetter("railjackIntrinsics"),
+	drifterIntrinsics: 0,
+	setDrifterIntrinsics: firestoreFieldSetter("drifterIntrinsics")
 }));
 
 const get = () => useStore.getState();
