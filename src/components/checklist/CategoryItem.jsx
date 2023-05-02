@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import checkmark from "../../icons/checkmark.svg";
 import { SHARED } from "../../utils/checklist-types";

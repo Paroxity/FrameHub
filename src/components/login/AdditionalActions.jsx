@@ -1,5 +1,5 @@
 import { sendPasswordResetEmail } from "firebase/auth";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { auth } from "../../App";
 import { useLoginFormStore } from "../../hooks/useLoginFormStore";
 import Button from "../Button";

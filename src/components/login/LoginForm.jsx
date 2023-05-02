@@ -1,4 +1,4 @@
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { useLoginFormStore } from "../../hooks/useLoginFormStore";
 import Button from "../Button";
 import FormInput from "./FormInput";

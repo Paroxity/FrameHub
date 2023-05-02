@@ -1,4 +1,4 @@
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { masteryRankName, mrToXP } from "../../utils/mastery-rank";
 import MasteryBreakdownTooltip from "./MasteryBreakdownTooltip";

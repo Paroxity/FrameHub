@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { useLoginFormStore } from "../../hooks/useLoginFormStore";
 import Button from "../Button";
 

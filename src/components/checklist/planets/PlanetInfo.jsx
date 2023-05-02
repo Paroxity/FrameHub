@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { useStore } from "../../../hooks/useStore";
 import nodes from "../../../resources/nodes.json";
 import { junctionsToXP } from "../../../utils/mastery-rank";

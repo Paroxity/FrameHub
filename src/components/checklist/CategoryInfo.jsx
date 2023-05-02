@@ -1,6 +1,6 @@
 import produce from "immer";
 import PropTypes from "prop-types";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { foundersItems } from "../../utils/items";
 import { xpFromItem } from "../../utils/mastery-rank";

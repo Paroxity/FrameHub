@@ -1,5 +1,5 @@
 import Masonry from "react-masonry-css";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { foundersItems } from "../../utils/items";
 import Category from "./Category";

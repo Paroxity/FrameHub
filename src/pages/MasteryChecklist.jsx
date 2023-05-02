@@ -1,7 +1,7 @@
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { firestore } from "../App";
 import Checklist from "../components/checklist/Checklist";
 import PlanetChecklist from "../components/checklist/planets/PlanetChecklist";

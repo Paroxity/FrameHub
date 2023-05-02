@@ -1,5 +1,5 @@
 import { useState } from "react";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { SHARED } from "../../utils/checklist-types";
 import Button from "../Button";

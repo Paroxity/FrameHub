@@ -1,5 +1,5 @@
 import { signOut } from "firebase/auth";
-import shallow from "zustand/shallow";
+import { shallow } from "zustand/shallow";
 import { auth } from "../../App";
 import { useStore } from "../../hooks/useStore";
 import { AUTHENTICATED } from "../../utils/checklist-types";
