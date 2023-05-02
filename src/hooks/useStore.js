@@ -384,12 +384,12 @@ export const useStore = create((set, get) => ({
 	},
 
 	hideMastered: true,
-	setHideMastered: firestoreFieldSetter("hideMastered", get, set),
+	setHideMastered: firestoreFieldSetter("hideMastered"),
 	hideFounders: true,
-	setHideFounders: firestoreFieldSetter("hideFounders", get, set),
+	setHideFounders: firestoreFieldSetter("hideFounders"),
 
 	intrinsics: 0,
-	setIntrinsics: firestoreFieldSetter("intrinsics", get, set)
+	setIntrinsics: firestoreFieldSetter("intrinsics")
 }));
 
 const get = () => useStore.getState();
@@ -507,3 +507,4 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
+
