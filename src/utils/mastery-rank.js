@@ -72,4 +72,4 @@ export function masteryRankName(mr) {
 	}
 }
 
-export const totalIntrinsics = 50;
+export const totalRailjackIntrinsics = 50;

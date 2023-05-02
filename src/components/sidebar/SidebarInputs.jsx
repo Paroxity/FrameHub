@@ -1,7 +1,7 @@
 import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { SHARED } from "../../utils/checklist-types";
-import { totalIntrinsics } from "../../utils/mastery-rank";
+import { totalRailjackIntrinsics } from "../../utils/mastery-rank";
 import Button from "../Button";
 import NumberInput from "../NumberInput";
 import { LabeledToggle } from "../Toggle";
@@ -9,8 +9,8 @@ import { LabeledToggle } from "../Toggle";
 function SidebarInputs() {
 	const {
 		type,
-		intrinsics,
-		setIntrinsics,
+		railjackIntrinsics,
+		setRailjackIntrinsics,
 		hideMastered,
 		setHideMastered,
 		hideFounders,
@@ -22,8 +22,8 @@ function SidebarInputs() {
 	} = useStore(
 		state => ({
 			type: state.type,
-			intrinsics: state.intrinsics,
-			setIntrinsics: state.setIntrinsics,
+			railjackIntrinsics: state.railjackIntrinsics,
+			setRailjackIntrinsics: state.setRailjackIntrinsics,
 			hideMastered: state.hideMastered,
 			setHideMastered: state.setHideMastered,
 			hideFounders: state.hideFounders,
@@ -49,17 +49,17 @@ function SidebarInputs() {
 				/>
 			)}
 			<NumberInput
-				name="Intrinsics"
+				name="Railjack Intrinsics"
 				disabled={type === SHARED}
 				min={0}
-				max={totalIntrinsics}
-				value={intrinsics.toString()}
-				onChange={setIntrinsics}
-				tooltipTitle="Intrinsics"
+				max={totalRailjackIntrinsics}
+				value={railjackIntrinsics.toString()}
+				onChange={setRailjackIntrinsics}
+				tooltipTitle="Railjack Intrinsics"
 				tooltipContent={
 					<>
 						<p>Max of 10 per intrinsics class</p>
-						<p>Maximum Value: {totalIntrinsics}</p>
+						<p>Maximum Value: {totalRailjackIntrinsics}</p>
 					</>
 				}
 			/>

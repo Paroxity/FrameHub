@@ -16,7 +16,7 @@ import { foundersItems } from "../utils/items";
 import {
 	intrinsicsToXP,
 	junctionsToXP,
-	totalIntrinsics,
+	totalRailjackIntrinsics,
 	xpFromItem,
 	xpToMR
 } from "../utils/mastery-rank";
@@ -164,7 +164,7 @@ export const useStore = create((set, get) => ({
 			flattenedItems,
 			itemsMastered,
 			partiallyMasteredItems,
-			intrinsics,
+			railjackIntrinsics,
 			hideFounders,
 			starChart,
 			starChartJunctions,
@@ -175,7 +175,7 @@ export const useStore = create((set, get) => ({
 		const masteryBreakdown = {
 			STAR_CHART: junctionsToXP(starChartJunctions.length),
 			STEEL_PATH: junctionsToXP(steelPathJunctions.length),
-			INTRINSICS: intrinsicsToXP(intrinsics)
+			INTRINSICS: intrinsicsToXP(railjackIntrinsics)
 		};
 
 		let xp = Object.values(masteryBreakdown).reduce(
@@ -194,7 +194,7 @@ export const useStore = create((set, get) => ({
 
 		let totalXP =
 			junctionsToXP(planetsWithJunctions.length * 2) +
-			intrinsicsToXP(totalIntrinsics);
+			intrinsicsToXP(totalRailjackIntrinsics);
 		let totalItems = 0;
 
 		Object.entries(flattenedItems).forEach(([itemName, item]) => {
@@ -388,27 +388,27 @@ export const useStore = create((set, get) => ({
 	hideFounders: true,
 	setHideFounders: firestoreFieldSetter("hideFounders"),
 
-	intrinsics: 0,
-	setIntrinsics: firestoreFieldSetter("intrinsics")
+	railjackIntrinsics: 0,
+	setRailjackIntrinsics: firestoreFieldSetter("railjackIntrinsics")
 }));
 
 const get = () => useStore.getState();
 const set = value => useStore.setState(value);
 
-function firestoreFieldSetter(key) {
+function firestoreFieldSetter(key, stateKey = key) {
 	return (value, load) => {
 		set(state =>
 			produce(state, draftState => {
-				if (state[key] !== value) {
+				if (state[stateKey] !== value) {
 					if (!load)
 						markOldNewChange(
 							draftState,
 							"field",
 							key,
-							state[key],
+							state[stateKey],
 							value
 						);
-					draftState[key] = value;
+					draftState[stateKey] = value;
 				}
 			})
 		);
