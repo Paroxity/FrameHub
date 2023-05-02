@@ -394,7 +394,7 @@ export const useStore = create((set, get) => ({
 	setHideFounders: firestoreFieldSetter("hideFounders"),
 
 	railjackIntrinsics: 0,
-	setRailjackIntrinsics: firestoreFieldSetter("railjackIntrinsics"),
+	setRailjackIntrinsics: firestoreFieldSetter("intrinsics", "railjackIntrinsics"),
 	drifterIntrinsics: 0,
 	setDrifterIntrinsics: firestoreFieldSetter("drifterIntrinsics")
 }));
