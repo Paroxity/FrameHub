@@ -8,7 +8,7 @@ import {
 	writeBatch
 } from "firebase/firestore";
 import { getMetadata, ref } from "firebase/storage";
-import produce from "immer";
+import { produce } from "immer";
 import create from "zustand";
 import { firestore, storage } from "../App";
 import { ANONYMOUS, SHARED } from "../utils/checklist-types";
@@ -394,7 +394,10 @@ export const useStore = create((set, get) => ({
 	setHideFounders: firestoreFieldSetter("hideFounders"),
 
 	railjackIntrinsics: 0,
-	setRailjackIntrinsics: firestoreFieldSetter("intrinsics", "railjackIntrinsics"),
+	setRailjackIntrinsics: firestoreFieldSetter(
+		"intrinsics",
+		"railjackIntrinsics"
+	),
 	drifterIntrinsics: 0,
 	setDrifterIntrinsics: firestoreFieldSetter("drifterIntrinsics")
 }));

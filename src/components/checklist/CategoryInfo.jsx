@@ -1,4 +1,4 @@
-import produce from "immer";
+import { produce } from "immer";
 import PropTypes from "prop-types";
 import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
@@ -94,3 +94,4 @@ CategoryItem.propTypes = {
 };
 
 export default CategoryItem;
+

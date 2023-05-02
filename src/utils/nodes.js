@@ -1,4 +1,4 @@
-import produce from "immer";
+import { produce } from "immer";
 import PropTypes from "prop-types";
 import nodes from "../resources/nodes.json";
 
@@ -87,3 +87,4 @@ export const nodeShape = {
 	lvl: PropTypes.arrayOf(PropTypes.number).isRequired,
 	xp: PropTypes.number
 };
+
