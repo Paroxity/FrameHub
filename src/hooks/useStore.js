@@ -177,7 +177,8 @@ export const useStore = create((set, get) => ({
 		const masteryBreakdown = {
 			STAR_CHART: junctionsToXP(starChartJunctions.length),
 			STEEL_PATH: junctionsToXP(steelPathJunctions.length),
-			INTRINSICS: intrinsicsToXP(railjackIntrinsics + drifterIntrinsics)
+			RAILJACK_INTRINSICS: intrinsicsToXP(railjackIntrinsics),
+			DRIFTER_INTRINSICS: intrinsicsToXP(drifterIntrinsics)
 		};
 
 		let xp = Object.values(masteryBreakdown).reduce(
@@ -517,4 +518,3 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
-
