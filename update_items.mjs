@@ -27,7 +27,8 @@ const OVERWRITES = {
 };
 const BLACKLIST = [];
 
-const API_URL = "https://content.warframe.com";
+const CONTENT_URL = "https://content.warframe.com";
+const ORIGIN_URL = "https://origin.warframe.com";
 const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
 const WIKI_URL = "https://warframe.fandom.com/wiki";
 const DROP_TABLE_URL = "https://www.warframe.com/droptables";
@@ -354,7 +355,7 @@ class ItemUpdater {
 		return this.parseDamagedJSON(
 			await (
 				await fetch(
-					`${API_URL}/PublicExport/Manifest/${this.endpoints.find(e =>
+					`${CONTENT_URL}/PublicExport/Manifest/${this.endpoints.find(e =>
 						e.startsWith(`Export${endpoint}`)
 					)}`
 				)
@@ -367,7 +368,7 @@ class ItemUpdater {
 			.decompress(
 				Buffer.from(
 					await (
-						await fetch(`${API_URL}/PublicExport/index_en.txt.lzma`)
+						await fetch(`${ORIGIN_URL}/PublicExport/index_en.txt.lzma`)
 					).arrayBuffer()
 				)
 			)
