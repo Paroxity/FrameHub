@@ -5,6 +5,7 @@ import lua from "lua-json";
 import lzma from "lzma";
 import fetch from "node-fetch";
 import { JSDOM } from "jsdom";
+import { setOutput } from "@actions/core";
 
 const OVERWRITES = {
 	AMP: {
@@ -450,9 +451,10 @@ class ItemUpdater {
 		}
 	}
 	console.log(`Completed in ${(Date.now() - startTime) / 1000} seconds.`);
-	process.stdout.write(
-		`::set-output name=updated::${
+
+	if (process.env.GITHUB_ACTION)
+		setOutput(
+			"updated",
 			difference.length > 0 || process.env.FORCE_UPLOAD === "true"
-		}`
-	);
+		);
 })();

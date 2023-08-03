@@ -17,6 +17,7 @@
 		"zustand": "^4.3.9"
 	},
 	"devDependencies": {
+		"@actions/core": "^1.10.0",
 		"eslint": "^8.45.0",
 		"eslint-config-prettier": "^8.9.0",
 		"eslint-plugin-react": "^7.33.0",

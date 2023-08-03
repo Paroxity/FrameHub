@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
       - name: Cache pnpm Modules
         uses: actions/cache@v3
         with:
@@ -37,7 +37,7 @@ jobs:
       - name: Authenticate Firebase
         uses: 'google-github-actions/auth@v0'
         with:
-          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
       - name: Upload items.json to Firebase
         uses: google-github-actions/upload-cloud-storage@v0
         if: steps.update_items.outputs.updated == 'true'
