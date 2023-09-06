@@ -20,11 +20,6 @@ const OVERWRITES = {
 			buildPrice: 1000
 		}
 	},
-	PRIMARY: {
-		"Gotva Prime": {
-			mr: 14
-		}
-	},
 	MELEE: {
 		"Tenet Agendus": { components: undefined }
 	},
