@@ -22,6 +22,7 @@ export const ingredientSuffixes = [
 	"Head",
 	"Heatsink",
 	"Hilt",
+	"Hook",
 	"Left Gauntlet",
 	"Limbs",
 	"Link",
