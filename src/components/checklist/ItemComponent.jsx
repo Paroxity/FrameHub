@@ -3,26 +3,26 @@ import PropTypes from "prop-types";
 import { ingredientSuffixes } from "../../utils/items";
 
 export default function ItemComponent({
+	itemName,
 	componentName,
 	component,
 	isSubcomponent
 }) {
+	const imageName =
+		(componentName.includes(" Prime ") ? "prime-" : "") +
+		(component.generic
+			? ingredientSuffixes.find(suffix =>
+					componentName.endsWith(suffix)
+			  ) ?? componentName.replace(`${itemName} `, "")
+			: componentName);
+
 	return (
 		<div className={classNames({ "item-subcomponent": isSubcomponent })}>
 			<img
 				className="component-image"
 				src={`https://cdn.warframestat.us/img/${
 					component?.img ||
-					(componentName.includes(" Prime ") ? "prime-" : "") +
-						(component.generic
-							? ingredientSuffixes
-									.find(suffix =>
-										componentName.endsWith(suffix)
-									)
-									.split(" ")
-									.join("-")
-									.toLowerCase()
-							: componentName.toLowerCase().split(" ").join("-"))
+					imageName.split(" ").join("-").toLowerCase()
 				}.png`}
 				alt=""
 				width="24px"
@@ -37,8 +37,9 @@ export default function ItemComponent({
 						return (
 							<ItemComponent
 								key={subcomponentName}
-								component={subcomponent}
+								itemName={itemName}
 								componentName={subcomponentName}
+								component={subcomponent}
 								isSubcomponent
 							/>
 						);
