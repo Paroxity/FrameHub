@@ -6,7 +6,7 @@ import GluedComponents from "../GluedComponents";
 import { PaginatedTooltipTitle } from "../PaginatedTooltip";
 import ItemComponent from "./ItemComponent";
 
-function ItemGeneralInfoTooltip({ item }) {
+function ItemGeneralInfoTooltip({ item, itemName }) {
 	const isMacOS =
 		window.navigator.userAgentData?.platform === "macOS" ||
 		window.navigator.platform === "MacIntel"; //TODO: Remove usage of deprecated Navigator.platform
@@ -21,6 +21,7 @@ function ItemGeneralInfoTooltip({ item }) {
 							return (
 								<ItemComponent
 									key={componentName}
+									itemName={itemName}
 									componentName={componentName}
 									component={component}
 								/>
