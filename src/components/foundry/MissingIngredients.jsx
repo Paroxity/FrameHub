@@ -6,6 +6,7 @@ import { LabeledToggle } from "../Toggle";
 function MissingIngredients() {
 	const [visible, setVisible] = useState(false);
 	const ingredients = useStore(state => state.ingredients);
+	const formaCost = useStore(state => state.formaCost);
 
 	return (
 		<>
@@ -24,8 +25,7 @@ function MissingIngredients() {
 						1348: 3,
 						1152: 2,
 						640: 1
-					}}
-				>
+					}}>
 					{Object.entries(ingredients)
 						.sort(([nameA, countA], [nameB, countB]) =>
 							countA > countB
@@ -55,6 +55,7 @@ function MissingIngredients() {
 						})}
 				</Masonry>
 			)}
+			<p>Forma Required for Max Rank: {formaCost}</p>
 		</>
 	);
 }

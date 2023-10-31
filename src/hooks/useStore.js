@@ -356,9 +356,11 @@ export const useStore = create((set, get) => ({
 		),
 
 	ingredients: {},
+	formaCost: 0,
 	recalculateIngredients: () => {
 		const { flattenedItems, itemsMastered, partiallyMasteredItems } = get();
 		const necessaryComponents = {};
+		let formaCost = 0;
 
 		function calculate(recipe) {
 			Object.entries(recipe.components).forEach(
@@ -378,15 +380,20 @@ export const useStore = create((set, get) => ({
 		}
 
 		Object.entries(flattenedItems).forEach(([itemName, item]) => {
-			if (
-				!itemsMastered.includes(itemName) &&
-				!partiallyMasteredItems[itemName] &&
-				item.components
-			) {
-				calculate(item);
+			if (!itemsMastered.includes(itemName)) {
+				if (!partiallyMasteredItems[itemName] && item.components) {
+					calculate(item);
+				}
+				if (item.maxLvl) {
+					formaCost += Math.floor(
+						(item.maxLvl -
+							(partiallyMasteredItems[itemName] ?? 30)) /
+							2
+					);
+				}
 			}
 		});
-		set({ ingredients: necessaryComponents });
+		set({ ingredients: necessaryComponents, formaCost });
 	},
 
 	hideMastered: true,
