@@ -198,7 +198,11 @@ export const useStore = create((set, get) => ({
 		let totalXP =
 			junctionsToXP(planetsWithJunctions.length * 2) +
 			intrinsicsToXP(totalRailjackIntrinsics + totalDrifterIntrinsics);
-		let totalItems = 0;
+		let totalItems = 1; // There is an extra "Amp" item that is shown in the in-game profile.
+
+		// Keep track of whether an amp has been mastered, because we assume the ghost "Amp" item is "mastered" by the
+		// time a user has obtained and mastered an actual amp.
+		let ampFound = false;
 
 		Object.entries(flattenedItems).forEach(([itemName, item]) => {
 			// Venari gains mastery XP through leveling, but does not show under the Profile. Kitguns show under both Primary
@@ -213,6 +217,12 @@ export const useStore = create((set, get) => ({
 			if (itemsMastered.includes(itemName)) {
 				addItemXP(item);
 				itemsMasteredCount += additionalItemCount;
+
+				// See comment above regarding `ampFound`.
+				if (!ampFound && item.type === "AMP") {
+					ampFound = true;
+					itemsMasteredCount++;
+				}
 			} else if (partiallyMasteredItems[itemName]) {
 				addItemXP(item, partiallyMasteredItems[itemName]);
 			}

@@ -45,7 +45,9 @@ function CategoryItem({ name }) {
 
 	let masteredCount = 0;
 	let masteredXP = 0;
-	let totalCount = 0;
+	// There is an extra "Amp" item in the amp category in the
+	// in-game profile.
+	let totalCount = name === "AMP" ? 1 : 0;
 	let totalXP = 0;
 	Object.entries(categoryItems).forEach(([itemName, item]) => {
 		if (
@@ -67,6 +69,9 @@ function CategoryItem({ name }) {
 			);
 		}
 	});
+
+	// Assume the ghost "Amp" item is mastered if there are any mastered amps.
+	if (name === "AMP" && masteredCount > 0) masteredCount++;
 
 	return (
 		<BaseCategoryInfo
@@ -94,4 +99,3 @@ CategoryItem.propTypes = {
 };
 
 export default CategoryItem;
-
