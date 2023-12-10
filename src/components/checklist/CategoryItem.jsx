@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import checkmark from "../../icons/checkmark.svg";
 import { SHARED } from "../../utils/checklist-types";
@@ -20,22 +19,19 @@ function CategoryItem({ name, item }) {
 		partialRank,
 		setPartiallyMasteredItem,
 		hidden
-	} = useStore(
-		state => ({
-			type: state.type,
-			masterItem: state.masterItem,
-			mastered: state.itemsMastered.includes(name),
-			masteryRankLocked: (item.mr || 0) > state.masteryRank,
-			partialRank: state.partiallyMasteredItems[name],
-			setPartiallyMasteredItem: state.setPartiallyMasteredItem,
-			hidden:
-				(state.hideMastered && state.itemsMastered.includes(name)) ||
-				(state.hideFounders &&
-					foundersItems.includes(name) &&
-					!state.itemsMastered.includes(name))
-		}),
-		shallow
-	);
+	} = useStore(state => ({
+		type: state.type,
+		masterItem: state.masterItem,
+		mastered: state.itemsMastered.includes(name),
+		masteryRankLocked: (item.mr || 0) > state.masteryRank,
+		partialRank: state.partiallyMasteredItems[name],
+		setPartiallyMasteredItem: state.setPartiallyMasteredItem,
+		hidden:
+			(state.hideMastered && state.itemsMastered.includes(name)) ||
+			(state.hideFounders &&
+				foundersItems.includes(name) &&
+				!state.itemsMastered.includes(name))
+	}));
 	const [rankSelectToggled, setRankSelectToggled] = useState(false);
 
 	return hidden ? null : (
@@ -102,7 +98,7 @@ function CategoryItem({ name, item }) {
 								? ` [${
 										(partialRank ? partialRank + "/" : "") +
 										item.maxLvl
-								  }]`
+									}]`
 								: "")}
 						{mastered && (
 							<img src={checkmark} className="checkmark" alt="" />

@@ -1,20 +1,16 @@
-import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { masteryRankName, mrToXP } from "../../utils/mastery-rank";
 import MasteryBreakdownTooltip from "./MasteryBreakdownTooltip";
 
 function MasteryRankInfo() {
 	const { itemsMasteredCount, totalItems, xp, totalXP, masteryRank } =
-		useStore(
-			state => ({
-				itemsMasteredCount: state.itemsMasteredCount,
-				totalItems: state.totalItems,
-				xp: state.xp,
-				totalXP: state.totalXP,
-				masteryRank: state.masteryRank
-			}),
-			shallow
-		);
+		useStore(state => ({
+			itemsMasteredCount: state.itemsMasteredCount,
+			totalItems: state.totalItems,
+			xp: state.xp,
+			totalXP: state.totalXP,
+			masteryRank: state.masteryRank
+		}));
 
 	return (
 		<MasteryBreakdownTooltip>

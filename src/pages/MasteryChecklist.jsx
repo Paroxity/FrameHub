@@ -1,7 +1,6 @@
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { shallow } from "zustand/shallow";
 import { firestore } from "../App";
 import Checklist from "../components/checklist/Checklist";
 import PlanetChecklist from "../components/checklist/planets/PlanetChecklist";
@@ -31,23 +30,20 @@ function MasteryChecklist(props) {
 		setHideMastered,
 		setHideFounders,
 		displayingNodes
-	} = useStore(
-		state => ({
-			setId: state.setId,
-			setType: state.setType,
-			reset: state.reset,
-			setItemsMastered: state.setItemsMastered,
-			setPartiallyMasteredItems: state.setPartiallyMasteredItems,
-			setNodesMastered: state.setNodesMastered,
-			setJunctionsMastered: state.setJunctionsMastered,
-			setRailjackIntrinsics: state.setRailjackIntrinsics,
-			setDrifterIntrinsics: state.setDrifterIntrinsics,
-			setHideMastered: state.setHideMastered,
-			setHideFounders: state.setHideFounders,
-			displayingNodes: state.displayingNodes
-		}),
-		shallow
-	);
+	} = useStore(state => ({
+		setId: state.setId,
+		setType: state.setType,
+		reset: state.reset,
+		setItemsMastered: state.setItemsMastered,
+		setPartiallyMasteredItems: state.setPartiallyMasteredItems,
+		setNodesMastered: state.setNodesMastered,
+		setJunctionsMastered: state.setJunctionsMastered,
+		setRailjackIntrinsics: state.setRailjackIntrinsics,
+		setDrifterIntrinsics: state.setDrifterIntrinsics,
+		setHideMastered: state.setHideMastered,
+		setHideFounders: state.setHideFounders,
+		displayingNodes: state.displayingNodes
+	}));
 
 	const [dataLoading, setDataLoading] = useState(true);
 	useEffect(() => {
@@ -85,13 +81,10 @@ function MasteryChecklist(props) {
 		);
 	}, [id, props.type]); //eslint-disable-line
 
-	const { items, fetchItems } = useStore(
-		state => ({
-			items: state.items,
-			fetchItems: state.fetchItems
-		}),
-		shallow
-	);
+	const { items, fetchItems } = useStore(state => ({
+		items: state.items,
+		fetchItems: state.fetchItems
+	}));
 	const itemsLoading = Object.keys(items).length === 0;
 	useEffect(() => {
 		fetchItems();

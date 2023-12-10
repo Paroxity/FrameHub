@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { SHARED } from "../../utils/checklist-types";
 import Button from "../Button";
@@ -13,17 +12,14 @@ function DangerZone() {
 		masterAllItems,
 		masterAllNodes,
 		masterAllJunctions
-	} = useStore(
-		state => ({
-			type: state.type,
-			displayingNodes: state.displayingNodes,
-			displayingSteelPath: state.displayingSteelPath,
-			masterAllItems: state.masterAllItems,
-			masterAllNodes: state.masterAllNodes,
-			masterAllJunctions: state.masterAllJunctions
-		}),
-		shallow
-	);
+	} = useStore(state => ({
+		type: state.type,
+		displayingNodes: state.displayingNodes,
+		displayingSteelPath: state.displayingSteelPath,
+		masterAllItems: state.masterAllItems,
+		masterAllNodes: state.masterAllNodes,
+		masterAllJunctions: state.masterAllJunctions
+	}));
 
 	const [confirmationCallback, setConfirmationCallback] = useState();
 	const [confirmationMessage, setConfirmationMessage] = useState("");
@@ -55,8 +51,7 @@ function DangerZone() {
 								"Are you sure you would like to master all items?"
 							);
 						}
-					}}
-				>
+					}}>
 					Master All {displayingNodes ? "Nodes" : "Items"}
 				</Button>
 				<Button
@@ -80,8 +75,7 @@ function DangerZone() {
 								"Are you sure you would like to reset all items?"
 							);
 						}
-					}}
-				>
+					}}>
 					Reset {displayingNodes ? "Nodes" : "Items"}
 				</Button>
 			</div>

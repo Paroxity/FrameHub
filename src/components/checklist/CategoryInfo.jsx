@@ -1,6 +1,5 @@
 import { produce } from "immer";
 import PropTypes from "prop-types";
-import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { foundersItems } from "../../utils/items";
 import { xpFromItem } from "../../utils/mastery-rank";
@@ -22,25 +21,19 @@ const fancyCategoryNames = {
 };
 
 function CategoryItem({ name }) {
-	const { categoryItems, hideFounders } = useStore(
-		state => ({
-			categoryItems: state.items[name],
-			hideFounders: state.hideFounders
-		}),
-		shallow
+	const { categoryItems, hideFounders } = useStore(state => ({
+		categoryItems: state.items[name],
+		hideFounders: state.hideFounders
+	}));
+	const itemsMastered = useStore(state =>
+		state.itemsMastered.filter(item => categoryItems[item])
 	);
-	const itemsMastered = useStore(
-		state => state.itemsMastered.filter(item => categoryItems[item]),
-		shallow
-	);
-	const partiallyMasteredItems = useStore(
-		state =>
-			produce(state.partiallyMasteredItems, draftState => {
-				Object.keys(draftState).forEach(item => {
-					if (!categoryItems[item]) delete draftState[item];
-				});
-			}),
-		shallow
+	const partiallyMasteredItems = useStore(state =>
+		produce(state.partiallyMasteredItems, draftState => {
+			Object.keys(draftState).forEach(item => {
+				if (!categoryItems[item]) delete draftState[item];
+			});
+		})
 	);
 
 	let masteredCount = 0;

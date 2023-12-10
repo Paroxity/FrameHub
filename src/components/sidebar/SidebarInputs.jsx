@@ -1,4 +1,3 @@
-import { shallow } from "zustand/shallow";
 import { useStore } from "../../hooks/useStore";
 import { SHARED } from "../../utils/checklist-types";
 import {
@@ -24,24 +23,21 @@ function SidebarInputs() {
 		setDisplayingNodes,
 		displayingSteelPath,
 		setDisplayingSteelPath
-	} = useStore(
-		state => ({
-			type: state.type,
-			railjackIntrinsics: state.railjackIntrinsics,
-			setRailjackIntrinsics: state.setRailjackIntrinsics,
-			drifterIntrinsics: state.drifterIntrinsics,
-			setDrifterIntrinsics: state.setDrifterIntrinsics,
-			hideMastered: state.hideMastered,
-			setHideMastered: state.setHideMastered,
-			hideFounders: state.hideFounders,
-			setHideFounders: state.setHideFounders,
-			displayingNodes: state.displayingNodes,
-			setDisplayingNodes: state.setDisplayingNodes,
-			displayingSteelPath: state.displayingSteelPath,
-			setDisplayingSteelPath: state.setDisplayingSteelPath
-		}),
-		shallow
-	);
+	} = useStore(state => ({
+		type: state.type,
+		railjackIntrinsics: state.railjackIntrinsics,
+		setRailjackIntrinsics: state.setRailjackIntrinsics,
+		drifterIntrinsics: state.drifterIntrinsics,
+		setDrifterIntrinsics: state.setDrifterIntrinsics,
+		hideMastered: state.hideMastered,
+		setHideMastered: state.setHideMastered,
+		hideFounders: state.hideFounders,
+		setHideFounders: state.setHideFounders,
+		displayingNodes: state.displayingNodes,
+		setDisplayingNodes: state.setDisplayingNodes,
+		displayingSteelPath: state.displayingSteelPath,
+		setDisplayingSteelPath: state.setDisplayingSteelPath
+	}));
 	return (
 		<>
 			<Button onClick={() => setDisplayingNodes(!displayingNodes)}>
@@ -102,4 +98,3 @@ function SidebarInputs() {
 }
 
 export default SidebarInputs;
-

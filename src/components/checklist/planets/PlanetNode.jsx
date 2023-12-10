@@ -1,6 +1,5 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import { shallow } from "zustand/shallow";
 import { useStore } from "../../../hooks/useStore";
 import checkmark from "../../../icons/checkmark.svg";
 import { SHARED } from "../../../utils/checklist-types";
@@ -11,23 +10,20 @@ import PlanetInfoTooltip from "./PlanetInfoTooltip";
 
 function PlanetNode({ id, node }) {
 	const { type, displayingSteelPath, masterNode, mastered, hidden } =
-		useStore(
-			state => ({
-				type: state.type,
-				displayingSteelPath: state.displayingSteelPath,
-				masterNode: state.masterNode,
-				mastered:
-					state[
-						state.displayingSteelPath ? "steelPath" : "starChart"
-					].includes(id),
-				hidden:
-					state.hideMastered &&
-					state[
-						state.displayingSteelPath ? "steelPath" : "starChart"
-					].includes(id)
-			}),
-			shallow
-		);
+		useStore(state => ({
+			type: state.type,
+			displayingSteelPath: state.displayingSteelPath,
+			masterNode: state.masterNode,
+			mastered:
+				state[
+					state.displayingSteelPath ? "steelPath" : "starChart"
+				].includes(id),
+			hidden:
+				state.hideMastered &&
+				state[
+					state.displayingSteelPath ? "steelPath" : "starChart"
+				].includes(id)
+		}));
 
 	return hidden ? null : (
 		<PaginatedTooltip
@@ -35,21 +31,18 @@ function PlanetNode({ id, node }) {
 				<>
 					<PlanetInfoTooltip node={node} />
 				</>
-			}
-		>
+			}>
 			<div
 				className={classNames("item", {
 					"item-mastered": mastered
-				})}
-			>
+				})}>
 				<Button
 					className="item-name"
 					onClick={() => {
 						if (type !== SHARED) {
 							masterNode(id, displayingSteelPath, !mastered);
 						}
-					}}
-				>
+					}}>
 					{node.name}
 					{mastered && (
 						<img src={checkmark} className="checkmark" alt="" />

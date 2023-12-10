@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import { shallow } from "zustand/shallow";
 import { useStore } from "../../../hooks/useStore";
 import nodes from "../../../resources/nodes.json";
 import { junctionsToXP } from "../../../utils/mastery-rank";
@@ -14,20 +13,17 @@ function PlanetInfo({ name }) {
 	let totalCount = hasJunction ? 1 : 0;
 	let totalXP = hasJunction ? junctionsToXP(1) : 0;
 
-	const { nodesMastered, junctionMastered } = useStore(
-		state => ({
-			nodesMastered: state[
-				state.displayingSteelPath ? "steelPath" : "starChart"
-			].filter(id => nodes[name][id]),
-			junctionMastered:
-				hasJunction &&
-				state[
-					(state.displayingSteelPath ? "steelPath" : "starChart") +
-						"Junctions"
-				].includes(name)
-		}),
-		shallow
-	);
+	const { nodesMastered, junctionMastered } = useStore(state => ({
+		nodesMastered: state[
+			state.displayingSteelPath ? "steelPath" : "starChart"
+		].filter(id => nodes[name][id]),
+		junctionMastered:
+			hasJunction &&
+			state[
+				(state.displayingSteelPath ? "steelPath" : "starChart") +
+					"Junctions"
+			].includes(name)
+	}));
 	Object.entries(nodes[name]).forEach(([id, node]) => {
 		totalCount++;
 		totalXP += node.xp ?? 0;
