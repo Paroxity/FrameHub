@@ -3,7 +3,9 @@ import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
 	getFirestore,
-	enableMultiTabIndexedDbPersistence
+	initializeFirestore,
+	persistentLocalCache,
+	persistentMultipleTabManager
 } from "firebase/firestore";
 import { getPerformance } from "firebase/performance";
 import { getStorage } from "firebase/storage";
@@ -38,8 +40,12 @@ const paroxityFirebase = initializeApp(
 	"paroxity"
 ); //TODO: Combine into one Firebase project
 export const auth = getAuth(paroxityFirebase);
+initializeFirestore(paroxityFirebase, {
+	localCache: persistentLocalCache({
+		tabManager: persistentMultipleTabManager()
+	})
+});
 export const firestore = getFirestore(paroxityFirebase);
-enableMultiTabIndexedDbPersistence(firestore);
 export const storage = getStorage(framehubFirebase);
 getAnalytics(framehubFirebase);
 getPerformance(framehubFirebase);
