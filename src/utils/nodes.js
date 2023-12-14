@@ -77,7 +77,9 @@ export const factionIndexMap = [
 	"Infested",
 	"Corrupted",
 	undefined,
-	"Sentient"
+	"Sentient",
+	undefined,
+	"Murmur"
 ];
 
 export const nodeShape = {
@@ -87,4 +89,3 @@ export const nodeShape = {
 	lvl: PropTypes.arrayOf(PropTypes.number).isRequired,
 	xp: PropTypes.number
 };
-

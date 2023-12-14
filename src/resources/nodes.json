@@ -670,6 +670,51 @@
 				15,
 				30
 			]
+		},
+		"SolNode715": {
+			"name": "EFFERVO",
+			"type": 0,
+			"faction": 7,
+			"lvl": [
+				55,
+				60
+			]
+		},
+		"SolNode716": {
+			"name": "NEX",
+			"type": 1,
+			"faction": 7,
+			"lvl": [
+				55,
+				60
+			]
+		},
+		"SolNode717": {
+			"name": "PERSTO",
+			"type": 2,
+			"faction": 7,
+			"lvl": [
+				55,
+				60
+			]
+		},
+		"SolNode718": {
+			"name": "CAMBIRE",
+			"type": 21,
+			"faction": 7,
+			"lvl": [
+				55,
+				60
+			]
+		},
+		"SolNode719": {
+			"name": "MUNIO",
+			"type": 8,
+			"faction": 7,
+			"lvl": [
+				55,
+				60
+			]
 		}
 	},
 	"Phobos": {
@@ -2251,6 +2296,35 @@
 			"faction": 0,
 			"lvl": [
 				50,
+				55
+			]
+		}
+	},
+	"Duviri": {
+		"SolNode236": {
+			"name": "The Duviri Experience",
+			"type": 28,
+			"faction": 5,
+			"lvl": [
+				20,
+				20
+			]
+		},
+		"SolNode237": {
+			"name": "The Lone Story",
+			"type": 28,
+			"faction": 5,
+			"lvl": [
+				20,
+				20
+			]
+		},
+		"SolNode238": {
+			"name": "The Circuit",
+			"type": 31,
+			"faction": 3,
+			"lvl": [
+				35,
 				55
 			]
 		}
