@@ -28,7 +28,7 @@ jobs:
           run_install: true
       - name: Update items.json
         id: update_items
-        run: node update_items.mjs
+        run: node updater/update_items.mjs
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           DISCORD_ADMIN_IDS: ${{ secrets.DISCORD_ADMIN_IDS }}
