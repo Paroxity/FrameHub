@@ -245,6 +245,7 @@ button:hover::before {
 
 /* Text/Password input */
 input[type="text"],
+input[type="email"],
 input[type="password"],
 input[type="number"] {
 	background-color: rgba(245, 227, 173, 0.05);
@@ -257,9 +258,11 @@ input[type="number"] {
 }
 
 input[type="text"]:hover,
+input[type="email"]:hover,
 input[type="password"]:hover,
 input[type="number"]:hover,
 input[type="text"]:focus,
+input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="number"]:focus {
 	border: 1px solid rgba(245, 227, 173, 0.25);
