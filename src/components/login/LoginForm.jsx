@@ -18,7 +18,7 @@ function LoginForm() {
 
 	return (
 		<form onSubmit={handleSubmit}>
-			<FormInput type="text" placeholder="EMAIL" valueSetter={setEmail} />
+			<FormInput type="email" placeholder="EMAIL" valueSetter={setEmail} />
 			<FormInput
 				type="password"
 				placeholder="PASSWORD"
