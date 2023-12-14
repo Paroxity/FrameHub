@@ -2,10 +2,10 @@ import FormData from "form-data";
 import fs from "fs/promises";
 import jsonDiff from "json-diff";
 import lua from "lua-json";
-import lzma from "lzma";
 import fetch from "node-fetch";
 import { JSDOM } from "jsdom";
 import { setOutput } from "@actions/core";
+import { fetchEndpoint } from "./warframe_exports.mjs";
 
 const OVERWRITES = {
 	AMP: {
@@ -28,10 +28,6 @@ const OVERWRITES = {
 };
 const BLACKLIST = [];
 
-const CONTENT_URL = "https://content.warframe.com";
-const ORIGIN_URL = process.env.PROXY_AUTH
-	? "https://wf-origin-proxy.aericio.workers.dev"
-	: "https://origin.warframe.com";
 const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
 const WIKI_URL = "https://warframe.fandom.com/wiki";
 const DROP_TABLE_URL = "https://www.warframe.com/droptables";
@@ -69,7 +65,6 @@ class ItemUpdater {
 
 		await this.fetchBaroData();
 		await this.fetchVaultStatus();
-		await this.fetchEndpoints();
 		await Promise.all([
 			this.fetchItems(),
 			this.fetchRecipes(),
@@ -78,7 +73,7 @@ class ItemUpdater {
 
 		this.mapItemNames(
 			this.items,
-			(await this.fetchEndpoint("Resources")).ExportResources
+			(await fetchEndpoint("Resources")).ExportResources
 		);
 
 		this.processItems();
@@ -254,10 +249,10 @@ class ItemUpdater {
 				type = uniqueName.includes("InfestedCatbrow")
 					? "INFESTED_CAT"
 					: uniqueName.includes("Catbrow")
-					? "CAT"
-					: uniqueName.includes("PredatorKubrow")
-					? "INFESTED_DOG"
-					: "DOG";
+						? "CAT"
+						: uniqueName.includes("PredatorKubrow")
+							? "INFESTED_DOG"
+							: "DOG";
 				break;
 			default:
 				type = {
@@ -301,32 +296,30 @@ class ItemUpdater {
 
 	async fetchRelics() {
 		this.relics = {};
-		(await this.fetchEndpoint("RelicArcane")).ExportRelicArcane.forEach(
-			relic => {
-				if (relic.relicRewards)
-					relic.relicRewards.forEach(reward => {
-						const processedRelic = {
-							rarity:
-								reward.rarity === "COMMON"
-									? 0
-									: reward.rarity === "UNCOMMON"
+		(await fetchEndpoint("RelicArcane")).ExportRelicArcane.forEach(relic => {
+			if (relic.relicRewards)
+				relic.relicRewards.forEach(reward => {
+					const processedRelic = {
+						rarity:
+							reward.rarity === "COMMON"
+								? 0
+								: reward.rarity === "UNCOMMON"
 									? 1
 									: 2
-						};
-						if (this.vaultedRelics.includes(relic.name))
-							processedRelic.vaulted = true;
+					};
+					if (this.vaultedRelics.includes(relic.name))
+						processedRelic.vaulted = true;
 
-						const rewardName = reward.rewardName.replace("/StoreItems", "");
-						if (!this.relics[rewardName]) this.relics[rewardName] = {};
-						this.relics[rewardName][this.processItemName(relic.name)] =
-							processedRelic;
-					});
-			}
-		);
+					const rewardName = reward.rewardName.replace("/StoreItems", "");
+					if (!this.relics[rewardName]) this.relics[rewardName] = {};
+					this.relics[rewardName][this.processItemName(relic.name)] =
+						processedRelic;
+				});
+		});
 	}
 
 	async fetchRecipes() {
-		this.recipes = (await this.fetchEndpoint("Recipes")).ExportRecipes.reduce(
+		this.recipes = (await fetchEndpoint("Recipes")).ExportRecipes.reduce(
 			(recipes, recipe) => {
 				const invalidBPs = [
 					"/Lotus/Types/Recipes/Weapons/CorpusHandcannonBlueprint",
@@ -346,40 +339,12 @@ class ItemUpdater {
 	async fetchItems() {
 		const data = await Promise.all(
 			ITEM_ENDPOINTS.map(async e => {
-				return (await this.fetchEndpoint(e))[`Export${e}`];
+				return (await fetchEndpoint(e))[`Export${e}`];
 			})
 		);
 		this.items = data.reduce((merged, d) => {
 			return [...merged, ...d];
 		}, []);
-	}
-
-	async fetchEndpoint(endpoint) {
-		return this.parseDamagedJSON(
-			await (
-				await fetch(
-					`${CONTENT_URL}/PublicExport/Manifest/${this.endpoints.find(e =>
-						e.startsWith(`Export${endpoint}`)
-					)}`
-				)
-			).text()
-		);
-	}
-
-	async fetchEndpoints() {
-		this.endpoints = lzma
-			.decompress(
-				Buffer.from(
-					await (
-						await fetch(`${ORIGIN_URL}/PublicExport/index_en.txt.lzma`, {
-							headers: {
-								Authentication: process.env.PROXY_AUTH
-							}
-						})
-					).arrayBuffer()
-				)
-			)
-			.split("\n");
 	}
 
 	async fetchBaroData() {
@@ -402,10 +367,6 @@ class ItemUpdater {
 		this.vaultedRelics = relics.filter(
 			relic => !unvaultedRelics.includes(relic)
 		);
-	}
-
-	parseDamagedJSON(json) {
-		return JSON.parse(json.replace(/\\r|\r?\n/g, ""));
 	}
 }
 
