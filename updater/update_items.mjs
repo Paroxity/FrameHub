@@ -63,13 +63,13 @@ class ItemUpdater {
 			PLEXUS: {}
 		};
 
-		await this.fetchBaroData();
-		await this.fetchVaultStatus();
 		await Promise.all([
+			this.fetchBaroData(),
+			this.fetchVaultStatus(),
 			this.fetchItems(),
-			this.fetchRecipes(),
-			this.fetchRelics()
+			this.fetchRecipes()
 		]);
+		await this.fetchRelics();
 
 		this.mapItemNames(
 			this.items,
