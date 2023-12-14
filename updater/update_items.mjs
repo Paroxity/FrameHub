@@ -20,6 +20,18 @@ const OVERWRITES = {
 			buildPrice: 1000
 		}
 	},
+	SECONDARY: {
+		Grimoire: {
+			mr: 10,
+			components: {
+				"Entrati Obols": 2000,
+				Necracoil: 50,
+				"Echo Voca": 15,
+				"Entrati Lanthorn": 10
+			},
+			buildPrice: 25000
+		}
+	},
 	MELEE: {
 		"Tenet Agendus": { components: undefined }
 	},
