@@ -35,7 +35,7 @@ jobs:
           FORCE_UPLOAD: ${{ contains(github.event.head_commit.message, 'force upload') && github.event_name == 'push' }}
           PROXY_AUTH: ${{ secrets.PROXY_AUTH }}
       - name: Authenticate Firebase
-        uses: 'google-github-actions/auth@v0'
+        uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
       - name: Upload items.json to Firebase
