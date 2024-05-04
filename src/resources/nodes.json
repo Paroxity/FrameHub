@@ -700,7 +700,7 @@
 		},
 		"SolNode718": {
 			"name": "CAMBIRE",
-			"type": 21,
+			"type": 38,
 			"faction": 7,
 			"lvl": [
 				55,
@@ -710,6 +710,15 @@
 		"SolNode719": {
 			"name": "MUNIO",
 			"type": 8,
+			"faction": 7,
+			"lvl": [
+				55,
+				60
+			]
+		},
+		"SolNode721": {
+			"name": "ARMATUS",
+			"type": 33,
 			"faction": 7,
 			"lvl": [
 				55,
