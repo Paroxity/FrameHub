@@ -19,9 +19,9 @@ jobs:
           restore-keys: |
             pnpm-cache-
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v4
         with:
-          version: 8.0.0
+          version: 9.0.0
           run_install: true
       - name: Build
         run: pnpm run build
