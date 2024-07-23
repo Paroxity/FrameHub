@@ -235,8 +235,8 @@
 			"type": 7,
 			"faction": 1,
 			"lvl": [
-				4,
-				6
+				6,
+				8
 			],
 			"xp": 18
 		},
@@ -672,7 +672,7 @@
 			]
 		},
 		"SolNode715": {
-			"name": "EFFERVO",
+			"name": "Effervo",
 			"type": 0,
 			"faction": 7,
 			"lvl": [
@@ -681,7 +681,7 @@
 			]
 		},
 		"SolNode716": {
-			"name": "NEX",
+			"name": "Nex",
 			"type": 1,
 			"faction": 7,
 			"lvl": [
@@ -690,7 +690,7 @@
 			]
 		},
 		"SolNode717": {
-			"name": "PERSTO",
+			"name": "Persto",
 			"type": 2,
 			"faction": 7,
 			"lvl": [
@@ -699,7 +699,7 @@
 			]
 		},
 		"SolNode718": {
-			"name": "CAMBIRE",
+			"name": "Cambire",
 			"type": 38,
 			"faction": 7,
 			"lvl": [
@@ -708,7 +708,7 @@
 			]
 		},
 		"SolNode719": {
-			"name": "MUNIO",
+			"name": "Munio",
 			"type": 8,
 			"faction": 7,
 			"lvl": [
@@ -717,7 +717,7 @@
 			]
 		},
 		"SolNode721": {
-			"name": "ARMATUS",
+			"name": "Armatus",
 			"type": 33,
 			"faction": 7,
 			"lvl": [
@@ -1220,7 +1220,7 @@
 		"SolNode215": {
 			"name": "Valac",
 			"type": 7,
-			"faction": 1,
+			"faction": 2,
 			"lvl": [
 				18,
 				20
