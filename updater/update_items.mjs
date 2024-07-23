@@ -7,6 +7,10 @@ import { JSDOM } from "jsdom";
 import { setOutput } from "@actions/core";
 import { fetchEndpoint } from "./warframe_exports.mjs";
 
+const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
+const WIKI_URL = "https://warframe.fandom.com/wiki";
+const DROP_TABLE_URL = "https://www.warframe.com/droptables";
+
 const OVERWRITES = {
 	AMP: {
 		"Mote Prism": {
@@ -18,6 +22,11 @@ const OVERWRITES = {
 			},
 			buildTime: 600,
 			buildPrice: 1000
+		}
+	},
+	PRIMARY: {
+		"Ax-52": {
+			wiki: `${WIKI_URL}/AX-52`
 		}
 	},
 	SECONDARY: {
@@ -39,10 +48,6 @@ const OVERWRITES = {
 	PLEXUS: { Plexus: {} }
 };
 const BLACKLIST = [];
-
-const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
-const WIKI_URL = "https://warframe.fandom.com/wiki";
-const DROP_TABLE_URL = "https://www.warframe.com/droptables";
 
 class ItemUpdater {
 	constructor(overwrites, blacklist) {
@@ -261,10 +266,10 @@ class ItemUpdater {
 				type = uniqueName.includes("InfestedCatbrow")
 					? "INFESTED_CAT"
 					: uniqueName.includes("Catbrow")
-						? "CAT"
-						: uniqueName.includes("PredatorKubrow")
-							? "INFESTED_DOG"
-							: "DOG";
+					? "CAT"
+					: uniqueName.includes("PredatorKubrow")
+					? "INFESTED_DOG"
+					: "DOG";
 				break;
 			default:
 				type = {
@@ -316,8 +321,8 @@ class ItemUpdater {
 							reward.rarity === "COMMON"
 								? 0
 								: reward.rarity === "UNCOMMON"
-									? 1
-									: 2
+								? 1
+								: 2
 					};
 					if (this.vaultedRelics.includes(relic.name))
 						processedRelic.vaulted = true;
