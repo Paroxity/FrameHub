@@ -11,9 +11,6 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
-      debounce:
-        specifier: ^2.1.0
-        version: 2.1.0
       firebase:
         specifier: ^10.13.1
         version: 10.13.1
@@ -2188,10 +2185,6 @@ packages:
 
   data-urls@5.0.0:
     resolution: {integrity: sha512-ZYP5VBHshaDAiVZxjbRVcFJpc+4xGgT0bK3vzy1HLN8jTO975HEbuYzZJcHoQEY5K1a0z8YayJkyVETa08eNTg==}
-    engines: {node: '>=18'}
-
-  debounce@2.1.0:
-    resolution: {integrity: sha512-OkL3+0pPWCqoBc/nhO9u6TIQNTK44fnBnzuVtJAbp13Naxw9R6u21x+8tVTka87AhDZ3htqZ2pSSsZl9fqL2Wg==}
     engines: {node: '>=18'}
 
   debug@2.6.9:
@@ -8217,8 +8210,6 @@ snapshots:
     dependencies:
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.0.0
-
-  debounce@2.1.0: {}
 
   debug@2.6.9:
     dependencies:

@@ -114,7 +114,15 @@ export const useStore = createWithEqualityFn(
 				set({ unsavedChanges: [] });
 			}
 		},
-		save: debounce(() => get().saveImmediate(), 2500),
+		saveTimeoutId: undefined,
+		save: () => {
+			set(state => {
+				if (state.saveTimeout) clearTimeout(state.saveTimeout);
+				return {
+					saveTimeout: setTimeout(() => state.saveImmediate(), 2500)
+				};
+			});
+		},
 
 		items: {},
 		flattenedItems: {},
@@ -550,3 +558,4 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
+

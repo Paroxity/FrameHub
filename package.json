@@ -3,7 +3,6 @@
 	"version": "0.1.0",
 	"dependencies": {
 		"classnames": "^2.5.1",
-		"debounce": "^2.1.0",
 		"firebase": "^10.13.1",
 		"immer": "^10.1.1",
 		"lua-json": "^1.0.1",
