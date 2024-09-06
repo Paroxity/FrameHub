@@ -457,6 +457,7 @@ function firestoreFieldSetter(key, stateKey = key) {
 			})
 		);
 		get().recalculateMasteryRank();
+		if (!load) get().save();
 	};
 }
 
@@ -480,7 +481,6 @@ function markOldNewChange(draftState, type, id, old, _new) {
 			old,
 			new: _new
 		});
-		get().save();
 	}
 }
 
