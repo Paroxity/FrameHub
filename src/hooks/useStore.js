@@ -312,7 +312,6 @@ export const useStore = createWithEqualityFn(
 			);
 			get().recalculateMasteryRank();
 			get().recalculateIngredients();
-			get().save();
 		},
 		setPartiallyMasteredItem: (name, rank, maxRank) => {
 			if (rank === maxRank) get().masterItem(name, true);
