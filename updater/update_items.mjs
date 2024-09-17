@@ -29,18 +29,6 @@ const OVERWRITES = {
 			wiki: `${WIKI_URL}/AX-52`
 		}
 	},
-	SECONDARY: {
-		Grimoire: {
-			mr: 10,
-			components: {
-				"Entrati Obols": 2000,
-				Necracoil: 50,
-				"Echo Voca": 15,
-				"Entrati Lanthorn": 10
-			},
-			buildPrice: 25000
-		}
-	},
 	MELEE: {
 		"Tenet Agendus": { components: undefined }
 	},
@@ -266,10 +254,10 @@ class ItemUpdater {
 				type = uniqueName.includes("InfestedCatbrow")
 					? "INFESTED_CAT"
 					: uniqueName.includes("Catbrow")
-					? "CAT"
-					: uniqueName.includes("PredatorKubrow")
-					? "INFESTED_DOG"
-					: "DOG";
+						? "CAT"
+						: uniqueName.includes("PredatorKubrow")
+							? "INFESTED_DOG"
+							: "DOG";
 				break;
 			default:
 				type = {
@@ -321,8 +309,8 @@ class ItemUpdater {
 							reward.rarity === "COMMON"
 								? 0
 								: reward.rarity === "UNCOMMON"
-								? 1
-								: 2
+									? 1
+									: 2
 					};
 					if (this.vaultedRelics.includes(relic.name))
 						processedRelic.vaulted = true;
