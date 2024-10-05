@@ -147,6 +147,15 @@
 				30
 			],
 			"xp": 24
+		},
+		"SolNode451": {
+			"name": "Saya's Visions",
+			"type": 41,
+			"faction": 2,
+			"lvl": [
+				5,
+				15
+			]
 		}
 	},
 	"Venus": {
