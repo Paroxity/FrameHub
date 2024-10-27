@@ -89,6 +89,8 @@ export const itemShape = {
 		)
 	),
 	buildTime: PropTypes.number,
-	buildPrice: PropTypes.number
+	buildPrice: PropTypes.number,
+	baro: PropTypes.arrayOf(PropTypes.number),
+	description: PropTypes.string
 };
 

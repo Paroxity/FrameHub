@@ -38,6 +38,29 @@ const OVERWRITES = {
 };
 const BLACKLIST = [];
 
+const SISTER_WEAPONS = [
+	"Tenet Arca Plasma",
+	"Tenet Flux Rifle",
+	"Tenet Glaxion",
+	"Tenet Tetra",
+	"Tenet Cycron",
+	"Tenet Detron",
+	"Tenet Plinx",
+	"Tenet Envoy",
+	"Tenet Diplos",
+	"Tenet Spirex"
+];
+const HOLOKEY_WEAPONS = [
+	"Tenet Agendus",
+	"Tenet Exec",
+	"Tenet Livia",
+	"Tenet Grigori",
+	"Tenet Ferrox"
+];
+const MARKET_WEAPONS = {
+
+}
+
 class ItemUpdater {
 	constructor(overwrites, blacklist) {
 		this.overwrites = overwrites;
@@ -159,6 +182,9 @@ class ItemUpdater {
 				const baroData = this.baroData[name];
 				if (baroData)
 					processedItem.baro = [baroData.CreditCost, baroData.DucatCost];
+				else if (SISTER_WEAPONS.includes(name)) processedItem.description = "Acquire by vanquishing a Sister of Parvos";
+				else if (HOLOKEY_WEAPONS.includes(name)) processedItem.description = "Purchase from Ergo Glast for 40 Corrupted Holokeys";
+				else if (name.startsWith("Kuva ")) processedItem.description = "Acquire by vanquishing a Kuva Lich";
 
 				Object.entries(processedItem).forEach(([key, value]) => {
 					if (!value) delete processedItem[key];

@@ -51,7 +51,7 @@ function ItemGeneralInfoTooltip({ item, itemName }) {
 							{item.baro[0].toLocaleString()}
 						</>
 					) : (
-						"Unknown Acquisition"
+						item.description ?? "Unknown Acquisition"
 					)}
 				</span>
 			)}
