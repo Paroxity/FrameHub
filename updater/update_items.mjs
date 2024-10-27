@@ -57,9 +57,7 @@ const HOLOKEY_WEAPONS = [
 	"Tenet Grigori",
 	"Tenet Ferrox"
 ];
-const MARKET_WEAPONS = {
-
-}
+const MARKET_WEAPONS = {};
 
 class ItemUpdater {
 	constructor(overwrites, blacklist) {
@@ -170,7 +168,17 @@ class ItemUpdater {
 						);
 					processedItem.buildTime = recipe.buildTime;
 					processedItem.buildPrice = recipe.buildPrice;
-				}
+				} else if (SISTER_WEAPONS.includes(name))
+					processedItem.description =
+						"Acquire by vanquishing a Sister of Parvos";
+				else if (HOLOKEY_WEAPONS.includes(name))
+					processedItem.description =
+						"Purchase from Ergo Glast for 40 Corrupted Holokeys";
+				else if (name.startsWith("Kuva "))
+					processedItem.description = "Acquire by vanquishing a Kuva Lich";
+				else if (name.startsWith("Dex "))
+					processedItem.description = "Acquire from yearly anniversary alerts";
+
 				if (name.startsWith("Mk1-"))
 					processedItem.wiki = `${WIKI_URL}/${name.replace("Mk1-", "MK1-")}`;
 				else if (type === "MOA" || type === "HOUND")
@@ -182,9 +190,6 @@ class ItemUpdater {
 				const baroData = this.baroData[name];
 				if (baroData)
 					processedItem.baro = [baroData.CreditCost, baroData.DucatCost];
-				else if (SISTER_WEAPONS.includes(name)) processedItem.description = "Acquire by vanquishing a Sister of Parvos";
-				else if (HOLOKEY_WEAPONS.includes(name)) processedItem.description = "Purchase from Ergo Glast for 40 Corrupted Holokeys";
-				else if (name.startsWith("Kuva ")) processedItem.description = "Acquire by vanquishing a Kuva Lich";
 
 				Object.entries(processedItem).forEach(([key, value]) => {
 					if (!value) delete processedItem[key];
