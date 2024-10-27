@@ -6,6 +6,7 @@ import fetch from "node-fetch";
 import { JSDOM } from "jsdom";
 import { setOutput } from "@actions/core";
 import { fetchEndpoint } from "./warframe_exports.mjs";
+import { createHash } from "crypto";
 
 const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
 const WIKI_URL = "https://warframe.fandom.com/wiki";
@@ -168,48 +169,45 @@ class ItemUpdater {
 	}
 
 	processRecipe(item, recipe, count = 1) {
-		return Object.entries(
-			recipe.ingredients.reduce((ingredients, ingredient) => {
-				const ingredientRawName = ingredient.ItemType;
-				const ingredientName = this.itemNames[ingredientRawName];
-				if (!ingredients[ingredientName])
-					ingredients[ingredientName] = {
-						count: 0
-					};
-				const ingredientData = ingredients[ingredientName];
-				ingredientData.count += ingredient.ItemCount * count;
+		return recipe.ingredients.reduce((ingredients, ingredient) => {
+			const ingredientRawName = ingredient.ItemType;
+			const ingredientName = this.itemNames[ingredientRawName];
+			if (!ingredients[ingredientName])
+				ingredients[ingredientName] = {
+					count: 0
+				};
+			const ingredientData = ingredients[ingredientName];
+			ingredientData.count += ingredient.ItemCount * count;
 
+			if (
+				ingredientRawName.includes("WeaponParts") ||
+				ingredientRawName.includes("WarframeRecipes")
+			) {
+				ingredientData.generic = true;
+
+				const relics =
+					this.relics[ingredientRawName] ||
+					this.relics[ingredientRawName.replace("Component", "Blueprint")];
+				if (relics && item.relics) item.relics[ingredientName] = relics;
+			} else {
+				const hash = createHash("sha256").update(ingredient.ItemType).digest("hex");
+				ingredientData.hash = hash.slice(0, 10);
+			}
+
+			if (this.recipes[ingredientRawName]?.ingredients.length > 0) {
 				if (
-					ingredientRawName.includes("WeaponParts") ||
-					ingredientRawName.includes("WarframeRecipes")
+					!ingredientRawName.includes("Items") &&
+					(!ingredientRawName.includes("Gameplay") ||
+						ingredientRawName.includes("Mechs"))
 				) {
-					ingredientData.generic = true;
-
-					const relics =
-						this.relics[ingredientRawName] ||
-						this.relics[ingredientRawName.replace("Component", "Blueprint")];
-					if (relics && item.relics) item.relics[ingredientName] = relics;
+					ingredientData.components = this.processRecipe(
+						item,
+						this.recipes[ingredientRawName],
+						ingredients[ingredientName].count
+					);
 				}
+			}
 
-				if (this.recipes[ingredientRawName]?.ingredients.length > 0) {
-					if (
-						!ingredientRawName.includes("Items") &&
-						(!ingredientRawName.includes("Gameplay") ||
-							ingredientRawName.includes("Mechs"))
-					) {
-						ingredientData.components = this.processRecipe(
-							item,
-							this.recipes[ingredientRawName],
-							ingredients[ingredientName].count
-						);
-					}
-				}
-
-				return ingredients;
-			}, {})
-		).reduce((ingredients, [ingredientName, ingredient]) => {
-			ingredients[ingredientName] =
-				Object.keys(ingredient).length <= 1 ? ingredient.count : ingredient;
 			return ingredients;
 		}, {});
 	}
@@ -254,10 +252,10 @@ class ItemUpdater {
 				type = uniqueName.includes("InfestedCatbrow")
 					? "INFESTED_CAT"
 					: uniqueName.includes("Catbrow")
-						? "CAT"
-						: uniqueName.includes("PredatorKubrow")
-							? "INFESTED_DOG"
-							: "DOG";
+					? "CAT"
+					: uniqueName.includes("PredatorKubrow")
+					? "INFESTED_DOG"
+					: "DOG";
 				break;
 			default:
 				type = {
@@ -309,8 +307,8 @@ class ItemUpdater {
 							reward.rarity === "COMMON"
 								? 0
 								: reward.rarity === "UNCOMMON"
-									? 1
-									: 2
+								? 1
+								: 2
 					};
 					if (this.vaultedRelics.includes(relic.name))
 						processedRelic.vaulted = true;
@@ -424,3 +422,4 @@ class ItemUpdater {
 			difference.length > 0 || process.env.FORCE_UPLOAD === "true"
 		);
 })();
+
