@@ -230,8 +230,8 @@ export const useStore = createWithEqualityFn(
 				const additionalItemCount = itemName.includes("Venari")
 					? 0
 					: item.type === "KITGUN"
-						? 2
-						: 1;
+					? 2
+					: 1;
 
 				if (itemsMastered.includes(itemName)) {
 					addItemXP(item);
@@ -401,10 +401,12 @@ export const useStore = createWithEqualityFn(
 						}
 						if (component.components || component.generic) return;
 						if (!necessaryComponents[componentName])
-							necessaryComponents[componentName] = 0;
-						necessaryComponents[componentName] += isNaN(component)
-							? component.count || 1
-							: component;
+							necessaryComponents[componentName] = {
+								count: 0,
+								hash: component.hash
+							};
+						necessaryComponents[componentName].count +=
+							component.count;
 					}
 				);
 			}

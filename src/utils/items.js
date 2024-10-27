@@ -59,14 +59,11 @@ export const itemShape = {
 	wiki: PropTypes.string,
 	vaulted: PropTypes.bool,
 	components: PropTypes.objectOf(
-		PropTypes.oneOfType([
-			PropTypes.number,
-			PropTypes.shape({
-				generic: PropTypes.bool,
-				img: PropTypes.string,
-				count: PropTypes.number
-			})
-		])
+		PropTypes.shape({
+			generic: PropTypes.bool,
+			hash: PropTypes.string,
+			count: PropTypes.number
+		})
 	),
 	relics: PropTypes.objectOf(
 		PropTypes.objectOf(

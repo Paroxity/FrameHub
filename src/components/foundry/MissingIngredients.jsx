@@ -27,22 +27,30 @@ function MissingIngredients() {
 						640: 1
 					}}>
 					{Object.entries(ingredients)
-						.sort(([nameA, countA], [nameB, countB]) =>
-							countA > countB
-								? -1
-								: countA < countB
-								? 1
-								: nameA.localeCompare(nameB)
+						.sort(
+							(
+								[nameA, { count: countA }],
+								[nameB, { count: countB }]
+							) =>
+								countA > countB
+									? -1
+									: countA < countB
+									? 1
+									: nameA.localeCompare(nameB)
 						)
-						.map(([name, count]) => {
+						.map(([name, { count, hash }]) => {
 							return (
 								<div key={name}>
 									<img
 										className="component-image"
-										src={`https://cdn.warframestat.us/img/${name
-											.toLowerCase()
-											.split(" ")
-											.join("-")}.png`}
+										src={`https://cdn.warframestat.us/img/${
+											name
+												.toLowerCase()
+												.split(" ")
+												.join("-") +
+											"-" +
+											hash
+										}.png`}
 										alt=""
 										width="24px"
 										onDragStart={e => e.preventDefault()}
@@ -61,3 +69,4 @@ function MissingIngredients() {
 }
 
 export default MissingIngredients;
+

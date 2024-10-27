@@ -8,28 +8,28 @@ export default function ItemComponent({
 	component,
 	isSubcomponent
 }) {
-	const imageName =
-		(componentName.includes(" Prime ") ? "prime-" : "") +
-		(component.generic
-			? ingredientSuffixes.find(suffix =>
-					componentName.endsWith(suffix)
-			  ) ?? componentName.replace(`${itemName} `, "")
-			: componentName);
+	const imageName = (
+		component.generic
+			? (componentName.includes(" Prime ") ? "prime-" : "") +
+					ingredientSuffixes.find(suffix =>
+						componentName.endsWith(suffix)
+					) ?? componentName.replace(`${itemName} `, "")
+			: componentName + "-" + component.hash
+	)
+		.split(" ")
+		.join("-")
+		.toLowerCase();
 
 	return (
 		<div className={classNames({ "item-subcomponent": isSubcomponent })}>
 			<img
 				className="component-image"
-				src={`https://cdn.warframestat.us/img/${
-					component?.img ||
-					imageName.split(" ").join("-").toLowerCase()
-				}.png`}
+				src={`https://cdn.warframestat.us/img/${imageName}.png`}
 				alt=""
 				width="24px"
 			/>
 			<span className="component-name">
-				{(component?.count || component).toLocaleString()}x{" "}
-				{componentName}
+				{component.count.toLocaleString()}x {componentName}
 			</span>
 			{component?.components &&
 				Object.entries(component.components).map(
@@ -52,16 +52,13 @@ export default function ItemComponent({
 const componentShape = {
 	count: PropTypes.number.isRequired,
 	generic: PropTypes.bool,
-	img: PropTypes.string
+	hash: PropTypes.string
 };
-const componentType = PropTypes.oneOfType([
-	PropTypes.shape(componentShape),
-	PropTypes.number
-]);
-componentShape.components = PropTypes.objectOf(componentType);
+componentShape.components = PropTypes.objectOf(PropTypes.shape(componentShape));
 
 ItemComponent.propTypes = {
 	componentName: PropTypes.string.isRequired,
-	component: componentType.isRequired,
+	component: PropTypes.shape(componentShape).isRequired,
 	isSubcomponent: PropTypes.bool
 };
+
