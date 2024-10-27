@@ -53,9 +53,8 @@ export const foundersItems = ["Excalibur Prime", "Skana Prime", "Lato Prime"];
 export function getComponentImageUrl(itemName, componentName, generic, hash) {
 	return `https://cdn.warframestat.us/img/${(generic
 		? (componentName.includes(" Prime ") ? "prime-" : "") +
-				ingredientSuffixes.find(suffix =>
-					componentName.endsWith(suffix)
-				) ?? componentName.replace(`${itemName} `, "")
+		  (ingredientSuffixes.find(suffix => componentName.endsWith(suffix)) ??
+				componentName.replace(`${itemName} `, ""))
 		: componentName + (hash ? "-" + hash : "")
 	)
 		.split(" ")
