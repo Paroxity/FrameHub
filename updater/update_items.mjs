@@ -181,7 +181,14 @@ class ItemUpdater {
 
 			if (
 				ingredientRawName.includes("WeaponParts") ||
-				ingredientRawName.includes("WarframeRecipes")
+				ingredientRawName.includes("WarframeRecipes") ||
+				ingredientRawName.includes("NecromechPart") ||
+
+				// WFCD warframe-items does not include a hash for these despite being unique from other generic component images
+				ingredientRawName.includes("DamagedMechPart") ||
+				ingredientName.startsWith("Cortege") ||
+				ingredientName.startsWith("Morgha") ||
+				ingredientName.startsWith("BardQuestSequencerPart")
 			) {
 				ingredientData.generic = true;
 
