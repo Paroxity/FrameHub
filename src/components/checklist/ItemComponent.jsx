@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import { ingredientSuffixes } from "../../utils/items";
+import { getComponentImageUrl } from "../../utils/items";
 
 export default function ItemComponent({
 	itemName,
@@ -8,23 +8,11 @@ export default function ItemComponent({
 	component,
 	isSubcomponent
 }) {
-	const imageName = (
-		component.generic
-			? (componentName.includes(" Prime ") ? "prime-" : "") +
-					ingredientSuffixes.find(suffix =>
-						componentName.endsWith(suffix)
-					) ?? componentName.replace(`${itemName} `, "")
-			: componentName + "-" + component.hash
-	)
-		.split(" ")
-		.join("-")
-		.toLowerCase();
-
 	return (
 		<div className={classNames({ "item-subcomponent": isSubcomponent })}>
 			<img
 				className="component-image"
-				src={`https://cdn.warframestat.us/img/${imageName}.png`}
+				src={getComponentImageUrl(itemName, componentName, component.generic, component.hash)}
 				alt=""
 				width="24px"
 			/>

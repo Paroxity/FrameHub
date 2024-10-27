@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-export const ingredientSuffixes = [
+const ingredientSuffixes = [
 	"Aegis",
 	"Barrel",
 	"Barrels",
@@ -50,6 +50,19 @@ export const ingredientSuffixes = [
 ];
 export const foundersItems = ["Excalibur Prime", "Skana Prime", "Lato Prime"];
 
+export function getComponentImageUrl(itemName, componentName, generic, hash) {
+	return `https://cdn.warframestat.us/img/${(generic
+		? (componentName.includes(" Prime ") ? "prime-" : "") +
+				ingredientSuffixes.find(suffix =>
+					componentName.endsWith(suffix)
+				) ?? componentName.replace(`${itemName} `, "")
+		: componentName + (hash ? "-" + hash : "")
+	)
+		.split(" ")
+		.join("-")
+		.toLowerCase()}.png`;
+}
+
 export const relicTiers = ["Lith", "Meso", "Neo", "Axi", "Requiem"];
 export const relicRarity = ["Common", "Uncommon", "Rare"];
 
@@ -76,3 +89,4 @@ export const itemShape = {
 	buildTime: PropTypes.number,
 	buildPrice: PropTypes.number
 };
+

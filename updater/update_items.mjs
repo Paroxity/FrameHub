@@ -183,12 +183,8 @@ class ItemUpdater {
 				ingredientRawName.includes("WeaponParts") ||
 				ingredientRawName.includes("WarframeRecipes") ||
 				ingredientRawName.includes("NecromechPart") ||
-
-				// WFCD warframe-items does not include a hash for these despite being unique from other generic component images
-				ingredientRawName.includes("DamagedMechPart") ||
-				ingredientName.startsWith("Cortege") ||
-				ingredientName.startsWith("Morgha") ||
-				ingredientName.startsWith("BardQuestSequencerPart")
+				// WFCD warframe-items considers Mandachord components as generic despite there being no other variations of these components
+				ingredientRawName.includes("BardQuestSequencerPart")
 			) {
 				ingredientData.generic = true;
 
@@ -196,6 +192,13 @@ class ItemUpdater {
 					this.relics[ingredientRawName] ||
 					this.relics[ingredientRawName.replace("Component", "Blueprint")];
 				if (relics && item.relics) item.relics[ingredientName] = relics;
+			} else if (
+				// WFCD warframe-items does not include a hash for these components despite them being unique from other generic components
+				ingredientRawName.includes("DamagedMechPart") ||
+				ingredientName.startsWith("Cortege") ||
+				ingredientName.startsWith("Morgha")
+			) {
+				ingredientData.hash = null;
 			} else {
 				const hash = createHash("sha256")
 					.update(ingredient.ItemType)

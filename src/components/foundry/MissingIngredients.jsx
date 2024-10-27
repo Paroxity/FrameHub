@@ -2,6 +2,7 @@ import { useState } from "react";
 import Masonry from "react-masonry-css";
 import { useStore } from "../../hooks/useStore";
 import { LabeledToggle } from "../Toggle";
+import { getComponentImageUrl } from "../../utils/items";
 
 function MissingIngredients() {
 	const [visible, setVisible] = useState(false);
@@ -43,14 +44,7 @@ function MissingIngredients() {
 								<div key={name}>
 									<img
 										className="component-image"
-										src={`https://cdn.warframestat.us/img/${
-											name
-												.toLowerCase()
-												.split(" ")
-												.join("-") +
-											"-" +
-											hash
-										}.png`}
+										src={getComponentImageUrl("", name, false, hash)}
 										alt=""
 										width="24px"
 										onDragStart={e => e.preventDefault()}
