@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import credits from "../../icons/credits.png";
+import ducats from "../../icons/ducats.png";
 import { itemShape } from "../../utils/items";
 import { detailedTime } from "../../utils/time";
 import GluedComponents from "../GluedComponents";
@@ -30,7 +31,29 @@ function ItemGeneralInfoTooltip({ item, itemName }) {
 					)}
 				</div>
 			) : (
-				<span className="item-uncraftable">UNCRAFTABLE</span>
+				<span className="item-uncraftable">
+					{item.baro ? (
+						<>
+							Purchase from Baro Ki'Teer for{" "}
+							<img
+								className="ducats"
+								src={ducats}
+								alt=""
+								width="20px"
+							/>{" "}
+							{item.baro[1].toLocaleString()} /{" "}
+							<img
+								className="credits"
+								src={credits}
+								alt=""
+								width="20px"
+							/>{" "}
+							{item.baro[0].toLocaleString()}
+						</>
+					) : (
+						"Unknown Acquisition"
+					)}
+				</span>
 			)}
 			<GluedComponents className="item-info" separator=" - ">
 				{item.buildTime && item.components && (
@@ -63,3 +86,4 @@ ItemGeneralInfoTooltip.propTypes = {
 };
 
 export default ItemGeneralInfoTooltip;
+

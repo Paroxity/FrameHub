@@ -510,7 +510,8 @@ input:disabled {
 }
 
 .component-image,
-.credits {
+.credits,
+.ducats {
 	user-select: none;
 	-moz-user-select: none;
 	-webkit-user-select: none;
@@ -803,7 +804,7 @@ input:disabled {
 	}
 
 	& > span {
-		display: block;
+		display: flex;
 	}
 }
 
