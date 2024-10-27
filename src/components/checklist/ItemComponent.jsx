@@ -25,7 +25,7 @@ export default function ItemComponent({
 						return (
 							<ItemComponent
 								key={subcomponentName}
-								itemName={itemName}
+								itemName={componentName}
 								componentName={subcomponentName}
 								component={subcomponent}
 								isSubcomponent
