@@ -54,11 +54,12 @@ export function getComponentImageUrl(itemName, componentName, generic, hash) {
 	return `https://cdn.warframestat.us/img/${(
 		(componentName.includes(" Prime") ? "prime-" : "") +
 		(generic
-			? ingredientSuffixes.find(suffix =>
+			? (ingredientSuffixes.find(suffix =>
 					componentName.endsWith(suffix)
-			  ) ?? componentName.replace(`${itemName} `, "")
-			: componentName.replace(`${itemName} `, "") +
-			  (hash ? "-" + hash : ""))
+				) ?? componentName.replace(`${itemName} `, ""))
+			: (itemName
+					? componentName.replace(`${itemName} `, "")
+					: componentName) + (hash ? "-" + hash : ""))
 	)
 		.split(" ")
 		.join("-")
