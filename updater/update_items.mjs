@@ -16,10 +16,10 @@ const OVERWRITES = {
 	AMP: {
 		"Mote Prism": {
 			components: {
-				"Cetus Wisp": 1,
-				"Tear Azurite": 20,
-				"Pyrotic Alloy": 10,
-				"Fish Oil": 30
+				"Cetus Wisp": { count: 1, hash: "0681ca5991" },
+				"Tear Azurite": { count: 20, hash: "397c0a4ebc" },
+				"Pyrotic Alloy": { count: 10, hash: "f0abc50ae0" },
+				"Fish Oil": { count: 30, hash: "74fd9aeeac" }
 			},
 			buildTime: 600,
 			buildPrice: 1000
@@ -190,7 +190,9 @@ class ItemUpdater {
 					this.relics[ingredientRawName.replace("Component", "Blueprint")];
 				if (relics && item.relics) item.relics[ingredientName] = relics;
 			} else {
-				const hash = createHash("sha256").update(ingredient.ItemType).digest("hex");
+				const hash = createHash("sha256")
+					.update(ingredient.ItemType)
+					.digest("hex");
 				ingredientData.hash = hash.slice(0, 10);
 			}
 
