@@ -39,7 +39,7 @@ const OVERWRITES = {
 const BLACKLIST = [];
 
 const SISTER_WEAPONS = [
-	"Tenet Arca Plasma",
+	"Tenet Arca Plasmor",
 	"Tenet Flux Rifle",
 	"Tenet Glaxion",
 	"Tenet Tetra",
