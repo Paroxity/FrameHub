@@ -168,15 +168,7 @@ class ItemUpdater {
 						);
 					processedItem.buildTime = recipe.buildTime;
 					processedItem.buildPrice = recipe.buildPrice;
-				} else if (SISTER_WEAPONS.includes(name))
-					processedItem.description =
-						"Acquire by vanquishing a Sister of Parvos";
-				else if (HOLOKEY_WEAPONS.includes(name))
-					processedItem.description =
-						"Purchase from Ergo Glast for 40 Corrupted Holokeys";
-				else if (name.startsWith("Kuva "))
-					processedItem.description = "Acquire by vanquishing a Kuva Lich";
-				else if (name.startsWith("Dex "))
+				} else if (name.startsWith("Dex "))
 					processedItem.description = "Acquire from yearly anniversary alerts";
 				else if (name.startsWith("Vaykor "))
 					processedItem.description =
@@ -193,6 +185,15 @@ class ItemUpdater {
 				else if (name.startsWith("Telos "))
 					processedItem.description =
 						"Purchase from Arbiters of Hexis for 125,000 standing";
+
+				if (name.startsWith("Kuva "))
+					processedItem.description = "Acquire by vanquishing a Kuva Lich";
+				else if (SISTER_WEAPONS.includes(name))
+					processedItem.description =
+						"Acquire by vanquishing a Sister of Parvos";
+				else if (HOLOKEY_WEAPONS.includes(name))
+					processedItem.description =
+						"Purchase from Ergo Glast for 40 Corrupted Holokeys";
 
 				if (name.startsWith("Mk1-"))
 					processedItem.wiki = `${WIKI_URL}/${name.replace("Mk1-", "MK1-")}`;
