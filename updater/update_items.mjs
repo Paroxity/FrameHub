@@ -178,6 +178,21 @@ class ItemUpdater {
 					processedItem.description = "Acquire by vanquishing a Kuva Lich";
 				else if (name.startsWith("Dex "))
 					processedItem.description = "Acquire from yearly anniversary alerts";
+				else if (name.startsWith("Vaykor "))
+					processedItem.description =
+						"Purchase from Steel Meridian for 125,000 standing";
+				else if (name.startsWith("Rakta "))
+					processedItem.description =
+						"Purchase from Red Veil for 125,000 standing";
+				else if (name.startsWith("Secura "))
+					processedItem.description =
+						"Purchase from The Perrin Sequence for 125,000 standing";
+				else if (name.startsWith("Sancti "))
+					processedItem.description =
+						"Purchase from New Loka for 125,000 standing";
+				else if (name.startsWith("Telos "))
+					processedItem.description =
+						"Purchase from Arbiters of Hexis for 125,000 standing";
 
 				if (name.startsWith("Mk1-"))
 					processedItem.wiki = `${WIKI_URL}/${name.replace("Mk1-", "MK1-")}`;
