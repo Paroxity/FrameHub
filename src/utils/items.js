@@ -51,11 +51,13 @@ const ingredientSuffixes = [
 export const foundersItems = ["Excalibur Prime", "Skana Prime", "Lato Prime"];
 
 export function getComponentImageUrl(itemName, componentName, generic, hash) {
-	return `https://cdn.warframestat.us/img/${(generic
-		? (componentName.includes(" Prime ") ? "prime-" : "") +
-		  (ingredientSuffixes.find(suffix => componentName.endsWith(suffix)) ??
-				componentName.replace(`${itemName} `, ""))
-		: componentName + (hash ? "-" + hash : "")
+	return `https://cdn.warframestat.us/img/${(
+		(componentName.includes(" Prime") ? "prime-" : "") +
+		(generic
+			? ingredientSuffixes.find(suffix =>
+					componentName.endsWith(suffix)
+			  ) ?? componentName.replace(`${itemName} `, "")
+			: componentName + (hash ? "-" + hash : ""))
 	)
 		.split(" ")
 		.join("-")
