@@ -182,7 +182,7 @@ class ItemUpdater {
 			if (
 				ingredientRawName.includes("WeaponParts") ||
 				ingredientRawName.includes("WarframeRecipes") ||
-				ingredientRawName.includes("NecromechPart") ||
+				ingredientRawName.includes("mechPart") ||
 				// WFCD warframe-items considers Mandachord components as generic despite there being no other variations of these components
 				ingredientRawName.includes("BardQuestSequencerPart")
 			) {
@@ -195,6 +195,7 @@ class ItemUpdater {
 			} else if (
 				// WFCD warframe-items does not include a hash for these components despite them being unique from other generic components
 				ingredientRawName.includes("DamagedMechPart") ||
+				ingredientRawName.includes("DamagedMechWeapon") ||
 				ingredientName.startsWith("Cortege") ||
 				ingredientName.startsWith("Morgha")
 			) {
