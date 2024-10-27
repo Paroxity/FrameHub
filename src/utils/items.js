@@ -57,7 +57,8 @@ export function getComponentImageUrl(itemName, componentName, generic, hash) {
 			? ingredientSuffixes.find(suffix =>
 					componentName.endsWith(suffix)
 			  ) ?? componentName.replace(`${itemName} `, "")
-			: componentName + (hash ? "-" + hash : ""))
+			: componentName.replace(`${itemName} `, "") +
+			  (hash ? "-" + hash : ""))
 	)
 		.split(" ")
 		.join("-")

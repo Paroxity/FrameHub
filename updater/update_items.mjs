@@ -182,9 +182,7 @@ class ItemUpdater {
 			if (
 				ingredientRawName.includes("WeaponParts") ||
 				ingredientRawName.includes("WarframeRecipes") ||
-				ingredientRawName.includes("mechPart") ||
-				// WFCD warframe-items considers Mandachord components as generic despite there being no other variations of these components
-				ingredientRawName.includes("BardQuestSequencerPart")
+				ingredientRawName.includes("mechPart")
 			) {
 				ingredientData.generic = true;
 
