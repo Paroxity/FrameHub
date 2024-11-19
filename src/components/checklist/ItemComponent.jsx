@@ -10,15 +10,22 @@ export default function ItemComponent({
 }) {
 	return (
 		<div className={classNames({ "item-subcomponent": isSubcomponent })}>
-			<img
-				className="component-image"
-				src={getComponentImageUrl(itemName, componentName, component.generic, component.hash)}
-				alt=""
-				width="24px"
-			/>
-			<span className="component-name">
-				{component.count.toLocaleString()}x {componentName}
-			</span>
+			<div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+				<img
+					className="component-image"
+					src={getComponentImageUrl(
+						itemName,
+						componentName,
+						component.generic,
+						component.hash
+					)}
+					alt=""
+					width="24px"
+				/>
+				<span className="component-name">
+					{component.count.toLocaleString()}x {componentName}
+				</span>
+			</div>
 			{component?.components &&
 				Object.entries(component.components).map(
 					([subcomponentName, subcomponent]) => {
@@ -49,4 +56,3 @@ ItemComponent.propTypes = {
 	component: PropTypes.shape(componentShape).isRequired,
 	isSubcomponent: PropTypes.bool
 };
-

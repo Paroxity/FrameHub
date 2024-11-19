@@ -25,7 +25,13 @@ function ItemRelicTooltip({ item, name }) {
 											const rarity =
 												relicRarity[relicData.rarity];
 											return (
-												<span key={relicName}>
+												<span
+													key={relicName}
+													style={{
+														display: "flex",
+														alignItems: "center",
+														gap: "4px"
+													}}>
 													<img
 														src={`https://cdn.warframestat.us/img/${relicTiers
 															.find(tier =>
@@ -39,8 +45,7 @@ function ItemRelicTooltip({ item, name }) {
 													/>
 													{relicName} (
 													<span
-														className={`relic relic-rarity-${rarity.toLowerCase()}`}
-													>
+														className={`relic relic-rarity-${rarity.toLowerCase()}`}>
 														{rarity}
 													</span>
 													)

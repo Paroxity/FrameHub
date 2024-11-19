@@ -36,15 +36,26 @@ function MissingIngredients() {
 								countA > countB
 									? -1
 									: countA < countB
-									? 1
-									: nameA.localeCompare(nameB)
+										? 1
+										: nameA.localeCompare(nameB)
 						)
 						.map(([name, { count, hash }]) => {
 							return (
-								<div key={name}>
+								<div
+									key={name}
+									style={{
+										display: "flex",
+										alignItems: "center",
+										gap: "4px"
+									}}>
 									<img
 										className="component-image"
-										src={getComponentImageUrl("", name, false, hash)}
+										src={getComponentImageUrl(
+											"",
+											name,
+											false,
+											hash
+										)}
 										alt=""
 										width="24px"
 										onDragStart={e => e.preventDefault()}
@@ -63,4 +74,3 @@ function MissingIngredients() {
 }
 
 export default MissingIngredients;
-
