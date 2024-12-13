@@ -310,10 +310,10 @@ class ItemUpdater {
 				type = uniqueName.includes("InfestedCatbrow")
 					? "INFESTED_CAT"
 					: uniqueName.includes("Catbrow")
-					? "CAT"
-					: uniqueName.includes("PredatorKubrow")
-					? "INFESTED_DOG"
-					: "DOG";
+						? "CAT"
+						: uniqueName.includes("PredatorKubrow")
+							? "INFESTED_DOG"
+							: "DOG";
 				break;
 			default:
 				type = {
@@ -365,8 +365,8 @@ class ItemUpdater {
 							reward.rarity === "COMMON"
 								? 0
 								: reward.rarity === "UNCOMMON"
-								? 1
-								: 2
+									? 1
+									: 2
 					};
 					if (this.vaultedRelics.includes(relic.name))
 						processedRelic.vaulted = true;
@@ -469,7 +469,13 @@ class ItemUpdater {
 					.join(" ")
 			);
 			form.append("file", colorlessDifference, "items.diff");
-			form.submit(process.env.DISCORD_WEBHOOK, () => {});
+			form.submit(process.env.DISCORD_WEBHOOK, (err) => {
+				if (err) {
+					console.log("Discord webhook error: " + err);
+					return;
+				}
+				console.log("Discord webhook message sent");
+			});
 		}
 	}
 	console.log(`Completed in ${(Date.now() - startTime) / 1000} seconds.`);
