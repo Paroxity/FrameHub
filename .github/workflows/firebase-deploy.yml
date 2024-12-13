@@ -12,7 +12,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
       - name: Cache pnpm Modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.local/share/pnpm/store
           key: pnpm-cache-${{ hashFiles('pnpm-lock.yaml') }}

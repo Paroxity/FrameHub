@@ -13,9 +13,9 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
       - name: Cache pnpm Modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.local/share/pnpm/store
           key: pnpm-cache-${{ hashFiles('pnpm-lock.yaml') }}
@@ -39,13 +39,13 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
       - name: Upload items.json to Firebase
-        uses: google-github-actions/upload-cloud-storage@v1
+        uses: google-github-actions/upload-cloud-storage@v2
         if: steps.update_items.outputs.updated == 'true'
         with:
           path: items.json
           destination: framehub-f9cfb.appspot.com
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: steps.update_items.outputs.updated == 'true'
         with:
           name: items.json
