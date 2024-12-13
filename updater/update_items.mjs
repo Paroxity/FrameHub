@@ -480,7 +480,7 @@ class ItemUpdater {
 	if (process.env.GITHUB_ACTION)
 		setOutput(
 			"updated",
-			difference.length > 0 || process.env.FORCE_UPLOAD === "true"
+			difference !== undefined || process.env.FORCE_UPLOAD === "true"
 		);
 })();
 
