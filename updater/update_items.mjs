@@ -1,6 +1,6 @@
 import FormData from "form-data";
 import fs from "fs/promises";
-import jsonDiff from "json-diff";
+import { colorize, diff } from "json-diff";
 import lua from "lua-json";
 import fetch from "node-fetch";
 import { JSDOM } from "jsdom";
@@ -448,19 +448,15 @@ class ItemUpdater {
 	const updater = new ItemUpdater(OVERWRITES, BLACKLIST);
 	await updater.run();
 
-	const difference = jsonDiff.diffString(existingItems, updater.processedItems);
+	const difference = diff(existingItems, updater.processedItems);
 	if (difference || process.env.FORCE_UPLOAD === "true") {
 		await fs.writeFile("items.json", JSON.stringify(updater.processedItems));
-		console.log(difference);
+		console.log(colorize(difference));
 		console.log(
 			`File size: ${((await fs.stat("items.json")).size / 1024).toFixed(3)}KB`
 		);
 
 		if (process.env.DISCORD_WEBHOOK && process.env.DISCORD_ADMIN_IDS) {
-			const colorlessDifference = difference.replace(
-				/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
-				""
-			);
 			const form = new FormData();
 			form.append(
 				"content",
@@ -468,13 +464,14 @@ class ItemUpdater {
 					.map(id => `<@${id}>`)
 					.join(" ")
 			);
-			form.append("file", colorlessDifference, "items.diff");
-			form.submit(process.env.DISCORD_WEBHOOK, (err) => {
+			form.append("file", colorize(difference, { color: false }), "items.diff");
+			form.submit(process.env.DISCORD_WEBHOOK, (err, res) => {
 				if (err) {
 					console.log("Discord webhook error: " + err);
 					return;
 				}
 				console.log("Discord webhook message sent");
+				res.resume();
 			});
 		}
 	}
