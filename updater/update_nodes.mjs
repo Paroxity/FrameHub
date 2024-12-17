@@ -26,8 +26,21 @@ const newNodes = {
 	"Kuva Fortress": {},
 	Zariman: {},
 	Duviri: {},
-	Void: {}
+	Void: {},
+	"Höllvania": {}
 };
+
+// ExportRegions has incorrect node names for Höllvania
+const hollvaniaNodeNames = {
+	"SolNode850": "Köbinn West",
+	"SolNode851": "Mischta Ramparts",
+	"SolNode852": "Old Konderuk",
+	"SolNode853": "Mausoleum East",
+	"SolNode854": "Rhu Manor",
+	"SolNode855": "Lower Vehrvod",
+	"SolNode856": "Victory Plaza",
+	"SolNode857": "Vehrvod District",
+}
 
 rawNodes.forEach(rawNode => {
 	if (!newNodes[rawNode.systemName]) {
@@ -38,7 +51,7 @@ rawNodes.forEach(rawNode => {
 	}
 
 	newNodes[rawNode.systemName][rawNode.uniqueName] = {
-		name: rawNode.name,
+		name: hollvaniaNodeNames[rawNode.uniqueName] ?? rawNode.name,
 		type: rawNode.missionIndex,
 		faction: rawNode.factionIndex,
 		lvl: [rawNode.minEnemyLevel, rawNode.maxEnemyLevel],
@@ -46,7 +59,6 @@ rawNodes.forEach(rawNode => {
 	};
 });
 
-//console.log(newNodes);
 await fs.writeFile(
 	"src/resources/nodes.json",
 	JSON.stringify(newNodes, undefined, "\t")

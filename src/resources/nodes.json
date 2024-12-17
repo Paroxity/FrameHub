@@ -2465,5 +2465,79 @@
 				45
 			]
 		}
+	},
+	"Höllvania": {
+		"SolNode850": {
+			"name": "Köbinn West",
+			"type": 40,
+			"faction": 9,
+			"lvl": [
+				65,
+				70
+			]
+		},
+		"SolNode851": {
+			"name": "Mischta Ramparts",
+			"type": 2,
+			"faction": 8,
+			"lvl": [
+				65,
+				70
+			]
+		},
+		"SolNode852": {
+			"name": "Old Konderuk",
+			"type": 2,
+			"faction": 9,
+			"lvl": [
+				65,
+				70
+			]
+		},
+		"SolNode853": {
+			"name": "Mausoleum East",
+			"type": 1,
+			"faction": 8,
+			"lvl": [
+				65,
+				70
+			]
+		},
+		"SolNode854": {
+			"name": "Rhu Manor",
+			"type": 1,
+			"faction": 9,
+			"lvl": [
+				65,
+				70
+			]
+		},
+		"SolNode855": {
+			"name": "Lower Vehrvod",
+			"type": 42,
+			"faction": 8,
+			"lvl": [
+				65,
+				70
+			]
+		},
+		"SolNode857": {
+			"name": "Vehrvod District",
+			"type": 42,
+			"faction": 8,
+			"lvl": [
+				65,
+				70
+			]
+		},
+		"SolNode856": {
+			"name": "Victory Plaza",
+			"type": 0,
+			"faction": 8,
+			"lvl": [
+				65,
+				70
+			]
+		}
 	}
 }

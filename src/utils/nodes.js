@@ -72,8 +72,9 @@ export const missionIndexMap = [
 	undefined,
 	"Alchemy",
 	undefined,
-	undefined,
-	"Shrine Defense"
+	"Legacyte Harvest",
+	"Shrine Defense",
+	"Faceoff"
 ];
 
 export const factionIndexMap = [
@@ -84,7 +85,9 @@ export const factionIndexMap = [
 	undefined,
 	"Sentient",
 	undefined,
-	"Murmur"
+	"Murmur",
+	"Scaldra",
+	"Techrot"
 ];
 
 export const nodeShape = {
