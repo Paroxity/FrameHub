@@ -395,11 +395,10 @@ export const useStore = createWithEqualityFn(
 			function calculate(recipe) {
 				Object.entries(recipe.components).forEach(
 					([componentName, component]) => {
-						if (component.components) {
-							calculate(component);
+						if (component.generic || component.hash === null) {
+							if (component.components) calculate(component);
 							return;
 						}
-						if (component.components || component.generic) return;
 						if (!necessaryComponents[componentName])
 							necessaryComponents[componentName] = {
 								count: 0,
