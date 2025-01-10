@@ -253,17 +253,11 @@ class ItemUpdater {
 			}
 
 			if (this.recipes[ingredientRawName]?.ingredients.length > 0) {
-				if (
-					!ingredientRawName.includes("Items") &&
-					(!ingredientRawName.includes("Gameplay") ||
-						ingredientRawName.includes("Mechs"))
-				) {
-					ingredientData.components = this.processRecipe(
-						item,
-						this.recipes[ingredientRawName],
-						ingredients[ingredientName].count
-					);
-				}
+				ingredientData.components = this.processRecipe(
+					item,
+					this.recipes[ingredientRawName],
+					ingredients[ingredientName].count
+				);
 			}
 
 			return ingredients;
@@ -483,4 +477,3 @@ class ItemUpdater {
 			difference !== undefined || process.env.FORCE_UPLOAD === "true"
 		);
 })();
-
