@@ -232,7 +232,12 @@ class ItemUpdater {
 				ingredientRawName.includes("ArchwingRecipes") ||
 				ingredientRawName.includes("mechPart")
 			) {
-				ingredientData.generic = true;
+				// WFCD warframe-items has components for each archwing that are not generic but also do not include a hash
+				if (ingredientRawName.includes("ArchwingRecipes")) {
+					ingredientData.hash = null;
+				} else {
+					ingredientData.generic = true;
+				}
 
 				const relics =
 					this.relics[ingredientRawName] ||
