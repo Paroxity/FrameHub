@@ -229,6 +229,7 @@ class ItemUpdater {
 			if (
 				ingredientRawName.includes("WeaponParts") ||
 				ingredientRawName.includes("WarframeRecipes") ||
+				ingredientRawName.includes("ArchwingRecipes") ||
 				ingredientRawName.includes("mechPart")
 			) {
 				ingredientData.generic = true;
