@@ -57,7 +57,7 @@ export function getComponentImageUrl(itemName, componentName, generic, hash) {
 			? (ingredientSuffixes.find(suffix =>
 					componentName.endsWith(suffix)
 				) ?? componentName.replace(`${itemName} `, ""))
-			: (itemName
+			: (itemName && hash
 					? componentName.replace(`${itemName} `, "")
 					: componentName) + (hash ? "-" + hash : ""))
 	)
@@ -94,4 +94,3 @@ export const itemShape = {
 	baro: PropTypes.arrayOf(PropTypes.number),
 	description: PropTypes.string
 };
-
