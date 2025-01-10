@@ -253,11 +253,16 @@ class ItemUpdater {
 			}
 
 			if (this.recipes[ingredientRawName]?.ingredients.length > 0) {
-				ingredientData.components = this.processRecipe(
-					item,
-					this.recipes[ingredientRawName],
-					ingredients[ingredientName].count
-				);
+				if (
+					!ingredientRawName.includes("MiscItems") ||
+					ingredientRawName === "/Lotus/Types/Items/MiscItems/Forma"
+				) {
+					ingredientData.components = this.processRecipe(
+						item,
+						this.recipes[ingredientRawName],
+						ingredients[ingredientName].count
+					);
+				}
 			}
 
 			return ingredients;
