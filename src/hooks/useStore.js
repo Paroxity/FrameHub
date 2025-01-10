@@ -230,8 +230,8 @@ export const useStore = createWithEqualityFn(
 				const additionalItemCount = itemName.includes("Venari")
 					? 0
 					: item.type === "KITGUN"
-					? 2
-					: 1;
+						? 2
+						: 1;
 
 				if (itemsMastered.includes(itemName)) {
 					addItemXP(item);
@@ -447,6 +447,26 @@ export const useStore = createWithEqualityFn(
 const get = () => useStore.getState();
 const set = value => useStore.setState(value);
 
+global.framehub = {
+	getItems: () => get().items,
+	getFlattenedItems: () => get().flattenedItems,
+	masterItem: (name, mastered) => get().masterItem(name, mastered),
+	getItemsMastered: () => get().itemsMastered,
+
+	getPartiallyMasteredItems: () => get().partiallyMasteredItems,
+	setPartiallyMasteredItem: (name, rank, maxRank) =>
+		get().setPartiallyMasteredItem(name, rank, maxRank),
+
+	getStarChart: () => get().starChart,
+	getStarChartJunctions: () => get().starChartJunctions,
+	getSteelPath: () => get().steelPath,
+	getSteelPathJunctions: () => get().steelPathJunctions,
+	masterNode: (id, steelPath, mastered) =>
+		get().masterNode(id, steelPath, mastered),
+	masterJunction: (id, steelPath, mastered) =>
+		get().masterJunction(id, steelPath, mastered)
+};
+
 function firestoreFieldSetter(key, stateKey = key) {
 	return (value, load) => {
 		set(state =>
@@ -559,4 +579,3 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
-
