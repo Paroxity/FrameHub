@@ -680,6 +680,7 @@ input:disabled {
 	position: fixed;
 	z-index: 10;
 	pointer-events: none;
+	white-space: nowrap;
 
 	.info {
 		display: block;

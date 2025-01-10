@@ -17,14 +17,14 @@ function Tooltip(props) {
 		}
 	}, [visible, props.content]);
 
-	const x = Math.min(
-		mouseX + 20,
-		document.documentElement.clientWidth - width.current
-	);
-	const y = Math.min(
-		mouseY + 30,
-		document.documentElement.clientHeight - height.current
-	);
+	const x =
+		mouseX + width.current + 20 > document.documentElement.clientWidth
+			? mouseX - width.current
+			: mouseX + 20;
+	const y =
+		mouseY + height.current + 30 > document.documentElement.clientHeight
+			? mouseY - height.current
+			: mouseY + 30;
 
 	return (
 		<div
@@ -42,15 +42,13 @@ function Tooltip(props) {
 			onMouseMove={event => {
 				setMouseX(event.clientX);
 				setMouseY(event.clientY);
-			}}
-		>
+			}}>
 			{props.children}
 			{visible && (
 				<div
 					className="tooltip"
 					style={{ top: `${y}px`, left: `${x}px` }}
-					ref={element}
-				>
+					ref={element}>
 					{props.title}
 					<div className="info">{props.content}</div>
 				</div>
