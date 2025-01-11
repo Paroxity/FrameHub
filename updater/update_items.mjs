@@ -198,7 +198,8 @@ class ItemUpdater {
 					count: 0
 				};
 			const ingredientData = ingredients[ingredientName];
-			ingredientData.count += ingredient.ItemCount * count;
+			ingredientData.count +=
+				ingredient.ItemCount * Math.ceil(count / recipe.num);
 
 			if (
 				ingredientRawName.includes("WeaponParts") ||
