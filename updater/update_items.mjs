@@ -92,17 +92,13 @@ class ItemUpdater {
 
 		await Promise.all([
 			this.fetchBaroData(),
-			this.fetchVaultStatus(),
+			this.fetchVaultStatus().then(() => this.fetchRelics()),
 			this.fetchItems(),
+			this.fetchResources(),
 			this.fetchRecipes()
 		]);
-		await this.fetchRelics();
 
-		this.mapItemNames(
-			this.items,
-			(await fetchEndpoint("Resources")).ExportResources
-		);
-
+		this.mapItemNames(this.items, this.resources);
 		this.processItems();
 		this.processedItems = this.mergeObjects(
 			this.processedItems,
@@ -411,6 +407,10 @@ class ItemUpdater {
 		this.items = data.reduce((merged, d) => {
 			return [...merged, ...d];
 		}, []);
+	}
+
+	async fetchResources() {
+		this.resources = (await fetchEndpoint("Resources")).ExportResources;
 	}
 
 	async fetchBaroData() {
