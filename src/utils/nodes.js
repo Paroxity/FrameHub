@@ -63,7 +63,7 @@ export const missionIndexMap = [
 	"Free Roam",
 	undefined,
 	undefined,
-	undefined,
+	"The Circuit",
 	undefined,
 	"Disruption",
 	"Void Flood",
