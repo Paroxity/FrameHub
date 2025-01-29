@@ -6,25 +6,27 @@ import { detailedTime } from "../../utils/time";
 import GluedComponents from "../GluedComponents";
 import { PaginatedTooltipTitle } from "../PaginatedTooltip";
 import ItemComponent from "./ItemComponent";
+import { useStore } from "../../hooks/useStore";
 
 function ItemGeneralInfoTooltip({ item, itemName }) {
 	const isMacOS =
 		window.navigator.userAgentData?.platform === "macOS" ||
 		window.navigator.platform === "MacIntel"; //TODO: Remove usage of deprecated Navigator.platform
+	const recipe = useStore(state => state.recipes[itemName]);
 
 	return (
 		<div className="item-tooltip">
 			<PaginatedTooltipTitle title="General Information" />
-			{item.components ? (
+			{recipe?.components ? (
 				<div className="item-craftable">
-					{Object.entries(item.components).map(
-						([componentName, component]) => {
+					{Object.entries(recipe.components).map(
+						([componentName, componentCount]) => {
 							return (
 								<ItemComponent
 									key={componentName}
 									itemName={itemName}
 									componentName={componentName}
-									component={component}
+									componentCount={componentCount}
 								/>
 							);
 						}
@@ -51,17 +53,17 @@ function ItemGeneralInfoTooltip({ item, itemName }) {
 							{item.baro[0].toLocaleString()}
 						</>
 					) : (
-						item.description ?? "Unknown Acquisition"
+						(item.description ?? "Unknown Acquisition")
 					)}
 				</span>
 			)}
 			<GluedComponents className="item-info" separator=" - ">
-				{item.buildTime && item.components && (
+				{recipe?.components && (
 					<span className="item-build-time">
-						{detailedTime(item.buildTime)}
+						{detailedTime(recipe.time)}
 					</span>
 				)}
-				{item.buildPrice && (
+				{recipe?.price && (
 					<>
 						<img
 							className="credits"
@@ -70,7 +72,7 @@ function ItemGeneralInfoTooltip({ item, itemName }) {
 							width="15px"
 						/>{" "}
 						<span className="item-build-price">
-							{item.buildPrice.toLocaleString()}
+							{recipe.price.toLocaleString()}
 						</span>
 					</>
 				)}
@@ -86,4 +88,3 @@ ItemGeneralInfoTooltip.propTypes = {
 };
 
 export default ItemGeneralInfoTooltip;
-

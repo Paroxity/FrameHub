@@ -7,6 +7,7 @@ import { getComponentImageUrl } from "../../utils/items";
 function MissingIngredients() {
 	const [visible, setVisible] = useState(false);
 	const ingredients = useStore(state => state.ingredients);
+	const ingredientHashes = useStore(state => state.ingredientHashes);
 	const formaCost = useStore(state => state.formaCost);
 
 	return (
@@ -28,18 +29,14 @@ function MissingIngredients() {
 						640: 1
 					}}>
 					{Object.entries(ingredients)
-						.sort(
-							(
-								[nameA, { count: countA }],
-								[nameB, { count: countB }]
-							) =>
-								countA > countB
-									? -1
-									: countA < countB
-										? 1
-										: nameA.localeCompare(nameB)
+						.sort(([nameA, countA], [nameB, countB]) =>
+							countA > countB
+								? -1
+								: countA < countB
+									? 1
+									: nameA.localeCompare(nameB)
 						)
-						.map(([name, { count, hash }]) => {
+						.map(([name, count]) => {
 							return (
 								<div
 									key={name}
@@ -53,8 +50,9 @@ function MissingIngredients() {
 										src={getComponentImageUrl(
 											"",
 											name,
-											false,
-											hash
+											ingredientHashes[name] ===
+												"generic",
+											ingredientHashes[name]
 										)}
 										alt=""
 										width="24px"

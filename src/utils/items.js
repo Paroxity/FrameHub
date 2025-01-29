@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 const ingredientSuffixes = [
 	"Aegis",
@@ -74,13 +74,6 @@ export const itemShape = {
 	mr: PropTypes.number,
 	wiki: PropTypes.string,
 	vaulted: PropTypes.bool,
-	components: PropTypes.objectOf(
-		PropTypes.shape({
-			generic: PropTypes.bool,
-			hash: PropTypes.string,
-			count: PropTypes.number
-		})
-	),
 	relics: PropTypes.objectOf(
 		PropTypes.objectOf(
 			PropTypes.shape({
@@ -89,8 +82,6 @@ export const itemShape = {
 			})
 		)
 	),
-	buildTime: PropTypes.number,
-	buildPrice: PropTypes.number,
 	baro: PropTypes.arrayOf(PropTypes.number),
 	description: PropTypes.string
 };

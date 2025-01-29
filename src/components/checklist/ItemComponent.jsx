@@ -1,13 +1,19 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { getComponentImageUrl } from "../../utils/items";
+import { useStore } from "../../hooks/useStore";
 
 export default function ItemComponent({
 	itemName,
 	componentName,
-	component,
+	componentCount,
 	isSubcomponent
 }) {
+	const componentRecipe = useStore(state => state.recipes[componentName]);
+	const ingredientHash = useStore(
+		state => state.ingredientHashes[componentName]
+	);
+
 	return (
 		<div className={classNames({ "item-subcomponent": isSubcomponent })}>
 			<div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -16,25 +22,30 @@ export default function ItemComponent({
 					src={getComponentImageUrl(
 						itemName,
 						componentName,
-						component.generic,
-						component.hash
+						ingredientHash === "generic",
+						ingredientHash
 					)}
 					alt=""
 					width="24px"
 				/>
 				<span className="component-name">
-					{component.count.toLocaleString()}x {componentName}
+					{componentCount.toLocaleString()}x {componentName}
 				</span>
 			</div>
-			{component?.components &&
-				Object.entries(component.components).map(
-					([subcomponentName, subcomponent]) => {
+			{componentRecipe?.components &&
+				Object.entries(componentRecipe.components).map(
+					([subcomponentName, subcomponentCount]) => {
 						return (
 							<ItemComponent
 								key={subcomponentName}
 								itemName={componentName}
 								componentName={subcomponentName}
-								component={subcomponent}
+								componentCount={
+									subcomponentCount *
+									Math.ceil(
+										componentCount / componentRecipe.count
+									)
+								}
 								isSubcomponent
 							/>
 						);
@@ -44,15 +55,9 @@ export default function ItemComponent({
 	);
 }
 
-const componentShape = {
-	count: PropTypes.number.isRequired,
-	generic: PropTypes.bool,
-	hash: PropTypes.string
-};
-componentShape.components = PropTypes.objectOf(PropTypes.shape(componentShape));
-
 ItemComponent.propTypes = {
+	itemName: PropTypes.string.isRequired,
 	componentName: PropTypes.string.isRequired,
-	component: PropTypes.shape(componentShape).isRequired,
+	componentCount: PropTypes.number.isRequired,
 	isSubcomponent: PropTypes.bool
 };

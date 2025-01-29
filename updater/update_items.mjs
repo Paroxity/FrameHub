@@ -8,35 +8,37 @@ import { setOutput } from "@actions/core";
 import { fetchEndpoint } from "./warframe_exports.mjs";
 import { createHash } from "crypto";
 
-const SCHEMA_VERSION = 1;
+const SCHEMA_VERSION = 2;
 
 const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
 const WIKI_URL = "https://warframe.fandom.com/wiki";
 const DROP_TABLE_URL = "https://www.warframe.com/droptables";
 
-const OVERWRITES = {
+const ITEM_OVERWRITES = {
 	AMP: {
-		"Mote Prism": {
-			components: {
-				"Cetus Wisp": { count: 1, hash: "0681ca5991" },
-				"Tear Azurite": { count: 20, hash: "397c0a4ebc" },
-				"Pyrotic Alloy": { count: 10, hash: "f0abc50ae0" },
-				"Fish Oil": { count: 30, hash: "74fd9aeeac" }
-			},
-			buildTime: 600,
-			buildPrice: 1000
-		}
+		"Mote Prism": {}
 	},
 	PRIMARY: {
 		"Ax-52": {
 			wiki: `${WIKI_URL}/AX-52`
 		}
 	},
-	MELEE: {
-		"Tenet Agendus": { components: undefined }
-	},
 	CAT: { Venari: {}, "Venari Prime": {} },
 	PLEXUS: { Plexus: {} }
+};
+const RECIPE_OVERWRITES = {
+	"Mote Prism": {
+		components: {
+			"Cetus Wisp": 1,
+			"Tear Azurite": 20,
+			"Pyrotic Alloy": 10,
+			"Fish Oil": 30
+		},
+		count: 1,
+		time: 600,
+		price: 1000
+	},
+	"Tenet Agendus": undefined
 };
 const BLACKLIST = [];
 
@@ -62,8 +64,9 @@ const HOLOKEY_WEAPONS = [
 const MARKET_WEAPONS = {};
 
 class ItemUpdater {
-	constructor(overwrites, blacklist) {
-		this.overwrites = overwrites;
+	constructor(itemOverwrites, recipeOverwrites, blacklist) {
+		this.itemOverwrites = itemOverwrites;
+		this.recipeOverwrites = recipeOverwrites;
 		this.blacklist = blacklist;
 	}
 
@@ -91,6 +94,8 @@ class ItemUpdater {
 			MECH: {},
 			PLEXUS: {}
 		};
+		this.processedRecipes = {};
+		this.ingredientHashes = {};
 
 		await Promise.all([
 			this.fetchBaroData(),
@@ -104,7 +109,11 @@ class ItemUpdater {
 		this.processItems();
 		this.processedItems = this.mergeObjects(
 			this.processedItems,
-			this.overwrites
+			this.itemOverwrites
+		);
+		this.processedRecipes = this.mergeObjects(
+			this.processedRecipes,
+			this.recipeOverwrites
 		);
 		this.orderItems();
 	}
@@ -159,13 +168,7 @@ class ItemUpdater {
 							[`${name} Blueprint`]: this.relics[recipe.uniqueName]
 						};
 					}
-					if (recipe.ingredients?.length > 0)
-						processedItem.components = this.processRecipe(
-							processedItem,
-							recipe
-						);
-					processedItem.buildTime = recipe.buildTime;
-					processedItem.buildPrice = recipe.buildPrice;
+					this.processRecipe(processedItem, name, recipe);
 				}
 
 				const description = this.describeItem(name);
@@ -191,65 +194,75 @@ class ItemUpdater {
 		});
 	}
 
-	processRecipe(item, recipe, count = 1) {
-		return recipe.ingredients.reduce((ingredients, ingredient) => {
-			const ingredientRawName = ingredient.ItemType;
-			const ingredientName = this.itemNames[ingredientRawName];
-			if (!ingredients[ingredientName])
-				ingredients[ingredientName] = {
-					count: 0
-				};
-			const ingredientData = ingredients[ingredientName];
-			ingredientData.count +=
-				ingredient.ItemCount * Math.ceil(count / recipe.num);
+	processRecipe(parentItem, itemName, recipe) {
+		if (this.processedRecipes[itemName]) return;
 
-			if (
-				ingredientRawName.includes("WeaponParts") ||
-				ingredientRawName.includes("WarframeRecipes") ||
-				ingredientRawName.includes("ArchwingRecipes") ||
-				ingredientRawName.includes("mechPart")
-			) {
-				// WFCD warframe-items has components for each archwing that are not generic but also do not include a hash
-				if (ingredientRawName.includes("ArchwingRecipes")) {
-					ingredientData.hash = null;
-				} else {
-					ingredientData.generic = true;
+		const processedRecipe = {
+			count: recipe.num,
+			time: recipe.buildTime,
+			price: recipe.buildPrice
+		};
+		if (recipe.ingredients?.length > 0) {
+			processedRecipe.components = {};
+
+			recipe.ingredients.forEach(ingredient => {
+				const ingredientRawName = ingredient.ItemType;
+				const ingredientName = this.itemNames[ingredientRawName];
+
+				if (
+					this.recipes[ingredientRawName] &&
+					(!ingredientRawName.includes("MiscItems") ||
+						ingredientRawName === "/Lotus/Types/Items/MiscItems/Forma")
+				) {
+					this.processRecipe(
+						parentItem,
+						ingredientName,
+						this.recipes[ingredientRawName]
+					);
 				}
+
+				processedRecipe.components[ingredientName] =
+					(processedRecipe.components[ingredientName] ?? 0) +
+					ingredient.ItemCount;
+				if (!this.ingredientHashes[ingredientName])
+					this.ingredientHashes[ingredientName] = this.createIngredientHash(
+						ingredientName,
+						ingredientRawName
+					);
 
 				const relics =
 					this.relics[ingredientRawName] ||
 					this.relics[ingredientRawName.replace("Component", "Blueprint")];
-				if (relics && item.relics) item.relics[ingredientName] = relics;
-			} else if (
-				// WFCD warframe-items does not include a hash for these components despite them being unique from other generic components
-				ingredientRawName.includes("DamagedMechPart") ||
-				ingredientRawName.includes("DamagedMechWeapon") ||
-				ingredientName.startsWith("Cortege") ||
-				ingredientName.startsWith("Morgha")
-			) {
-				ingredientData.hash = null;
-			} else {
-				const hash = createHash("sha256")
-					.update(ingredient.ItemType)
-					.digest("hex");
-				ingredientData.hash = hash.slice(0, 10);
-			}
+				if (relics && parentItem.relics)
+					parentItem.relics[ingredientName] = relics;
+			});
+		}
+		this.processedRecipes[itemName] = processedRecipe;
+	}
 
-			if (this.recipes[ingredientRawName]?.ingredients.length > 0) {
-				if (
-					!ingredientRawName.includes("MiscItems") ||
-					ingredientRawName === "/Lotus/Types/Items/MiscItems/Forma"
-				) {
-					ingredientData.components = this.processRecipe(
-						item,
-						this.recipes[ingredientRawName],
-						ingredients[ingredientName].count
-					);
-				}
+	createIngredientHash(name, rawName) {
+		if (
+			rawName.includes("WeaponParts") ||
+			rawName.includes("WarframeRecipes") ||
+			rawName.includes("ArchwingRecipes") ||
+			rawName.includes("mechPart")
+		) {
+			// WFCD warframe-items has components for each archwing that are not generic but also do not include a hash
+			if (rawName.includes("ArchwingRecipes")) {
+				return null;
 			}
-
-			return ingredients;
-		}, {});
+			return "generic";
+		}
+		// WFCD warframe-items does not include a hash for these components despite them being unique from other generic components
+		if (
+			rawName.includes("DamagedMechPart") ||
+			rawName.includes("DamagedMechWeapon") ||
+			name.startsWith("Cortege") ||
+			name.startsWith("Morgha")
+		) {
+			return null;
+		}
+		return createHash("sha256").update(rawName).digest("hex").slice(0, 10);
 	}
 
 	categorizeItem(item) {
@@ -456,12 +469,18 @@ class ItemUpdater {
 		).json();
 	}
 
-	const updater = new ItemUpdater(OVERWRITES, BLACKLIST);
+	const updater = new ItemUpdater(
+		ITEM_OVERWRITES,
+		RECIPE_OVERWRITES,
+		BLACKLIST
+	);
 	await updater.run();
 
 	const data = {
 		schema_version: SCHEMA_VERSION,
-		items: updater.processedItems
+		items: updater.processedItems,
+		recipes: updater.processedRecipes,
+		ingredient_hashes: updater.ingredientHashes
 	};
 	const difference = diff(existingData, data);
 	if (difference || process.env.FORCE_UPLOAD === "true") {

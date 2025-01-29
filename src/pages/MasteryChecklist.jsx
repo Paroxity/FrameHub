@@ -81,13 +81,13 @@ function MasteryChecklist(props) {
 		);
 	}, [id, props.type]); //eslint-disable-line
 
-	const { items, fetchItems } = useStore(state => ({
+	const { items, fetchData } = useStore(state => ({
 		items: state.items,
-		fetchItems: state.fetchItems
+		fetchData: state.fetchData
 	}));
 	const itemsLoading = Object.keys(items).length === 0;
 	useEffect(() => {
-		fetchItems();
+		fetchData();
 	}, []); //eslint-disable-line
 
 	return dataLoading || itemsLoading ? (

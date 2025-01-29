@@ -124,10 +124,14 @@ export const useStore = createWithEqualityFn(
 		},
 
 		items: {},
+		recipes: {},
+		ingredientHashes: {},
 		flattenedItems: {},
-		setItems: items => {
+		setData: ({ items, recipes, ingredient_hashes: ingredientHashes }) => {
 			set({
 				items,
+				recipes,
+				ingredientHashes,
 				flattenedItems: Object.entries(items).reduce(
 					(flattenedItems, [category, categoryItems]) => {
 						Object.entries(categoryItems).reduce(
@@ -150,12 +154,12 @@ export const useStore = createWithEqualityFn(
 			get().recalculateMasteryRank();
 			get().recalculateIngredients();
 		},
-		fetchItems: async () => {
+		fetchData: async () => {
 			let cached = false;
 			if (localStorage.getItem("items")) {
 				const cachedData = JSON.parse(localStorage.getItem("items"));
 				if (cachedData.schema_version === SCHEMA_VERSION) {
-					get().setItems(cachedData.items);
+					get().setData(cachedData);
 					cached = true;
 				}
 			}
@@ -172,7 +176,7 @@ export const useStore = createWithEqualityFn(
 				).json();
 				localStorage.setItem("items", JSON.stringify(data));
 				localStorage.setItem("items-updated-at", updated);
-				get().setItems(data.items);
+				get().setData(data);
 			}
 		},
 
@@ -393,33 +397,63 @@ export const useStore = createWithEqualityFn(
 		ingredients: {},
 		formaCost: 0,
 		recalculateIngredients: () => {
-			const { flattenedItems, itemsMastered, partiallyMasteredItems } =
-				get();
+			const {
+				flattenedItems,
+				recipes,
+				ingredientHashes,
+				itemsMastered,
+				partiallyMasteredItems
+			} = get();
+
 			const necessaryComponents = {};
 			let formaCost = 0;
 
-			function calculate(recipe) {
+			const needsRounding = new Map();
+
+			function calculate(recipe, count = 1) {
+				if (!recipe.components) return;
+
 				Object.entries(recipe.components).forEach(
-					([componentName, component]) => {
-						if (component.components) calculate(component);
-						if (component.generic || component.hash === null) {
-							return;
+					([componentName, componentCount]) => {
+						componentCount *= count / recipe.count;
+
+						const componentRecipe = recipes[componentName];
+						if (componentRecipe) {
+							if (
+								!Number.isInteger(
+									componentCount / componentRecipe.count
+								)
+							) {
+								needsRounding.set(
+									componentName,
+									(needsRounding.get(componentName) ?? 0) +
+										componentCount
+								);
+								return;
+							}
+							calculate(componentRecipe, componentCount);
 						}
-						if (!necessaryComponents[componentName])
-							necessaryComponents[componentName] = {
-								count: 0,
-								hash: component.hash
-							};
-						necessaryComponents[componentName].count +=
-							component.count;
+
+						if (
+							ingredientHashes[componentName] === null ||
+							ingredientHashes[componentName] === "generic"
+						)
+							return;
+
+						necessaryComponents[componentName] =
+							(necessaryComponents[componentName] ?? 0) +
+							componentCount;
 					}
 				);
 			}
 
 			Object.entries(flattenedItems).forEach(([itemName, item]) => {
 				if (!itemsMastered.includes(itemName)) {
-					if (!partiallyMasteredItems[itemName] && item.components) {
-						calculate(item);
+					if (
+						!partiallyMasteredItems[itemName] &&
+						recipes[itemName]
+					) {
+						calculate(recipes[itemName]);
 					}
 					if (item.maxLvl) {
 						formaCost += Math.floor(
@@ -430,6 +464,21 @@ export const useStore = createWithEqualityFn(
 					}
 				}
 			});
+
+			while (needsRounding.size !== 0) {
+				for (const [componentName, componentCount] of needsRounding) {
+					const componentRecipe = recipes[componentName];
+					const newCount =
+						Math.ceil(componentCount / componentRecipe.count) *
+						componentRecipe.count;
+
+					needsRounding.delete(componentName);
+					calculate(componentRecipe, newCount);
+					necessaryComponents[componentName] =
+						(necessaryComponents[componentName] ?? 0) + newCount;
+				}
+			}
+
 			set({ ingredients: necessaryComponents, formaCost });
 		},
 
