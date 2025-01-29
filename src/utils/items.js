@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 
+export const SCHEMA_VERSION = 1;
+
 const ingredientSuffixes = [
 	"Aegis",
 	"Barrel",

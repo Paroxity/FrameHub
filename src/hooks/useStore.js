@@ -10,7 +10,7 @@ import { getMetadata, ref } from "firebase/storage";
 import { produce } from "immer";
 import { firestore, storage } from "../App";
 import { ANONYMOUS, SHARED } from "../utils/checklist-types";
-import { foundersItems } from "../utils/items";
+import { foundersItems, SCHEMA_VERSION } from "../utils/items";
 import {
 	intrinsicsToXP,
 	junctionsToXP,
@@ -151,22 +151,28 @@ export const useStore = createWithEqualityFn(
 			get().recalculateIngredients();
 		},
 		fetchItems: async () => {
-			if (localStorage.getItem("items"))
-				get().setItems(JSON.parse(localStorage.getItem("items")));
+			let cached = false;
+			if (localStorage.getItem("items")) {
+				const cachedData = JSON.parse(localStorage.getItem("items"));
+				if (cachedData.schema_version === SCHEMA_VERSION) {
+					get().setItems(cachedData.items);
+					cached = true;
+				}
+			}
 
 			const { updated } = await getMetadata(ref(storage, "items.json"));
 			if (
-				localStorage.getItem("items-updated-at") !== updated ||
-				!localStorage.getItem("items")
+				!cached ||
+				localStorage.getItem("items-updated-at") !== updated
 			) {
-				const items = await (
+				const data = await (
 					await fetch(
 						"https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media"
 					)
 				).json();
-				localStorage.setItem("items", JSON.stringify(items));
+				localStorage.setItem("items", JSON.stringify(data));
 				localStorage.setItem("items-updated-at", updated);
-				get().setItems(items);
+				get().setItems(data.items);
 			}
 		},
 

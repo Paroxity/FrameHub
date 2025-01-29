@@ -8,6 +8,8 @@ import { setOutput } from "@actions/core";
 import { fetchEndpoint } from "./warframe_exports.mjs";
 import { createHash } from "crypto";
 
+const SCHEMA_VERSION = 1;
+
 const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
 const WIKI_URL = "https://warframe.fandom.com/wiki";
 const DROP_TABLE_URL = "https://www.warframe.com/droptables";
@@ -443,11 +445,11 @@ class ItemUpdater {
 (async () => {
 	const startTime = Date.now();
 
-	let existingItems;
+	let existingData;
 	try {
-		existingItems = JSON.parse(await fs.readFile("items.json", "utf8"));
+		existingData = JSON.parse(await fs.readFile("items.json", "utf8"));
 	} catch (e) {
-		existingItems = await (
+		existingData = await (
 			await fetch(
 				"https://firebasestorage.googleapis.com/v0/b/framehub-f9cfb.appspot.com/o/items.json?alt=media"
 			)
@@ -457,9 +459,13 @@ class ItemUpdater {
 	const updater = new ItemUpdater(OVERWRITES, BLACKLIST);
 	await updater.run();
 
-	const difference = diff(existingItems, updater.processedItems);
+	const data = {
+		schema_version: SCHEMA_VERSION,
+		items: updater.processedItems
+	};
+	const difference = diff(existingData, data);
 	if (difference || process.env.FORCE_UPLOAD === "true") {
-		await fs.writeFile("items.json", JSON.stringify(updater.processedItems));
+		await fs.writeFile("items.json", JSON.stringify(data));
 		console.log(colorize(difference));
 		console.log(
 			`File size: ${((await fs.stat("items.json")).size / 1024).toFixed(3)}KB`
