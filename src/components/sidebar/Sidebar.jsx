@@ -16,7 +16,6 @@ import Social from "./Social";
 function Sidebar() {
 	const type = useStore(state => state.type);
 	const [toggled, setToggled] = useState(false);
-	const [showLink, setShowLink] = useState(false);
 
 	return (
 		<>
@@ -29,9 +28,7 @@ function Sidebar() {
 				)}
 				<DangerZone />
 				{type === AUTHENTICATED && (
-					<Button centered onClick={() => setShowLink(true)}>
-						Share
-					</Button>
+					<SharePrompt />
 				)}
 				<LogoutButton />
 				<ExitButton />
@@ -45,7 +42,6 @@ function Sidebar() {
 				}}
 				alt="menu"
 			/>
-			<SharePrompt showLink={showLink} setShowLink={setShowLink} />
 		</>
 	);
 }
