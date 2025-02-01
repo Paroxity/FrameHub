@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useStore } from "../../hooks/useStore";
 import placeholderIcon from "../../icons/placeholder-icon.svg";
 import { ANONYMOUS, AUTHENTICATED } from "../../utils/checklist-types";
-import Button from "../Button";
 import DangerZone from "./DangerZone";
 import ExitButton from "./ExitButton";
 import LogoutButton from "./LogoutButton";
@@ -27,9 +26,7 @@ function Sidebar() {
 					<div>Remember to bookmark this URL.</div>
 				)}
 				<DangerZone />
-				{type === AUTHENTICATED && (
-					<SharePrompt />
-				)}
+				{type === AUTHENTICATED && <SharePrompt />}
 				<LogoutButton />
 				<ExitButton />
 				<Social />
