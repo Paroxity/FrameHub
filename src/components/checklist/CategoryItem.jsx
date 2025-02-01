@@ -81,7 +81,7 @@ function CategoryItem({ name, item }) {
 							if (e.ctrlKey || e.metaKey) {
 								window.open(
 									item.wiki ||
-										`https://warframe.fandom.com/wiki/${name}`
+										`https://wiki.warframe.com/w/${name}`
 								);
 							} else {
 								if (type !== SHARED) {

@@ -11,7 +11,7 @@ import { createHash } from "crypto";
 const SCHEMA_VERSION = 2;
 
 const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
-const WIKI_URL = "https://warframe.fandom.com/wiki";
+const WIKI_URL = "https://wiki.warframe.com/w";
 const DROP_TABLE_URL = "https://www.warframe.com/droptables";
 
 const ITEM_OVERWRITES = {
@@ -434,9 +434,7 @@ class ItemUpdater {
 
 	async fetchBaroData() {
 		const luaTable = await (
-			await fetch(
-				"https://warframe.fandom.com/wiki/Module:Baro/data?action=raw"
-			)
+			await fetch(WIKI_URL + "/Module:Baro/data?action=raw")
 		).text();
 		this.baroData = lua.parse(luaTable).Items;
 	}
