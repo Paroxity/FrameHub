@@ -16,15 +16,28 @@ const DROP_TABLE_URL = "https://www.warframe.com/droptables";
 
 const ITEM_OVERWRITES = {
 	AMP: {
-		"Mote Prism": {}
+		"Mote Prism": {
+			id: "/Lotus/Weapons/Sentients/OperatorAmplifiers/SentTrainingAmplifier/SentAmpTrainingBarrel"
+		}
 	},
 	PRIMARY: {
 		"Ax-52": {
 			wiki: `${WIKI_URL}/AX-52`
 		}
 	},
-	CAT: { Venari: {}, "Venari Prime": {} },
-	PLEXUS: { Plexus: {} }
+	CAT: {
+		Venari: {
+			id: "/Lotus/Powersuits/Khora/Kavat/KhoraKavatPowerSuit"
+		},
+		"Venari Prime": {
+			id: "/Lotus/Powersuits/Khora/Kavat/KhoraPrimeKavatPowerSuit"
+		}
+	},
+	PLEXUS: {
+		Plexus: {
+			id: "/Lotus/Types/Game/CrewShip/RailJack/DefaultHarness"
+		}
+	}
 };
 const RECIPE_OVERWRITES = {
 	"Mote Prism": {
