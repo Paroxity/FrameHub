@@ -15,13 +15,13 @@ function PlanetJunction({ planet }) {
 				state[
 					(state.displayingSteelPath ? "steelPath" : "starChart") +
 						"Junctions"
-				].includes(planet),
+				].has(planet),
 			hidden:
 				state.hideMastered &&
 				state[
 					(state.displayingSteelPath ? "steelPath" : "starChart") +
 						"Junctions"
-				].includes(planet)
+				].has(planet)
 		}));
 	return hidden ? null : (
 		<div

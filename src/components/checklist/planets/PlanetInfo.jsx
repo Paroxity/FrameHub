@@ -16,18 +16,18 @@ function PlanetInfo({ name }) {
 	const { nodesMastered, junctionMastered } = useStore(state => ({
 		nodesMastered: state[
 			state.displayingSteelPath ? "steelPath" : "starChart"
-		].filter(id => nodes[name][id]),
+		],
 		junctionMastered:
 			hasJunction &&
 			state[
 				(state.displayingSteelPath ? "steelPath" : "starChart") +
 					"Junctions"
-			].includes(name)
+			].has(name)
 	}));
 	Object.entries(nodes[name]).forEach(([id, node]) => {
 		totalCount++;
 		totalXP += node.xp ?? 0;
-		if (nodesMastered.includes(id)) {
+		if (nodesMastered.has(id)) {
 			masteredCount++;
 			masteredXP += node.xp ?? 0;
 		}

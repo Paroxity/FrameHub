@@ -17,12 +17,12 @@ function PlanetNode({ id, node }) {
 			mastered:
 				state[
 					state.displayingSteelPath ? "steelPath" : "starChart"
-				].includes(id),
+				].has(id),
 			hidden:
 				state.hideMastered &&
 				state[
 					state.displayingSteelPath ? "steelPath" : "starChart"
-				].includes(id)
+				].has(id)
 		}));
 
 	return hidden ? null : (

@@ -12,14 +12,14 @@ function PlanetChecklist() {
 				!Object.keys(nodes[planet]).every(id =>
 					state[
 						state.displayingSteelPath ? "steelPath" : "starChart"
-					].includes(id)
+					].has(id)
 				) ||
 				(planetsWithJunctions.includes(planet) &&
 					!state[
 						(state.displayingSteelPath
 							? "steelPath"
 							: "starChart") + "Junctions"
-					].includes(planet))
+					].has(planet))
 			);
 		})
 	);

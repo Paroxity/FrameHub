@@ -1,4 +1,3 @@
-import { produce } from "immer";
 import PropTypes from "prop-types";
 import { useStore } from "../../hooks/useStore";
 import { foundersItems } from "../../utils/items";
@@ -21,20 +20,17 @@ const fancyCategoryNames = {
 };
 
 function CategoryItem({ name }) {
-	const { categoryItems, hideFounders } = useStore(state => ({
+	const {
+		itemsMastered,
+		partiallyMasteredItems,
+		categoryItems,
+		hideFounders
+	} = useStore(state => ({
+		itemsMastered: state.itemsMastered,
+		partiallyMasteredItems: state.partiallyMasteredItems,
 		categoryItems: state.items[name],
 		hideFounders: state.hideFounders
 	}));
-	const itemsMastered = useStore(state =>
-		state.itemsMastered.filter(item => categoryItems[item])
-	);
-	const partiallyMasteredItems = useStore(state =>
-		produce(state.partiallyMasteredItems, draftState => {
-			Object.keys(draftState).forEach(item => {
-				if (!categoryItems[item]) delete draftState[item];
-			});
-		})
-	);
 
 	let masteredCount = 0;
 	let masteredXP = 0;
@@ -46,12 +42,12 @@ function CategoryItem({ name }) {
 		if (
 			hideFounders &&
 			foundersItems.includes(itemName) &&
-			!itemsMastered.includes(itemName)
+			!itemsMastered.has(itemName)
 		)
 			return;
 		totalCount++;
 		totalXP += xpFromItem(item, name);
-		if (itemsMastered.includes(itemName)) {
+		if (itemsMastered.has(itemName)) {
 			masteredCount++;
 			masteredXP += xpFromItem(item, name);
 		} else if (partiallyMasteredItems[itemName]) {
@@ -92,3 +88,4 @@ CategoryItem.propTypes = {
 };
 
 export default CategoryItem;
+

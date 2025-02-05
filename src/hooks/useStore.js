@@ -201,8 +201,8 @@ export const useStore = createWithEqualityFn(
 			} = get();
 
 			const masteryBreakdown = {
-				STAR_CHART: junctionsToXP(starChartJunctions.length),
-				STEEL_PATH: junctionsToXP(steelPathJunctions.length),
+				STAR_CHART: junctionsToXP(starChartJunctions.size),
+				STEEL_PATH: junctionsToXP(steelPathJunctions.size),
 				RAILJACK_INTRINSICS: intrinsicsToXP(railjackIntrinsics),
 				DRIFTER_INTRINSICS: intrinsicsToXP(drifterIntrinsics)
 			};
@@ -243,7 +243,7 @@ export const useStore = createWithEqualityFn(
 						? 2
 						: 1;
 
-				if (itemsMastered.includes(itemName)) {
+				if (itemsMastered.has(itemName)) {
 					addItemXP(item);
 					itemsMasteredCount += additionalItemCount;
 
@@ -258,7 +258,7 @@ export const useStore = createWithEqualityFn(
 				if (
 					hideFounders &&
 					foundersItems.includes(itemName) &&
-					!itemsMastered.includes(itemName)
+					!itemsMastered.has(itemName)
 				)
 					return;
 				totalXP += xpFromItem(item, item.type);
@@ -268,11 +268,11 @@ export const useStore = createWithEqualityFn(
 			Object.entries(flattenedNodes).forEach(([id, node]) => {
 				if (node.xp) {
 					totalXP += node.xp * 2;
-					if (starChart.includes(id)) {
+					if (starChart.has(id)) {
 						xp += node.xp;
 						masteryBreakdown.STAR_CHART += node.xp;
 					}
-					if (steelPath.includes(id)) {
+					if (steelPath.has(id)) {
 						xp += node.xp;
 						masteryBreakdown.STEEL_PATH += node.xp;
 					}
@@ -289,7 +289,7 @@ export const useStore = createWithEqualityFn(
 			});
 		},
 
-		itemsMastered: [],
+		itemsMastered: new Set(),
 		setItemsMastered: itemsMastered => {
 			setMastered("itemsMastered", itemsMastered);
 			get().recalculateIngredients();
@@ -308,7 +308,7 @@ export const useStore = createWithEqualityFn(
 					i =>
 						!get().hideFounders ||
 						!foundersItems.includes(i) ||
-						get().itemsMastered.includes(i)
+						get().itemsMastered.has(i)
 				),
 				mastered
 			);
@@ -332,7 +332,7 @@ export const useStore = createWithEqualityFn(
 		},
 		setPartiallyMasteredItem: (name, rank, maxRank) => {
 			if (rank === maxRank) get().masterItem(name, true);
-			else if (get().itemsMastered.includes(name))
+			else if (get().itemsMastered.has(name))
 				get().masterItem(name, false);
 			rank = rank === maxRank || rank === 0 ? undefined : rank;
 
@@ -362,10 +362,10 @@ export const useStore = createWithEqualityFn(
 		displayingSteelPath: false,
 		setDisplayingSteelPath: displayingSteelPath =>
 			set({ displayingSteelPath }),
-		starChart: [],
-		starChartJunctions: [],
-		steelPath: [],
-		steelPathJunctions: [],
+		starChart: new Set(),
+		starChartJunctions: new Set(),
+		steelPath: new Set(),
+		steelPathJunctions: new Set(),
 		setNodesMastered: (nodesMastered, steelPath) =>
 			setMastered(steelPath ? "steelPath" : "starChart", nodesMastered),
 		masterNode: (id, steelPath, mastered) =>
@@ -454,7 +454,7 @@ export const useStore = createWithEqualityFn(
 			}
 
 			Object.entries(flattenedItems).forEach(([itemName, item]) => {
-				if (!itemsMastered.includes(itemName)) {
+				if (!itemsMastered.has(itemName)) {
 					if (
 						!partiallyMasteredItems[itemName] &&
 						recipes[itemName]
@@ -587,7 +587,7 @@ function setMastered(key, mastered) {
 		if (!mastered.includes(item)) mastered.push(item);
 	});
 
-	set(() => ({ [key]: mastered }));
+	set(() => ({ [key]: new Set(mastered) }));
 	get().recalculateMasteryRank();
 }
 
@@ -595,10 +595,9 @@ function master(key, id, mastered) {
 	set(state =>
 		produce(state, draftState => {
 			if (mastered) {
-				if (!draftState[key].includes(id)) draftState[key].push(id);
+				draftState[key].add(id);
 			} else {
-				const index = draftState[key].indexOf(id);
-				if (index !== -1) draftState[key].splice(index, 1);
+				draftState[key].delete(id);
 			}
 			markMasteryChange(draftState, key, id, mastered);
 		})
@@ -611,14 +610,14 @@ function masterAll(key, all, mastered) {
 	set(state =>
 		produce(state, draftState => {
 			all.forEach(id => {
-				if (mastered && !draftState[key].includes(id)) {
-					draftState[key].push(id);
+				if (mastered && !draftState[key].has(id)) {
+					draftState[key].add(id);
 					markMasteryChange(draftState, key, id, mastered);
-				} else if (!mastered && draftState[key].includes(id)) {
+				} else if (!mastered && draftState[key].has(id)) {
 					markMasteryChange(draftState, key, id, mastered);
 				}
 			});
-			if (!mastered) draftState[key] = [];
+			if (!mastered) draftState[key] = new Set();
 		})
 	);
 	get().recalculateMasteryRank();

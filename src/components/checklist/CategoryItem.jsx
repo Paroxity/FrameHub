@@ -22,15 +22,15 @@ function CategoryItem({ name, item }) {
 	} = useStore(state => ({
 		type: state.type,
 		masterItem: state.masterItem,
-		mastered: state.itemsMastered.includes(name),
+		mastered: state.itemsMastered.has(name),
 		masteryRankLocked: (item.mr || 0) > state.masteryRank,
 		partialRank: state.partiallyMasteredItems[name],
 		setPartiallyMasteredItem: state.setPartiallyMasteredItem,
 		hidden:
-			(state.hideMastered && state.itemsMastered.includes(name)) ||
+			(state.hideMastered && state.itemsMastered.has(name)) ||
 			(state.hideFounders &&
 				foundersItems.includes(name) &&
-				!state.itemsMastered.includes(name))
+				!state.itemsMastered.has(name))
 	}));
 	const [rankSelectToggled, setRankSelectToggled] = useState(false);
 

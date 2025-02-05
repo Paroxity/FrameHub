@@ -10,7 +10,7 @@ function Checklist() {
 				!state.hideMastered ||
 				!Object.keys(state.items[category]).every(
 					item =>
-						state.itemsMastered.includes(item) ||
+						state.itemsMastered.has(item) ||
 						(state.hideFounders && foundersItems.includes(item))
 				)
 			);
