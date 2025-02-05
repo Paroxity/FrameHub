@@ -7,7 +7,7 @@ import { getComponentImageUrl } from "../../utils/items";
 function MissingIngredients() {
 	const [visible, setVisible] = useState(false);
 	const ingredients = useStore(state => state.ingredients);
-	const ingredientHashes = useStore(state => state.ingredientHashes);
+	const ingredientIds = useStore(state => state.ingredientIds);
 	const formaCost = useStore(state => state.formaCost);
 
 	return (
@@ -48,11 +48,7 @@ function MissingIngredients() {
 									<img
 										className="component-image"
 										src={getComponentImageUrl(
-											"",
-											name,
-											ingredientHashes[name] ===
-												"generic",
-											ingredientHashes[name]
+											ingredientIds[name]
 										)}
 										alt=""
 										width="24px"
@@ -72,3 +68,4 @@ function MissingIngredients() {
 }
 
 export default MissingIngredients;
+

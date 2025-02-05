@@ -1,69 +1,11 @@
 import PropTypes from "prop-types";
 
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
-const ingredientSuffixes = [
-	"Aegis",
-	"Barrel",
-	"Barrels",
-	"Blade",
-	"Blades",
-	"Boot",
-	"Carapace",
-	"Chain",
-	"Chassis",
-	"Core",
-	"Cerebrum",
-	"Day Aspect",
-	"Disc",
-	"Gauntlet",
-	"Grip",
-	"Guard",
-	"Handle",
-	"Harness",
-	"Head",
-	"Heatsink",
-	"Hilt",
-	"Hook",
-	"Left Gauntlet",
-	"Limbs",
-	"Link",
-	"Lower Limb",
-	"Motor",
-	"Neuroptics",
-	"Night Aspect",
-	"Ornament",
-	"Pouch",
-	"Receiver",
-	"Receivers",
-	"Right Gauntlet",
-	"Rivet",
-	"Stars",
-	"Stock",
-	"String",
-	"Subcortex",
-	"Systems",
-	"Upper Limb",
-	"Wings",
-	"Casing",
-	"Engine",
-	"Capsule",
-	"Weapon Pod"
-];
 export const foundersItems = ["Excalibur Prime", "Skana Prime", "Lato Prime"];
 
-export function getComponentImageUrl(itemName, componentName, generic, hash) {
-	return `https://cdn.warframestat.us/img/${(
-		(componentName.includes(" Prime") ? "prime-" : "") +
-		(generic
-			? (ingredientSuffixes.find(suffix =>
-					componentName.endsWith(suffix)
-				) ?? componentName.replace(`${itemName} `, ""))
-			: componentName + (hash ? "-" + hash : ""))
-	)
-		.split(" ")
-		.join("-")
-		.toLowerCase()}.png`;
+export function getComponentImageUrl(id) {
+	return "https://cdn.jsdelivr.net/gh/Aericio/warframe-exports-data/image/" + id.slice(1).replaceAll("/", ".") + ".png";
 }
 
 export const relicTiers = ["Lith", "Meso", "Neo", "Axi", "Requiem"];

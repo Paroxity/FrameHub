@@ -6,9 +6,8 @@ import fetch from "node-fetch";
 import { JSDOM } from "jsdom";
 import { setOutput } from "@actions/core";
 import { fetchEndpoint } from "./warframe_exports.mjs";
-import { createHash } from "crypto";
 
-const SCHEMA_VERSION = 2;
+const SCHEMA_VERSION = 3;
 
 const ITEM_ENDPOINTS = ["Warframes", "Weapons", "Sentinels"];
 const WIKI_URL = "https://wiki.warframe.com/w";
@@ -108,7 +107,6 @@ class ItemUpdater {
 			PLEXUS: {}
 		};
 		this.processedRecipes = {};
-		this.ingredientHashes = {};
 		this.ingredientIds = {};
 
 		await Promise.all([
@@ -239,11 +237,6 @@ class ItemUpdater {
 				processedRecipe.components[ingredientName] =
 					(processedRecipe.components[ingredientName] ?? 0) +
 					ingredient.ItemCount;
-				if (!this.ingredientHashes[ingredientName])
-					this.ingredientHashes[ingredientName] = this.createIngredientHash(
-						ingredientName,
-						ingredientRawName
-					);
 				if (!this.ingredientIds[ingredientName])
 					this.ingredientIds[ingredientName] = ingredientRawName;
 
@@ -255,31 +248,6 @@ class ItemUpdater {
 			});
 		}
 		this.processedRecipes[itemName] = processedRecipe;
-	}
-
-	createIngredientHash(name, rawName) {
-		if (
-			rawName.includes("WeaponParts") ||
-			rawName.includes("WarframeRecipes") ||
-			rawName.includes("ArchwingRecipes") ||
-			rawName.includes("mechPart")
-		) {
-			// WFCD warframe-items has components for each archwing that are not generic but also do not include a hash
-			if (rawName.includes("ArchwingRecipes")) {
-				return null;
-			}
-			return "generic";
-		}
-		// WFCD warframe-items does not include a hash for these components despite them being unique from other generic components
-		if (
-			rawName.includes("DamagedMechPart") ||
-			rawName.includes("DamagedMechWeapon") ||
-			name.startsWith("Cortege") ||
-			name.startsWith("Morgha")
-		) {
-			return null;
-		}
-		return createHash("sha256").update(rawName).digest("hex").slice(0, 10);
 	}
 
 	categorizeItem(item) {
@@ -495,7 +463,6 @@ class ItemUpdater {
 		schema_version: SCHEMA_VERSION,
 		items: updater.processedItems,
 		recipes: updater.processedRecipes,
-		ingredient_hashes: updater.ingredientHashes,
 		ingredient_ids: updater.ingredientIds
 	};
 	const difference = diff(existingData, data);

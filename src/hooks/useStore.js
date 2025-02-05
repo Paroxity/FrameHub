@@ -125,13 +125,13 @@ export const useStore = createWithEqualityFn(
 
 		items: {},
 		recipes: {},
-		ingredientHashes: {},
+		ingredientIds: {},
 		flattenedItems: {},
-		setData: ({ items, recipes, ingredient_hashes: ingredientHashes }) => {
+		setData: ({ items, recipes, ingredient_ids: ingredientIds }) => {
 			set({
 				items,
 				recipes,
-				ingredientHashes,
+				ingredientIds,
 				flattenedItems: Object.entries(items).reduce(
 					(flattenedItems, [category, categoryItems]) => {
 						Object.entries(categoryItems).reduce(
@@ -400,7 +400,7 @@ export const useStore = createWithEqualityFn(
 			const {
 				flattenedItems,
 				recipes,
-				ingredientHashes,
+				ingredientIds,
 				itemsMastered,
 				partiallyMasteredItems
 			} = get();
@@ -427,18 +427,24 @@ export const useStore = createWithEqualityFn(
 								needsRounding.set(
 									componentName,
 									(needsRounding.get(componentName) ?? 0) +
-										componentCount
+									componentCount
 								);
 								return;
 							}
 							calculate(componentRecipe, componentCount);
 						}
 
+						const ingredientId = ingredientIds[componentName];
+						// Do not show generic components such as Barrels, Receivers, etc.
 						if (
-							ingredientHashes[componentName] === null ||
-							ingredientHashes[componentName] === "generic"
-						)
+							ingredientId.includes("WeaponParts") ||
+							ingredientId.includes("WarframeRecipes") ||
+							ingredientId.includes("ArchwingRecipes") ||
+							ingredientId.includes("mechPart") ||
+							componentName.startsWith("Cortege") ||
+							componentName.startsWith("Morgha")) {
 							return;
+						}
 
 						necessaryComponents[componentName] =
 							(necessaryComponents[componentName] ?? 0) +
@@ -459,7 +465,7 @@ export const useStore = createWithEqualityFn(
 						formaCost += Math.floor(
 							(item.maxLvl -
 								(partiallyMasteredItems[itemName] ?? 30)) /
-								2
+							2
 						);
 					}
 				}

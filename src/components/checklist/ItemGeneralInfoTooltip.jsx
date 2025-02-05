@@ -24,7 +24,6 @@ function ItemGeneralInfoTooltip({ item, itemName }) {
 							return (
 								<ItemComponent
 									key={componentName}
-									itemName={itemName}
 									componentName={componentName}
 									componentCount={componentCount}
 								/>

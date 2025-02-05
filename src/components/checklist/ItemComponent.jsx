@@ -4,27 +4,19 @@ import { getComponentImageUrl } from "../../utils/items";
 import { useStore } from "../../hooks/useStore";
 
 export default function ItemComponent({
-	itemName,
 	componentName,
 	componentCount,
 	isSubcomponent
 }) {
 	const componentRecipe = useStore(state => state.recipes[componentName]);
-	const ingredientHash = useStore(
-		state => state.ingredientHashes[componentName]
-	);
+	const ingredientId = useStore(state => state.ingredientIds[componentName]);
 
 	return (
 		<div className={classNames({ "item-subcomponent": isSubcomponent })}>
 			<div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
 				<img
 					className="component-image"
-					src={getComponentImageUrl(
-						itemName,
-						componentName,
-						ingredientHash === "generic",
-						ingredientHash
-					)}
+					src={getComponentImageUrl(ingredientId)}
 					alt=""
 					width="24px"
 				/>
@@ -38,7 +30,6 @@ export default function ItemComponent({
 						return (
 							<ItemComponent
 								key={subcomponentName}
-								itemName={componentName}
 								componentName={subcomponentName}
 								componentCount={
 									subcomponentCount *
@@ -56,8 +47,8 @@ export default function ItemComponent({
 }
 
 ItemComponent.propTypes = {
-	itemName: PropTypes.string.isRequired,
 	componentName: PropTypes.string.isRequired,
 	componentCount: PropTypes.number.isRequired,
 	isSubcomponent: PropTypes.bool
 };
+
