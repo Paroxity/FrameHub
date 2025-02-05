@@ -96,6 +96,7 @@ class ItemUpdater {
 		};
 		this.processedRecipes = {};
 		this.ingredientHashes = {};
+		this.ingredientIds = {};
 
 		await Promise.all([
 			this.fetchBaroData(),
@@ -156,6 +157,7 @@ class ItemUpdater {
 			if (type && !this.blacklist.includes(name)) {
 				const recipe = this.recipes[item.uniqueName];
 				const processedItem = {
+					id: item.uniqueName,
 					maxLvl: type === "MECH" ? 40 : item.maxLevelCap,
 					mr: item.masteryReq
 				};
@@ -229,6 +231,8 @@ class ItemUpdater {
 						ingredientName,
 						ingredientRawName
 					);
+				if (!this.ingredientIds[ingredientName])
+					this.ingredientIds[ingredientName] = ingredientRawName;
 
 				const relics =
 					this.relics[ingredientRawName] ||
@@ -478,7 +482,8 @@ class ItemUpdater {
 		schema_version: SCHEMA_VERSION,
 		items: updater.processedItems,
 		recipes: updater.processedRecipes,
-		ingredient_hashes: updater.ingredientHashes
+		ingredient_hashes: updater.ingredientHashes,
+		ingredient_ids: updater.ingredientIds
 	};
 	const difference = diff(existingData, data);
 	if (difference || process.env.FORCE_UPLOAD === "true") {
