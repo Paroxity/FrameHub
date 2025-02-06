@@ -22,6 +22,10 @@ export function xpFromItem(item, category, rank) {
 	return xpPerRank * (rank ?? item.maxLvl ?? 30);
 }
 
+export function itemLevelByXP(item, category, xp) {
+	return Math.min(Math.floor(Math.sqrt(xp / (5 * xpFromItem(item, category, 1)))), item.maxLvl ?? 30);
+}
+
 export function xpToMR(xp) {
 	let mr = Math.floor(Math.sqrt(xp / 2500));
 	if (mr >= 30) mr = 30 + Math.floor((xp - 2250000) / 147500);

@@ -18,7 +18,8 @@ import {
 	totalRailjackIntrinsics,
 	totalDrifterIntrinsics,
 	xpFromItem,
-	xpToMR
+	xpToMR,
+	itemLevelByXP
 } from "../utils/mastery-rank";
 import { flattenedNodes, planetsWithJunctions } from "../utils/nodes";
 import { createWithEqualityFn } from "zustand/traditional";
@@ -504,11 +505,23 @@ export const useStore = createWithEqualityFn(
 		gameSyncUsername: undefined,
 		gameSyncPlatform: undefined,
 		gameSync: () => {
-			const { gameSyncUsername: username, gameSyncPlatform: platform } = get();
+			const { gameSyncUsername: username, gameSyncPlatform: platform, flattenedItems, partiallyMasteredItems, setPartiallyMasteredItem } = get();
 			if (!username)
 				return;
 			// TODO: Impl
-			const data = testData; // TODO: Fetch
+			const gameProfile = testData; // TODO: Fetch
+			const gameProfileItemsXP = new Map();
+			gameProfile.Results[0].LoadOutInventory.XPInfo.forEach(({ ItemType, XP }) => {
+				gameProfileItemsXP.set(ItemType, XP);
+			});
+
+			Object.entries(flattenedItems).forEach(([itemName, item]) => {
+				const currentPartialMastery = partiallyMasteredItems[itemName];
+				const gameLevel = itemLevelByXP(item, item.type, gameProfileItemsXP.get(item.id) ?? 0);
+
+				if (currentPartialMastery !== gameLevel)
+					setPartiallyMasteredItem(itemName, gameLevel, item.maxLvl ?? 30);
+			});
 
 		},
 		setGameSyncInfo: (username, platform) => {
