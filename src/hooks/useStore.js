@@ -505,11 +505,12 @@ export const useStore = createWithEqualityFn(
 		gameSyncUsername: undefined,
 		gameSyncPlatform: undefined,
 		gameSync: () => {
-			const { gameSyncUsername: username, gameSyncPlatform: platform, flattenedItems, partiallyMasteredItems, setPartiallyMasteredItem } = get();
+			const { gameSyncUsername: username, gameSyncPlatform: platform, flattenedItems, partiallyMasteredItems, setPartiallyMasteredItem, setRailjackIntrinsics, setDrifterIntrinsics } = get();
 			if (!username)
 				return;
 			// TODO: Impl
 			const gameProfile = testData; // TODO: Fetch
+			console.log(gameProfile);
 			const gameProfileItemsXP = new Map();
 			gameProfile.Results[0].LoadOutInventory.XPInfo.forEach(({ ItemType, XP }) => {
 				gameProfileItemsXP.set(ItemType, XP);
@@ -522,6 +523,14 @@ export const useStore = createWithEqualityFn(
 				if (currentPartialMastery !== gameLevel)
 					setPartiallyMasteredItem(itemName, gameLevel, item.maxLvl ?? 30);
 			});
+
+			const intrinsics = gameProfile.Results[0].PlayerSkills;
+			setRailjackIntrinsics(["LPS_COMMAND", "LPS_ENGINEERING", "LPS_GUNNERY", "LPS_PILOTING", "LPS_TACTICAL"].reduce((railjackIntrinsics, key) => {
+				return railjackIntrinsics + (intrinsics?.[key] ?? 0);
+			}, 0));
+			setDrifterIntrinsics(["LPS_DRIFT_COMBAT", "LPS_DRIFT_ENDURANCE", "LPS_DRIFT_OPPORTUNITY", "LPS_DRIFT_RIDING"].reduce((railjackIntrinsics, key) => {
+				return railjackIntrinsics + (intrinsics?.[key] ?? 0);
+			}, 0));
 
 		},
 		setGameSyncInfo: (username, platform) => {
