@@ -4,6 +4,7 @@ import {
 	collection,
 	deleteField,
 	doc,
+	updateDoc,
 	writeBatch
 } from "firebase/firestore";
 import { getMetadata, ref } from "firebase/storage";
@@ -22,6 +23,7 @@ import {
 import { flattenedNodes, planetsWithJunctions } from "../utils/nodes";
 import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
+import { testData } from "./test";
 
 export const useStore = createWithEqualityFn(
 	(set, get) => ({
@@ -33,17 +35,9 @@ export const useStore = createWithEqualityFn(
 
 		unsavedChanges: [],
 		saveImmediate: () => {
-			const { type, id, unsavedChanges } = get();
+			const { getDocRef, type, unsavedChanges } = get();
 			if (type !== SHARED && unsavedChanges.length > 0) {
-				const docRef = doc(
-					collection(
-						firestore,
-						type === ANONYMOUS
-							? "anonymousMasteryData"
-							: "masteryData"
-					),
-					id
-				);
+				const docRef = getDocRef();
 				const batch = writeBatch(firestore);
 
 				batch.set(
@@ -502,7 +496,48 @@ export const useStore = createWithEqualityFn(
 			"railjackIntrinsics"
 		),
 		drifterIntrinsics: 0,
-		setDrifterIntrinsics: firestoreFieldSetter("drifterIntrinsics")
+		setDrifterIntrinsics: firestoreFieldSetter("drifterIntrinsics"),
+
+		gameSyncUsername: undefined,
+		gameSyncPlatform: undefined,
+		gameSync: () => {
+			const { gameSyncUsername: username, gameSyncPlatform: platform } = get();
+			if (!username)
+				return;
+			// TODO: Impl
+			const data = testData; // TODO: Fetch
+
+		},
+		setGameSyncInfo: (username, platform) => {
+			set({ gameSyncUsername: username, gameSyncPlatform: platform });
+		},
+		enableGameSync: async (username, platform) => {
+			// TODO: Verify username/platform
+			const docRef = get().getDocRef();
+			updateDoc(docRef, { gameSyncUsername: username, gameSyncPlatform: platform });
+			get().setGameSyncInfo(username, platform);
+			get().gameSync();
+		},
+		disableGameSync: () => {
+			if (!get().gameSyncUsername) return;
+
+			const docRef = get().getDocRef();
+			updateDoc(docRef, { gameSyncUsername: deleteField(), gameSyncPlatform: deleteField() });
+			get().setGameSyncInfo();
+		},
+
+		getDocRef: () => {
+			const { type, id } = get();
+			return doc(
+				collection(
+					firestore,
+					type === ANONYMOUS
+						? "anonymousMasteryData"
+						: "masteryData"
+				),
+				id
+			);
+		}
 	}),
 	shallow
 );
@@ -527,7 +562,12 @@ global.framehub = {
 	masterNode: (id, steelPath, mastered) =>
 		get().masterNode(id, steelPath, mastered),
 	masterJunction: (id, steelPath, mastered) =>
-		get().masterJunction(id, steelPath, mastered)
+		get().masterJunction(id, steelPath, mastered),
+
+	// TODO: Remove!
+	enableGameSync: (username, platform) => get().enableGameSync(username, platform),
+	disableGameSync: () => get().disableGameSync(),
+	gameSync: () => get().gameSync()
 };
 
 function firestoreFieldSetter(key, stateKey = key) {
