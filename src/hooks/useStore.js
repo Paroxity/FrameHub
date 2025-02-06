@@ -331,6 +331,9 @@ export const useStore = createWithEqualityFn(
 			get().recalculateIngredients();
 		},
 		setPartiallyMasteredItem: (name, rank, maxRank) => {
+			const oldRank = get().partiallyMasteredItems[name] ?? (get().itemsMastered.has(name) ? maxRank : 0);
+			if (rank === oldRank) return;
+
 			if (rank === maxRank) get().masterItem(name, true);
 			else if (get().itemsMastered.has(name))
 				get().masterItem(name, false);
@@ -597,6 +600,9 @@ function setMastered(key, mastered) {
 function master(key, id, mastered) {
 	set(state =>
 		produce(state, draftState => {
+			const previouslyMastered = draftState[key].has(id);
+			if (previouslyMastered === mastered) return;
+
 			if (mastered) {
 				draftState[key].add(id);
 			} else {
