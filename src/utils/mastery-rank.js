@@ -1,9 +1,4 @@
 export function xpFromItem(item, category, rank) {
-	if (item.xp)
-		return rank === undefined
-			? item.xp
-			: item.xp * (rank / (item.maxLvl ?? 30));
-
 	let xpPerRank;
 	switch (category) {
 		case "WF":
