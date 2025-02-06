@@ -30,7 +30,8 @@ function MasteryChecklist(props) {
 		setHideMastered,
 		setHidePrime,
 		setHideFounders,
-		displayingNodes
+		displayingNodes,
+		setGameSyncInfo
 	} = useStore(state => ({
 		setId: state.setId,
 		setType: state.setType,
@@ -44,7 +45,8 @@ function MasteryChecklist(props) {
 		setHideMastered: state.setHideMastered,
 		setHidePrime: state.setHidePrime,
 		setHideFounders: state.setHideFounders,
-		displayingNodes: state.displayingNodes
+		displayingNodes: state.displayingNodes,
+		setGameSyncInfo: state.setGameSyncInfo
 	}));
 
 	const [dataLoading, setDataLoading] = useState(true);
@@ -78,20 +80,30 @@ function MasteryChecklist(props) {
 				setNodesMastered(data?.steelPath ?? [], true);
 				setJunctionsMastered(data?.starChartJunctions ?? [], false);
 				setJunctionsMastered(data?.steelPathJunctions ?? [], true);
+				setGameSyncInfo(data?.gameSyncId, data?.gameSyncPlatform);
 
 				setDataLoading(false);
 			}
 		);
 	}, [id, props.type]); //eslint-disable-line
 
-	const { items, fetchData } = useStore(state => ({
+	const { items, fetchData, gameSync } = useStore(state => ({
 		items: state.items,
-		fetchData: state.fetchData
+		fetchData: state.fetchData,
+		gameSync: state.gameSync
 	}));
 	const itemsLoading = Object.keys(items).length === 0;
 	useEffect(() => {
 		fetchData();
-	}, []); //eslint-disable-line
+	}, [fetchData]);
+	useEffect(() => {
+		if (props.type !== SHARED && !dataLoading && !itemsLoading) {
+			gameSync();
+
+			const interval = setInterval(() => gameSync(), 5 * 60 * 1000);
+			return () => clearInterval(interval);
+		}
+	}, [props.type, dataLoading, itemsLoading, gameSync]);
 
 	return dataLoading || itemsLoading ? (
 		<LoadingScreen />

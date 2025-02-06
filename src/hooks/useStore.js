@@ -4,6 +4,7 @@ import {
 	collection,
 	deleteField,
 	doc,
+	updateDoc,
 	writeBatch
 } from "firebase/firestore";
 import { getMetadata, ref } from "firebase/storage";
@@ -17,11 +18,13 @@ import {
 	totalRailjackIntrinsics,
 	totalDrifterIntrinsics,
 	xpFromItem,
-	xpToMR
+	xpToMR,
+	itemLevelByXP
 } from "../utils/mastery-rank";
 import { flattenedNodes, planetsWithJunctions } from "../utils/nodes";
 import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
+import { testData } from "./test";
 
 export const useStore = createWithEqualityFn(
 	(set, get) => ({
@@ -33,17 +36,9 @@ export const useStore = createWithEqualityFn(
 
 		unsavedChanges: [],
 		saveImmediate: () => {
-			const { type, id, unsavedChanges } = get();
+			const { getDocRef, type, unsavedChanges } = get();
 			if (type !== SHARED && unsavedChanges.length > 0) {
-				const docRef = doc(
-					collection(
-						firestore,
-						type === ANONYMOUS
-							? "anonymousMasteryData"
-							: "masteryData"
-					),
-					id
-				);
+				const docRef = getDocRef();
 				const batch = writeBatch(firestore);
 
 				batch.set(
@@ -502,7 +497,107 @@ export const useStore = createWithEqualityFn(
 			"railjackIntrinsics"
 		),
 		drifterIntrinsics: 0,
-		setDrifterIntrinsics: firestoreFieldSetter("drifterIntrinsics")
+		setDrifterIntrinsics: firestoreFieldSetter("drifterIntrinsics"),
+
+		gameSyncId: undefined,
+		gameSyncPlatform: undefined,
+		gameSync: () => {
+			const {
+				gameSyncId: accountId,
+				gameSyncPlatform: platform,
+				flattenedItems,
+				partiallyMasteredItems,
+				setPartiallyMasteredItem,
+				itemsMastered,
+				setRailjackIntrinsics,
+				setDrifterIntrinsics
+			} = get();
+			if (!accountId) return;
+			// TODO: Impl
+			const gameProfile = testData; // TODO: Fetch
+			console.log(gameProfile);
+			const gameProfileItemsXP = new Map();
+			gameProfile.Results[0].LoadOutInventory.XPInfo.forEach(
+				({ ItemType, XP }) => {
+					gameProfileItemsXP.set(ItemType, XP);
+				}
+			);
+
+			Object.entries(flattenedItems).forEach(([itemName, item]) => {
+				const currentPartialMastery = itemsMastered.has(itemName)
+					? (item.maxLvl ?? 30)
+					: (partiallyMasteredItems[itemName] ?? 0);
+				const gameLevel = itemLevelByXP(
+					item,
+					item.type,
+					gameProfileItemsXP.get(item.id) ?? 0
+				);
+
+				if (currentPartialMastery !== gameLevel)
+					setPartiallyMasteredItem(
+						itemName,
+						gameLevel,
+						item.maxLvl ?? 30
+					);
+			});
+
+			const intrinsics = gameProfile.Results[0].PlayerSkills;
+			setRailjackIntrinsics(
+				[
+					"LPS_COMMAND",
+					"LPS_ENGINEERING",
+					"LPS_GUNNERY",
+					"LPS_PILOTING",
+					"LPS_TACTICAL"
+				].reduce((railjackIntrinsics, key) => {
+					return railjackIntrinsics + (intrinsics?.[key] ?? 0);
+				}, 0)
+			);
+			setDrifterIntrinsics(
+				[
+					"LPS_DRIFT_COMBAT",
+					"LPS_DRIFT_ENDURANCE",
+					"LPS_DRIFT_OPPORTUNITY",
+					"LPS_DRIFT_RIDING"
+				].reduce((railjackIntrinsics, key) => {
+					return railjackIntrinsics + (intrinsics?.[key] ?? 0);
+				}, 0)
+			);
+		},
+		setGameSyncInfo: (accountId, platform) => {
+			set({ gameSyncId: accountId, gameSyncPlatform: platform });
+		},
+		enableGameSync: async (accountId, platform) => {
+			// TODO: Verify account id/platform
+			const docRef = get().getDocRef();
+			updateDoc(docRef, {
+				gameSyncId: accountId,
+				gameSyncPlatform: platform
+			});
+			get().setGameSyncInfo(accountId, platform);
+			get().gameSync();
+		},
+		disableGameSync: () => {
+			if (!get().gameSyncId) return;
+
+			const docRef = get().getDocRef();
+			updateDoc(docRef, {
+				gameSyncId: deleteField(),
+				gameSyncPlatform: deleteField()
+			});
+			get().setGameSyncInfo();
+		},
+
+		getDocRef: () => {
+			const { type, id } = get();
+			return doc(
+				collection(
+					firestore,
+					type === ANONYMOUS ? "anonymousMasteryData" : "masteryData"
+				),
+				id
+			);
+		}
 	}),
 	shallow
 );
@@ -527,7 +622,13 @@ global.framehub = {
 	masterNode: (id, steelPath, mastered) =>
 		get().masterNode(id, steelPath, mastered),
 	masterJunction: (id, steelPath, mastered) =>
-		get().masterJunction(id, steelPath, mastered)
+		get().masterJunction(id, steelPath, mastered),
+
+	// TODO: Remove!
+	enableGameSync: (accountId, platform) =>
+		get().enableGameSync(accountId, platform),
+	disableGameSync: () => get().disableGameSync(),
+	gameSync: () => get().gameSync()
 };
 
 function firestoreFieldSetter(key, stateKey = key) {
