@@ -12,7 +12,7 @@ import ItemRelicTooltip from "./ItemRelicTooltip";
 
 function CategoryItem({ name, item }) {
 	const {
-		type,
+		readOnly,
 		masterItem,
 		mastered,
 		masteryRankLocked,
@@ -20,7 +20,7 @@ function CategoryItem({ name, item }) {
 		setPartiallyMasteredItem,
 		hidden
 	} = useStore(state => ({
-		type: state.type,
+		readOnly: (state.type === SHARED || state.gameSyncId !== undefined),
 		masterItem: state.masterItem,
 		mastered: state.itemsMastered.has(name),
 		masteryRankLocked: (item.mr || 0) > state.masteryRank,
@@ -39,7 +39,7 @@ function CategoryItem({ name, item }) {
 
 	return hidden ? null : (
 		<>
-			{rankSelectToggled && item.maxLvl && (
+			{!readOnly && rankSelectToggled && item.maxLvl && (
 				<div className="rank-options">
 					{Array.from(Array((item.maxLvl - 30) / 2 + 2)).map(
 						(i, j) => {
@@ -87,7 +87,7 @@ function CategoryItem({ name, item }) {
 										`https://wiki.warframe.com/w/${name}`
 								);
 							} else {
-								if (type !== SHARED) {
+								if (!readOnly) {
 									if (item.maxLvl)
 										setRankSelectToggled(
 											!rankSelectToggled

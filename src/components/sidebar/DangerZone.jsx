@@ -6,14 +6,14 @@ import ConfirmationPrompt from "./ConfirmationPrompt";
 
 function DangerZone() {
 	const {
-		type,
+		readOnly,
 		displayingNodes,
 		displayingSteelPath,
 		masterAllItems,
 		masterAllNodes,
 		masterAllJunctions
 	} = useStore(state => ({
-		type: state.type,
+		readOnly: (state.type === SHARED || state.gameSyncId !== undefined),
 		displayingNodes: state.displayingNodes,
 		displayingSteelPath: state.displayingSteelPath,
 		masterAllItems: state.masterAllItems,
@@ -24,7 +24,7 @@ function DangerZone() {
 	const [confirmationCallback, setConfirmationCallback] = useState();
 	const [confirmationMessage, setConfirmationMessage] = useState("");
 
-	return type === SHARED ? null : (
+	return readOnly ? null : (
 		<>
 			<span className="danger-text">Danger zone</span>
 			<div className="danger">
