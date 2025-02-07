@@ -9,9 +9,10 @@ import PaginatedTooltip from "../../PaginatedTooltip";
 import PlanetInfoTooltip from "./PlanetInfoTooltip";
 
 function PlanetNode({ id, node }) {
-	const { type, displayingSteelPath, masterNode, mastered, hidden } =
+	const { type, gameSyncUsername, displayingSteelPath, masterNode, mastered, hidden } =
 		useStore(state => ({
 			type: state.type,
+			gameSyncUsername: state.gameSyncUsername,
 			displayingSteelPath: state.displayingSteelPath,
 			masterNode: state.masterNode,
 			mastered:
@@ -39,7 +40,7 @@ function PlanetNode({ id, node }) {
 				<Button
 					className="item-name"
 					onClick={() => {
-						if (type !== SHARED) {
+						if (type !== SHARED && !gameSyncUsername) {
 							masterNode(id, displayingSteelPath, !mastered);
 						}
 					}}>

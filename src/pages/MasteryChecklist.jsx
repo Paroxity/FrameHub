@@ -97,8 +97,13 @@ function MasteryChecklist(props) {
 		fetchData();
 	}, [fetchData]);
 	useEffect(() => {
-		if (!dataLoading && !itemsLoading) gameSync();
-	}, [dataLoading, itemsLoading, gameSync]);
+		if (props.type !== SHARED && !dataLoading && !itemsLoading) {
+			gameSync();
+
+			const interval = setInterval(() => gameSync(), 5 * 60 * 1000);
+			return () => clearInterval(interval);
+		}
+	}, [props.type, dataLoading, itemsLoading, gameSync]);
 
 	return dataLoading || itemsLoading ? (
 		<LoadingScreen />

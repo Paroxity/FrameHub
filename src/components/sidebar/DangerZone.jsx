@@ -7,6 +7,7 @@ import ConfirmationPrompt from "./ConfirmationPrompt";
 function DangerZone() {
 	const {
 		type,
+		gameSyncUsername,
 		displayingNodes,
 		displayingSteelPath,
 		masterAllItems,
@@ -14,6 +15,7 @@ function DangerZone() {
 		masterAllJunctions
 	} = useStore(state => ({
 		type: state.type,
+		gameSyncUsername: state.gameSyncUsername,
 		displayingNodes: state.displayingNodes,
 		displayingSteelPath: state.displayingSteelPath,
 		masterAllItems: state.masterAllItems,
@@ -30,6 +32,7 @@ function DangerZone() {
 			<div className="danger">
 				<Button
 					centered
+					disabled={gameSyncUsername !== undefined}
 					onClick={() => {
 						if (displayingNodes) {
 							setConfirmationCallback(() => () => {
@@ -56,6 +59,7 @@ function DangerZone() {
 				</Button>
 				<Button
 					centered
+					disabled={gameSyncUsername !== undefined}
 					onClick={() => {
 						if (displayingNodes) {
 							setConfirmationCallback(() => () => {
