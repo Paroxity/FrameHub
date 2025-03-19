@@ -22,6 +22,14 @@ const ITEM_OVERWRITES = {
 	PRIMARY: {
 		"Ax-52": {
 			wiki: `${WIKI_URL}/AX-52`
+		},
+		"Efv-5 Jupiter": {
+			wiki: `${WIKI_URL}/EFV-5 Jupiter`
+		}
+	},
+	SECONDARY: {
+		"Efv-8 Mars": {
+			wiki: `${WIKI_URL}/EFV-8 Mars`
 		}
 	},
 	CAT: {
@@ -334,6 +342,9 @@ class ItemUpdater {
 					return "Acquire by vanquishing a Sister of Parvos";
 				if (HOLOKEY_WEAPONS.includes(itemName))
 					return "Purchase from Ergo Glast for 40 Corrupted Holokeys";
+				break;
+			case "Coda":
+				return "Purchase from Eleanor in the Höllvania Central Mall for 10 Live Heartcells";
 		}
 	}
 
