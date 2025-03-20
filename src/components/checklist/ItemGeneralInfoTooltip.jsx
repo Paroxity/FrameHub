@@ -68,7 +68,7 @@ function ItemGeneralInfoTooltip({ item, itemName }) {
 							className="credits"
 							src={credits}
 							alt=""
-							width="15px"
+							width="20px"
 						/>{" "}
 						<span className="item-build-price">
 							{recipe.price.toLocaleString()}
