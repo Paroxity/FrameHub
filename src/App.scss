@@ -698,6 +698,11 @@ input:disabled {
 	}
 }
 
+.item-uncraftable {
+	max-width: 24em;
+	text-wrap: wrap;
+}
+
 .item-subcomponent {
 	margin-left: 30px;
 }
