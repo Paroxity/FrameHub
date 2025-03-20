@@ -335,6 +335,8 @@ class ItemUpdater {
 				return "Purchase from New Loka for 125,000 standing";
 			case "Telos":
 				return "Purchase from Arbiters of Hexis for 125,000 standing";
+			case "Synoid":
+				return "Purchase from Cephalon Suda for 125,000 standing";
 			case "Kuva":
 				return "Acquire by vanquishing a Kuva Lich";
 			case "Tenet":
