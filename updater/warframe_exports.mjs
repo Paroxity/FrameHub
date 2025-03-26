@@ -9,7 +9,7 @@ const ORIGIN_URL = process.env.PROXY_AUTH
 let endpoints;
 
 function parseDamagedJSON(json) {
-	return JSON.parse(json.replace(/\\r|\r?\n/g, ""));
+	return JSON.parse(json.replace(/\\\"/g, "'").replace(/\n|\r|\\/g, ""));
 }
 
 async function fetchEndpoints() {
