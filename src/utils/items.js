@@ -4,6 +4,11 @@ export const SCHEMA_VERSION = 3;
 
 export const foundersItems = ["Excalibur Prime", "Skana Prime", "Lato Prime"];
 
+export function itemIsPrime(name)
+{
+	return name.includes(" Prime") && !foundersItems.includes(name);
+}
+
 export function getComponentImageUrl(id) {
 	return "https://cdn.jsdelivr.net/gh/Aericio/warframe-exports-data/image/" + id.slice(1).replaceAll("/", ".") + ".png";
 }

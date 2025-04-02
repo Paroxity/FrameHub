@@ -28,6 +28,7 @@ function MasteryChecklist(props) {
 		setRailjackIntrinsics,
 		setDrifterIntrinsics,
 		setHideMastered,
+		setHidePrime,
 		setHideFounders,
 		displayingNodes
 	} = useStore(state => ({
@@ -41,6 +42,7 @@ function MasteryChecklist(props) {
 		setRailjackIntrinsics: state.setRailjackIntrinsics,
 		setDrifterIntrinsics: state.setDrifterIntrinsics,
 		setHideMastered: state.setHideMastered,
+		setHidePrime: state.setHidePrime,
 		setHideFounders: state.setHideFounders,
 		displayingNodes: state.displayingNodes
 	}));
@@ -70,6 +72,7 @@ function MasteryChecklist(props) {
 				setRailjackIntrinsics(data?.intrinsics ?? 0, true);
 				setDrifterIntrinsics(data?.drifterIntrinsics ?? 0, true);
 				setHideMastered(data?.hideMastered ?? false, true);
+				setHidePrime(data?.hidePrime ?? false, true);
 				setHideFounders(data?.hideFounders ?? true, true);
 				setNodesMastered(data?.starChart ?? [], false);
 				setNodesMastered(data?.steelPath ?? [], true);

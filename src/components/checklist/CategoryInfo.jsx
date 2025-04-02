@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useStore } from "../../hooks/useStore";
-import { foundersItems } from "../../utils/items";
+import { foundersItems, itemIsPrime } from "../../utils/items";
 import { xpFromItem } from "../../utils/mastery-rank";
 import BaseCategoryInfo from "./BaseCategoryInfo";
 
@@ -24,12 +24,14 @@ function CategoryItem({ name }) {
 		itemsMastered,
 		partiallyMasteredItems,
 		categoryItems,
-		hideFounders
+		hideFounders,
+		hidePrime
 	} = useStore(state => ({
 		itemsMastered: state.itemsMastered,
 		partiallyMasteredItems: state.partiallyMasteredItems,
 		categoryItems: state.items[name],
-		hideFounders: state.hideFounders
+		hideFounders: state.hideFounders,
+		hidePrime: state.hidePrime
 	}));
 
 	let masteredCount = 0;
@@ -45,6 +47,13 @@ function CategoryItem({ name }) {
 			!itemsMastered.has(itemName)
 		)
 			return;
+		if (
+			hidePrime && 
+			itemIsPrime(itemName) &&
+			!itemsMastered.has(itemName)
+		)
+			return;
+		
 		totalCount++;
 		totalXP += xpFromItem(item, name);
 		if (itemsMastered.has(itemName)) {
