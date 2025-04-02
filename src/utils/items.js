@@ -6,7 +6,7 @@ export const foundersItems = ["Excalibur Prime", "Skana Prime", "Lato Prime"];
 
 export function itemIsPrime(name)
 {
-	return name.includes(" Prime") && !foundersItems.includes(name);
+	return (name.includes(" Prime") || name.includes("Prime ")) && !foundersItems.includes(name);
 }
 
 export function getComponentImageUrl(id) {
