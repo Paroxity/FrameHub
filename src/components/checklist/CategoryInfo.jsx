@@ -42,12 +42,10 @@ function CategoryItem({ name }) {
 	let totalXP = 0;
 	Object.entries(categoryItems).forEach(([itemName, item]) => {
 		if (
-			hideFounders &&
-			foundersItems.includes(itemName) &&
-			!itemsMastered.has(itemName)
+			!itemsMastered.has(itemName) &&
+			((hideFounders && foundersItems.includes(itemName)) ||
+				(hidePrime && itemIsPrime(itemName)))
 		)
-			return;
-		if (hidePrime && itemIsPrime(itemName) && !itemsMastered.has(itemName))
 			return;
 
 		totalCount++;
