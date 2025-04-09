@@ -17,6 +17,8 @@ function SidebarInputs() {
 		setDrifterIntrinsics,
 		hideMastered,
 		setHideMastered,
+		hidePrime,
+		setHidePrime,
 		hideFounders,
 		setHideFounders,
 		displayingNodes,
@@ -31,6 +33,8 @@ function SidebarInputs() {
 		setDrifterIntrinsics: state.setDrifterIntrinsics,
 		hideMastered: state.hideMastered,
 		setHideMastered: state.setHideMastered,
+		hidePrime: state.hidePrime,
+		setHidePrime: state.setHidePrime,
 		hideFounders: state.hideFounders,
 		setHideFounders: state.setHideFounders,
 		displayingNodes: state.displayingNodes,
@@ -85,6 +89,11 @@ function SidebarInputs() {
 				label="Hide Mastered"
 				toggled={hideMastered}
 				onToggle={setHideMastered}
+			/>
+			<LabeledToggle
+				label="Hide Prime"
+				toggled={hidePrime}
+				onToggle={setHidePrime}
 			/>
 			{!displayingNodes && (
 				<LabeledToggle

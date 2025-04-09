@@ -427,7 +427,7 @@ export const useStore = createWithEqualityFn(
 								needsRounding.set(
 									componentName,
 									(needsRounding.get(componentName) ?? 0) +
-									componentCount
+										componentCount
 								);
 								return;
 							}
@@ -442,7 +442,8 @@ export const useStore = createWithEqualityFn(
 							ingredientId.includes("ArchwingRecipes") ||
 							ingredientId.includes("mechPart") ||
 							componentName.startsWith("Cortege") ||
-							componentName.startsWith("Morgha")) {
+							componentName.startsWith("Morgha")
+						) {
 							return;
 						}
 
@@ -465,7 +466,7 @@ export const useStore = createWithEqualityFn(
 						formaCost += Math.floor(
 							(item.maxLvl -
 								(partiallyMasteredItems[itemName] ?? 30)) /
-							2
+								2
 						);
 					}
 				}
@@ -490,6 +491,8 @@ export const useStore = createWithEqualityFn(
 
 		hideMastered: true,
 		setHideMastered: firestoreFieldSetter("hideMastered"),
+		hidePrime: false,
+		setHidePrime: firestoreFieldSetter("hidePrime"),
 		hideFounders: true,
 		setHideFounders: firestoreFieldSetter("hideFounders"),
 
@@ -638,3 +641,4 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
+
