@@ -28,8 +28,12 @@ function CategoryItem({ name, item }) {
 		setPartiallyMasteredItem: state.setPartiallyMasteredItem,
 		hidden:
 			(state.hideMastered && state.itemsMastered.has(name)) ||
-			(state.hideFounders && foundersItems.includes(name) && !state.itemsMastered.has(name)) ||
-			(state.hidePrime && itemIsPrime(name) && !state.itemsMastered.has(name))
+			(state.hideFounders &&
+				foundersItems.includes(name) &&
+				!state.itemsMastered.has(name)) ||
+			(state.hidePrime &&
+				itemIsPrime(name) &&
+				!state.itemsMastered.has(name))
 	}));
 	const [rankSelectToggled, setRankSelectToggled] = useState(false);
 
@@ -115,3 +119,4 @@ CategoryItem.propTypes = {
 };
 
 export default CategoryItem;
+

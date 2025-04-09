@@ -47,13 +47,9 @@ function CategoryItem({ name }) {
 			!itemsMastered.has(itemName)
 		)
 			return;
-		if (
-			hidePrime && 
-			itemIsPrime(itemName) &&
-			!itemsMastered.has(itemName)
-		)
+		if (hidePrime && itemIsPrime(itemName) && !itemsMastered.has(itemName))
 			return;
-		
+
 		totalCount++;
 		totalXP += xpFromItem(item, name);
 		if (itemsMastered.has(itemName)) {

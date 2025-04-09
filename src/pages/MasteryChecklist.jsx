@@ -120,3 +120,4 @@ MasteryChecklist.propTypes = {
 };
 
 export default MasteryChecklist;
+

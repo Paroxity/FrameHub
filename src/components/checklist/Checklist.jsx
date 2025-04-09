@@ -1,6 +1,6 @@
 import Masonry from "react-masonry-css";
 import { useStore } from "../../hooks/useStore";
-import { foundersItems,itemIsPrime } from "../../utils/items";
+import { foundersItems, itemIsPrime } from "../../utils/items";
 import Category from "./Category";
 
 function Checklist() {
@@ -37,3 +37,4 @@ function Checklist() {
 }
 
 export default Checklist;
+
