@@ -326,7 +326,9 @@ export const useStore = createWithEqualityFn(
 			get().recalculateIngredients();
 		},
 		setPartiallyMasteredItem: (name, rank, maxRank) => {
-			const oldRank = get().partiallyMasteredItems[name] ?? (get().itemsMastered.has(name) ? maxRank : 0);
+			const oldRank =
+				get().partiallyMasteredItems[name] ??
+				(get().itemsMastered.has(name) ? maxRank : 0);
 			if (rank === oldRank) return;
 
 			if (rank === maxRank) get().masterItem(name, true);
@@ -505,33 +507,67 @@ export const useStore = createWithEqualityFn(
 		gameSyncUsername: undefined,
 		gameSyncPlatform: undefined,
 		gameSync: () => {
-			const { gameSyncUsername: username, gameSyncPlatform: platform, flattenedItems, partiallyMasteredItems, setPartiallyMasteredItem, setRailjackIntrinsics, setDrifterIntrinsics } = get();
-			if (!username)
-				return;
+			const {
+				gameSyncUsername: username,
+				gameSyncPlatform: platform,
+				flattenedItems,
+				partiallyMasteredItems,
+				setPartiallyMasteredItem,
+				itemsMastered,
+				setRailjackIntrinsics,
+				setDrifterIntrinsics
+			} = get();
+			if (!username) return;
 			// TODO: Impl
 			const gameProfile = testData; // TODO: Fetch
 			console.log(gameProfile);
 			const gameProfileItemsXP = new Map();
-			gameProfile.Results[0].LoadOutInventory.XPInfo.forEach(({ ItemType, XP }) => {
-				gameProfileItemsXP.set(ItemType, XP);
-			});
+			gameProfile.Results[0].LoadOutInventory.XPInfo.forEach(
+				({ ItemType, XP }) => {
+					gameProfileItemsXP.set(ItemType, XP);
+				}
+			);
 
 			Object.entries(flattenedItems).forEach(([itemName, item]) => {
-				const currentPartialMastery = partiallyMasteredItems[itemName];
-				const gameLevel = itemLevelByXP(item, item.type, gameProfileItemsXP.get(item.id) ?? 0);
+				const currentPartialMastery = itemsMastered.has(itemName)
+					? (item.maxLvl ?? 30)
+					: (partiallyMasteredItems[itemName] ?? 0);
+				const gameLevel = itemLevelByXP(
+					item,
+					item.type,
+					gameProfileItemsXP.get(item.id) ?? 0
+				);
 
 				if (currentPartialMastery !== gameLevel)
-					setPartiallyMasteredItem(itemName, gameLevel, item.maxLvl ?? 30);
+					setPartiallyMasteredItem(
+						itemName,
+						gameLevel,
+						item.maxLvl ?? 30
+					);
 			});
 
 			const intrinsics = gameProfile.Results[0].PlayerSkills;
-			setRailjackIntrinsics(["LPS_COMMAND", "LPS_ENGINEERING", "LPS_GUNNERY", "LPS_PILOTING", "LPS_TACTICAL"].reduce((railjackIntrinsics, key) => {
-				return railjackIntrinsics + (intrinsics?.[key] ?? 0);
-			}, 0));
-			setDrifterIntrinsics(["LPS_DRIFT_COMBAT", "LPS_DRIFT_ENDURANCE", "LPS_DRIFT_OPPORTUNITY", "LPS_DRIFT_RIDING"].reduce((railjackIntrinsics, key) => {
-				return railjackIntrinsics + (intrinsics?.[key] ?? 0);
-			}, 0));
-
+			setRailjackIntrinsics(
+				[
+					"LPS_COMMAND",
+					"LPS_ENGINEERING",
+					"LPS_GUNNERY",
+					"LPS_PILOTING",
+					"LPS_TACTICAL"
+				].reduce((railjackIntrinsics, key) => {
+					return railjackIntrinsics + (intrinsics?.[key] ?? 0);
+				}, 0)
+			);
+			setDrifterIntrinsics(
+				[
+					"LPS_DRIFT_COMBAT",
+					"LPS_DRIFT_ENDURANCE",
+					"LPS_DRIFT_OPPORTUNITY",
+					"LPS_DRIFT_RIDING"
+				].reduce((railjackIntrinsics, key) => {
+					return railjackIntrinsics + (intrinsics?.[key] ?? 0);
+				}, 0)
+			);
 		},
 		setGameSyncInfo: (username, platform) => {
 			set({ gameSyncUsername: username, gameSyncPlatform: platform });
@@ -539,7 +575,10 @@ export const useStore = createWithEqualityFn(
 		enableGameSync: async (username, platform) => {
 			// TODO: Verify username/platform
 			const docRef = get().getDocRef();
-			updateDoc(docRef, { gameSyncUsername: username, gameSyncPlatform: platform });
+			updateDoc(docRef, {
+				gameSyncUsername: username,
+				gameSyncPlatform: platform
+			});
 			get().setGameSyncInfo(username, platform);
 			get().gameSync();
 		},
@@ -547,7 +586,10 @@ export const useStore = createWithEqualityFn(
 			if (!get().gameSyncUsername) return;
 
 			const docRef = get().getDocRef();
-			updateDoc(docRef, { gameSyncUsername: deleteField(), gameSyncPlatform: deleteField() });
+			updateDoc(docRef, {
+				gameSyncUsername: deleteField(),
+				gameSyncPlatform: deleteField()
+			});
 			get().setGameSyncInfo();
 		},
 
@@ -556,9 +598,7 @@ export const useStore = createWithEqualityFn(
 			return doc(
 				collection(
 					firestore,
-					type === ANONYMOUS
-						? "anonymousMasteryData"
-						: "masteryData"
+					type === ANONYMOUS ? "anonymousMasteryData" : "masteryData"
 				),
 				id
 			);
@@ -590,7 +630,8 @@ global.framehub = {
 		get().masterJunction(id, steelPath, mastered),
 
 	// TODO: Remove!
-	enableGameSync: (username, platform) => get().enableGameSync(username, platform),
+	enableGameSync: (username, platform) =>
+		get().enableGameSync(username, platform),
 	disableGameSync: () => get().disableGameSync(),
 	gameSync: () => get().gameSync()
 };
