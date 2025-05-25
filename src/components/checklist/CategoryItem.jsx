@@ -39,7 +39,7 @@ function CategoryItem({ name, item }) {
 
 	return hidden ? null : (
 		<>
-			{rankSelectToggled && item.maxLvl && (
+			{!readOnly && rankSelectToggled && item.maxLvl && (
 				<div className="rank-options">
 					{Array.from(Array((item.maxLvl - 30) / 2 + 2)).map(
 						(i, j) => {
