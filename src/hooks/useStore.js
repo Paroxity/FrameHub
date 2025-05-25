@@ -515,8 +515,11 @@ export const useStore = createWithEqualityFn(
 				setRailjackIntrinsics,
 				setDrifterIntrinsics,
 				starChart,
+				starChartJunctions,
 				steelPath,
-				masterNode
+				steelPathJunctions,
+				masterNode,
+				masterJunction
 			} = get();
 			if (!accountId) return;
 
@@ -560,6 +563,18 @@ export const useStore = createWithEqualityFn(
 				const hasSteelPathInGame = gameProfileMissions.get(node) === 1;
 				if (hasSteelPath !== hasSteelPathInGame)
 					masterNode(node, true, hasSteelPathInGame);
+			});
+
+			Object.entries(planetJunctionsMap).forEach(([planet, junctionNode]) => {
+				const hasStarChart = starChartJunctions.has(planet);
+				const hasStarChartInGame = gameProfileMissions.has(junctionNode);
+				if (hasStarChart !== hasStarChartInGame)
+					masterJunction(planet, false, hasStarChartInGame);
+
+				const hasSteelPath = steelPathJunctions.has(planet);
+				const hasSteelPathInGame = gameProfileMissions.get(junctionNode) === 1;
+				if (hasSteelPath !== hasSteelPathInGame)
+					masterJunction(planet, true, hasSteelPathInGame);
 			});
 
 			const intrinsics = gameProfile.Results[0].PlayerSkills;
