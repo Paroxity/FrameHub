@@ -513,18 +513,24 @@ export const useStore = createWithEqualityFn(
 				setPartiallyMasteredItem,
 				itemsMastered,
 				setRailjackIntrinsics,
-				setDrifterIntrinsics
+				setDrifterIntrinsics,
+				starChart,
+				steelPath,
+				masterNode
 			} = get();
 			if (!accountId) return;
-			// TODO: Impl
+
 			const gameProfile = testData; // TODO: Fetch
-			console.log(gameProfile);
 			const gameProfileItemsXP = new Map();
+			const gameProfileMissions = new Map();
 			gameProfile.Results[0].LoadOutInventory.XPInfo.forEach(
 				({ ItemType, XP }) => {
 					gameProfileItemsXP.set(ItemType, XP);
 				}
 			);
+			gameProfile.Results[0].Missions.forEach(m => {
+				gameProfileMissions.set(m.Tag, m.Tier ?? 0);
+			});
 
 			Object.entries(flattenedItems).forEach(([itemName, item]) => {
 				const currentPartialMastery = itemsMastered.has(itemName)
@@ -542,6 +548,18 @@ export const useStore = createWithEqualityFn(
 						gameLevel,
 						item.maxLvl ?? 30
 					);
+			});
+
+			Object.keys(flattenedNodes).forEach(node => {
+				const hasStarChart = starChart.has(node);
+				const hasStarChartInGame = gameProfileMissions.has(node);
+				if (hasStarChart !== hasStarChartInGame)
+					masterNode(node, false, hasStarChartInGame);
+
+				const hasSteelPath = steelPath.has(node);
+				const hasSteelPathInGame = gameProfileMissions.get(node) === 1;
+				if (hasSteelPath !== hasSteelPathInGame)
+					masterNode(node, true, hasSteelPathInGame);
 			});
 
 			const intrinsics = gameProfile.Results[0].PlayerSkills;
@@ -748,4 +766,3 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
-
