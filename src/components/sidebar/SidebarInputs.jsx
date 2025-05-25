@@ -10,8 +10,7 @@ import { LabeledToggle } from "../Toggle";
 
 function SidebarInputs() {
 	const {
-		type,
-		gameSyncId,
+		readOnly,
 		railjackIntrinsics,
 		setRailjackIntrinsics,
 		drifterIntrinsics,
@@ -27,8 +26,7 @@ function SidebarInputs() {
 		displayingSteelPath,
 		setDisplayingSteelPath
 	} = useStore(state => ({
-		type: state.type,
-		gameSyncId: state.gameSyncId,
+		readOnly: (state.type === SHARED || state.gameSyncId !== undefined),
 		railjackIntrinsics: state.railjackIntrinsics,
 		setRailjackIntrinsics: state.setRailjackIntrinsics,
 		drifterIntrinsics: state.drifterIntrinsics,
@@ -59,7 +57,7 @@ function SidebarInputs() {
 			)}
 			<NumberInput
 				name="Railjack Intrinsics"
-				disabled={type === SHARED || gameSyncId !== undefined}
+				disabled={readOnly}
 				min={0}
 				max={totalRailjackIntrinsics}
 				value={railjackIntrinsics.toString()}
@@ -74,7 +72,7 @@ function SidebarInputs() {
 			/>
 			<NumberInput
 				name="Drifter Intrinsics"
-				disabled={type === SHARED || gameSyncId !== undefined}
+				disabled={readOnly}
 				min={0}
 				max={totalDrifterIntrinsics}
 				value={drifterIntrinsics.toString()}

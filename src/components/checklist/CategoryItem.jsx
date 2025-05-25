@@ -12,8 +12,7 @@ import ItemRelicTooltip from "./ItemRelicTooltip";
 
 function CategoryItem({ name, item }) {
 	const {
-		type,
-		gameSyncId,
+		readOnly,
 		masterItem,
 		mastered,
 		masteryRankLocked,
@@ -21,8 +20,7 @@ function CategoryItem({ name, item }) {
 		setPartiallyMasteredItem,
 		hidden
 	} = useStore(state => ({
-		type: state.type,
-		gameSyncId: state.gameSyncId,
+		readOnly: (state.type === SHARED || state.gameSyncId !== undefined),
 		masterItem: state.masterItem,
 		mastered: state.itemsMastered.has(name),
 		masteryRankLocked: (item.mr || 0) > state.masteryRank,
@@ -89,7 +87,7 @@ function CategoryItem({ name, item }) {
 										`https://wiki.warframe.com/w/${name}`
 								);
 							} else {
-								if (type !== SHARED && !gameSyncId) {
+								if (!readOnly) {
 									if (item.maxLvl)
 										setRankSelectToggled(
 											!rankSelectToggled
