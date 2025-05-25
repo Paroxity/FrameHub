@@ -23,7 +23,7 @@ export function xpFromItem(item, category, rank) {
 }
 
 export function itemLevelByXP(item, category, xp) {
-	return Math.min(Math.floor(Math.sqrt(xp / (5 * xpFromItem(item, category, 1)))), item.maxLvl ?? 30);
+	return Math.min(Math.floor(Math.sqrt(xp / xpFromItem(item, category, 5))), item.maxLvl ?? 30);
 }
 
 export function xpToMR(xp) {
