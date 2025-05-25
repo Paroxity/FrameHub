@@ -504,7 +504,7 @@ export const useStore = createWithEqualityFn(
 
 		gameSyncId: undefined,
 		gameSyncPlatform: undefined,
-		gameSync: () => {
+		gameSync: async () => {
 			const {
 				gameSyncId: accountId,
 				gameSyncPlatform: platform,
@@ -523,15 +523,22 @@ export const useStore = createWithEqualityFn(
 			} = get();
 			if (!accountId) return;
 
-			const gameProfile = testData; // TODO: Fetch
+			const gameProfile = testData?.Results?.[0]; // TODO: Fetch
+			if (
+				!gameProfile?.LoadOutInventory?.XPInfo?.[0].ItemType ||
+				!gameProfile?.LoadOutInventory?.XPInfo?.[0].XP ||
+				!gameProfile?.Missions?.[0]?.Tag
+			)
+				return;
+
 			const gameProfileItemsXP = new Map();
 			const gameProfileMissions = new Map();
-			gameProfile.Results[0].LoadOutInventory.XPInfo.forEach(
+			gameProfile.LoadOutInventory.XPInfo.forEach(
 				({ ItemType, XP }) => {
 					gameProfileItemsXP.set(ItemType, XP);
 				}
 			);
-			gameProfile.Results[0].Missions.forEach(m => {
+			gameProfile.Missions.forEach(m => {
 				gameProfileMissions.set(m.Tag, m.Tier ?? 0);
 			});
 
@@ -577,7 +584,7 @@ export const useStore = createWithEqualityFn(
 					masterJunction(planet, true, hasSteelPathInGame);
 			});
 
-			const intrinsics = gameProfile.Results[0].PlayerSkills;
+			const intrinsics = gameProfile.PlayerSkills;
 			setRailjackIntrinsics(
 				[
 					"LPS_COMMAND",
