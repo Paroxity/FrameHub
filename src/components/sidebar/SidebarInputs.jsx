@@ -90,11 +90,13 @@ function SidebarInputs() {
 				toggled={hideMastered}
 				onToggle={setHideMastered}
 			/>
-			<LabeledToggle
-				label="Hide Prime"
-				toggled={hidePrime}
-				onToggle={setHidePrime}
-			/>
+			{!displayingNodes && (
+				<LabeledToggle
+					label="Hide Prime"
+					toggled={hidePrime}
+					onToggle={setHidePrime}
+				/>
+			)}
 			{!displayingNodes && (
 				<LabeledToggle
 					label="Hide Founders"
