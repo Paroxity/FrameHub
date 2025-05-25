@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import nodes from "../../../resources/nodes.json";
-import { planetsWithJunctions } from "../../../utils/nodes";
+import { planetJunctionsMap } from "../../../utils/nodes";
 import Toggle from "../../Toggle";
 import PlanetInfo from "./PlanetInfo";
 import PlanetJunction from "./PlanetJunction";
@@ -33,7 +33,7 @@ function Planet({ name }) {
 			/>
 			{visible && (
 				<>
-					{planetsWithJunctions.includes(name) && (
+					{planetJunctionsMap[name] && (
 						<PlanetJunction planet={name} />
 					)}
 					{Object.entries(planetNodes).map(([id, node]) => {

@@ -21,7 +21,7 @@ import {
 	xpToMR,
 	itemLevelByXP
 } from "../utils/mastery-rank";
-import { flattenedNodes, planetsWithJunctions } from "../utils/nodes";
+import { flattenedNodes, planetJunctionsMap } from "../utils/nodes";
 import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
 import { testData } from "./test";
@@ -218,7 +218,7 @@ export const useStore = createWithEqualityFn(
 			let itemsMasteredCount = 0;
 
 			let totalXP =
-				junctionsToXP(planetsWithJunctions.length * 2) +
+				junctionsToXP(Object.keys(planetJunctionsMap).length * 2) +
 				intrinsicsToXP(
 					totalRailjackIntrinsics + totalDrifterIntrinsics
 				);
@@ -388,7 +388,7 @@ export const useStore = createWithEqualityFn(
 		masterAllJunctions: (steelPath, mastered) =>
 			masterAll(
 				(steelPath ? "steelPath" : "starChart") + "Junctions",
-				planetsWithJunctions,
+				Object.keys(planetJunctionsMap),
 				mastered
 			),
 
