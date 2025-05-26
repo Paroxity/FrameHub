@@ -24,7 +24,7 @@ import {
 import { flattenedNodes, planetJunctionsMap } from "../utils/nodes";
 import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
-import { testData } from "./test";
+import { getGameProfile } from "../utils/profile";
 
 export const useStore = createWithEqualityFn(
 	(set, get) => ({
@@ -326,7 +326,9 @@ export const useStore = createWithEqualityFn(
 			get().recalculateIngredients();
 		},
 		setPartiallyMasteredItem: (name, rank, maxRank) => {
-			const oldRank = get().partiallyMasteredItems[name] ?? (get().itemsMastered.has(name) ? maxRank : 0);
+			const oldRank =
+				get().partiallyMasteredItems[name] ??
+				(get().itemsMastered.has(name) ? maxRank : 0);
 			if (rank === oldRank) return;
 
 			if (rank === maxRank) get().masterItem(name, true);
@@ -523,7 +525,7 @@ export const useStore = createWithEqualityFn(
 			} = get();
 			if (!accountId) return;
 
-			const gameProfile = testData?.Results?.[0]; // TODO: Fetch
+			const gameProfile = (await getGameProfile(accountId))?.Results?.[0];
 			if (
 				!gameProfile?.LoadOutInventory?.XPInfo?.[0].ItemType ||
 				!gameProfile?.LoadOutInventory?.XPInfo?.[0].XP ||
@@ -533,11 +535,9 @@ export const useStore = createWithEqualityFn(
 
 			const gameProfileItemsXP = new Map();
 			const gameProfileMissions = new Map();
-			gameProfile.LoadOutInventory.XPInfo.forEach(
-				({ ItemType, XP }) => {
-					gameProfileItemsXP.set(ItemType, XP);
-				}
-			);
+			gameProfile.LoadOutInventory.XPInfo.forEach(({ ItemType, XP }) => {
+				gameProfileItemsXP.set(ItemType, XP);
+			});
 			gameProfile.Missions.forEach(m => {
 				gameProfileMissions.set(m.Tag, m.Tier ?? 0);
 			});
@@ -572,17 +572,21 @@ export const useStore = createWithEqualityFn(
 					masterNode(node, true, hasSteelPathInGame);
 			});
 
-			Object.entries(planetJunctionsMap).forEach(([planet, junctionNode]) => {
-				const hasStarChart = starChartJunctions.has(planet);
-				const hasStarChartInGame = gameProfileMissions.has(junctionNode);
-				if (hasStarChart !== hasStarChartInGame)
-					masterJunction(planet, false, hasStarChartInGame);
+			Object.entries(planetJunctionsMap).forEach(
+				([planet, junctionNode]) => {
+					const hasStarChart = starChartJunctions.has(planet);
+					const hasStarChartInGame =
+						gameProfileMissions.has(junctionNode);
+					if (hasStarChart !== hasStarChartInGame)
+						masterJunction(planet, false, hasStarChartInGame);
 
-				const hasSteelPath = steelPathJunctions.has(planet);
-				const hasSteelPathInGame = gameProfileMissions.get(junctionNode) === 1;
-				if (hasSteelPath !== hasSteelPathInGame)
-					masterJunction(planet, true, hasSteelPathInGame);
-			});
+					const hasSteelPath = steelPathJunctions.has(planet);
+					const hasSteelPathInGame =
+						gameProfileMissions.get(junctionNode) === 1;
+					if (hasSteelPath !== hasSteelPathInGame)
+						masterJunction(planet, true, hasSteelPathInGame);
+				}
+			);
 
 			const intrinsics = gameProfile.PlayerSkills;
 			setRailjackIntrinsics(
@@ -788,3 +792,4 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
+
