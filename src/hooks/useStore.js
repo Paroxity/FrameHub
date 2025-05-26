@@ -506,7 +506,7 @@ export const useStore = createWithEqualityFn(
 
 		gameSyncId: undefined,
 		gameSyncPlatform: undefined,
-		gameSync: async () => {
+		gameSync: async (prefetchedProfile) => {
 			const {
 				gameSyncId: accountId,
 				gameSyncPlatform: platform,
@@ -525,7 +525,7 @@ export const useStore = createWithEqualityFn(
 			} = get();
 			if (!accountId) return;
 
-			const gameProfile = (await getGameProfile(accountId))?.Results?.[0];
+			const gameProfile = prefetchedProfile ?? (await getGameProfile(accountId, platform))?.Results?.[0];
 			if (
 				!gameProfile?.LoadOutInventory?.XPInfo?.[0].ItemType ||
 				!gameProfile?.LoadOutInventory?.XPInfo?.[0].XP ||
@@ -615,14 +615,14 @@ export const useStore = createWithEqualityFn(
 			set({ gameSyncId: accountId, gameSyncPlatform: platform });
 		},
 		enableGameSync: async (accountId, platform) => {
-			// TODO: Verify account id/platform
+			const gameProfile = await getGameProfile(accountId, platform);
 			const docRef = get().getDocRef();
 			updateDoc(docRef, {
 				gameSyncId: accountId,
 				gameSyncPlatform: platform
 			});
 			get().setGameSyncInfo(accountId, platform);
-			get().gameSync();
+			get().gameSync(gameProfile);
 		},
 		disableGameSync: () => {
 			if (!get().gameSyncId) return;
