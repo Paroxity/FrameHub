@@ -10,7 +10,7 @@ import { LabeledToggle } from "../Toggle";
 
 function SidebarInputs() {
 	const {
-		type,
+		readOnly,
 		railjackIntrinsics,
 		setRailjackIntrinsics,
 		drifterIntrinsics,
@@ -26,7 +26,7 @@ function SidebarInputs() {
 		displayingSteelPath,
 		setDisplayingSteelPath
 	} = useStore(state => ({
-		type: state.type,
+		readOnly: (state.type === SHARED || state.gameSyncId !== undefined),
 		railjackIntrinsics: state.railjackIntrinsics,
 		setRailjackIntrinsics: state.setRailjackIntrinsics,
 		drifterIntrinsics: state.drifterIntrinsics,
@@ -57,7 +57,7 @@ function SidebarInputs() {
 			)}
 			<NumberInput
 				name="Railjack Intrinsics"
-				disabled={type === SHARED}
+				disabled={readOnly}
 				min={0}
 				max={totalRailjackIntrinsics}
 				value={railjackIntrinsics.toString()}
@@ -72,7 +72,7 @@ function SidebarInputs() {
 			/>
 			<NumberInput
 				name="Drifter Intrinsics"
-				disabled={type === SHARED}
+				disabled={readOnly}
 				min={0}
 				max={totalDrifterIntrinsics}
 				value={drifterIntrinsics.toString()}
@@ -90,11 +90,13 @@ function SidebarInputs() {
 				toggled={hideMastered}
 				onToggle={setHideMastered}
 			/>
-			<LabeledToggle
-				label="Hide Prime"
-				toggled={hidePrime}
-				onToggle={setHidePrime}
-			/>
+			{!displayingNodes && (
+				<LabeledToggle
+					label="Hide Prime"
+					toggled={hidePrime}
+					onToggle={setHidePrime}
+				/>
+			)}
 			{!displayingNodes && (
 				<LabeledToggle
 					label="Hide Founders"

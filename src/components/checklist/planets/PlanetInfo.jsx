@@ -2,11 +2,11 @@ import PropTypes from "prop-types";
 import { useStore } from "../../../hooks/useStore";
 import nodes from "../../../resources/nodes.json";
 import { junctionsToXP } from "../../../utils/mastery-rank";
-import { planetsWithJunctions } from "../../../utils/nodes";
+import { planetJunctionsMap } from "../../../utils/nodes";
 import BaseCategoryInfo from "../BaseCategoryInfo";
 
 function PlanetInfo({ name }) {
-	const hasJunction = planetsWithJunctions.includes(name);
+	const hasJunction = planetJunctionsMap[name] !== undefined;
 
 	let masteredCount = 0;
 	let masteredXP = 0;

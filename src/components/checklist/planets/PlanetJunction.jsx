@@ -6,9 +6,9 @@ import { SHARED } from "../../../utils/checklist-types";
 import Button from "../../Button";
 
 function PlanetJunction({ planet }) {
-	const { type, displayingSteelPath, masterJunction, mastered, hidden } =
+	const { readOnly, displayingSteelPath, masterJunction, mastered, hidden } =
 		useStore(state => ({
-			type: state.type,
+			readOnly: (state.type === SHARED || state.gameSyncId !== undefined),
 			displayingSteelPath: state.displayingSteelPath,
 			masterJunction: state.masterJunction,
 			mastered:
@@ -31,7 +31,7 @@ function PlanetJunction({ planet }) {
 			<Button
 				className="item-name"
 				onClick={() => {
-					if (type !== SHARED) {
+					if (!readOnly) {
 						masterJunction(planet, displayingSteelPath, !mastered);
 					}
 				}}>
