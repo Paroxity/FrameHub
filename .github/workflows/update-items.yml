@@ -33,7 +33,8 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           DISCORD_ADMIN_IDS: ${{ secrets.DISCORD_ADMIN_IDS }}
           FORCE_UPLOAD: ${{ contains(github.event.head_commit.message, 'force upload') && github.event_name == 'push' }}
-          PROXY_AUTH: ${{ secrets.PROXY_AUTH }}
+          WARFRAME_ORIGIN_PROXY: ${{ secrets.WARFRAME_ORIGIN_PROXY }}
+          X_PROXY_TOKEN: ${{ secrets.X_PROXY_TOKEN }}
       - name: Authenticate Firebase
         uses: 'google-github-actions/auth@v2'
         with:
