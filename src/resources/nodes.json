@@ -1631,8 +1631,8 @@
 			"type": 4,
 			"faction": 1,
 			"lvl": [
-				29,
-				31
+				30,
+				32
 			],
 			"xp": 52
 		},
@@ -2322,7 +2322,7 @@
 		"SolNode236": {
 			"name": "The Duviri Experience",
 			"type": 28,
-			"faction": 5,
+			"faction": 10,
 			"lvl": [
 				20,
 				20
@@ -2331,7 +2331,7 @@
 		"SolNode237": {
 			"name": "The Lone Story",
 			"type": 28,
-			"faction": 5,
+			"faction": 10,
 			"lvl": [
 				20,
 				20

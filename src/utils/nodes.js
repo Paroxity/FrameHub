@@ -87,7 +87,8 @@ export const factionIndexMap = [
 	undefined,
 	"Murmur",
 	"Scaldra",
-	"Techrot"
+	"Techrot",
+	"Duviri"
 ];
 
 export const nodeShape = {
