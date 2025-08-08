@@ -7,6 +7,7 @@ button {
 }
 
 @media (max-height: 720px) {
+
 	html,
 	input,
 	button {
@@ -63,14 +64,17 @@ h6 {
 }
 
 .masonry-grid {
-	display: -webkit-box; /* Not needed if autoprefixing */
-	display: -ms-flexbox; /* Not needed if autoprefixing */
+	display: -webkit-box;
+	/* Not needed if autoprefixing */
+	display: -ms-flexbox;
+	/* Not needed if autoprefixing */
 	display: flex;
 	width: auto;
 }
 
 .masonry-grid_column {
-	padding: 0 15px; /* gutter size */
+	padding: 0 15px;
+	/* gutter size */
 	background-clip: padding-box;
 }
 
@@ -113,11 +117,9 @@ button::before {
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: linear-gradient(
-		180deg,
-		rgba(0, 0, 0, 0) 0%,
-		rgba(245, 227, 173, 0.25) 100%
-	);
+	background: linear-gradient(180deg,
+			rgba(0, 0, 0, 0) 0%,
+			rgba(245, 227, 173, 0.25) 100%);
 	transition: all 0.2s ease-out;
 }
 
@@ -319,11 +321,9 @@ input::placeholder {
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	background: linear-gradient(
-		180deg,
-		rgba(0, 0, 0, 0) 0%,
-		rgba(245, 227, 173, 0.25) 90%
-	);
+	background: linear-gradient(180deg,
+			rgba(0, 0, 0, 0) 0%,
+			rgba(245, 227, 173, 0.25) 90%);
 	transition: all 0.2s ease-out;
 }
 
@@ -372,29 +372,28 @@ input:disabled {
 	pointer-events: none;
 }
 
-/* Custom Select */
 .custom-select {
 	background-color: rgba(245, 227, 173, 0.05);
 	border: 1px solid rgba(245, 227, 173, 0);
 	padding: 5px 0.75em 0.1em;
 	font-size: 1.25em;
 	cursor: url("icons/cursor.png"), auto !important;
-	color: #bea966; /* match placeholder styling */
+	color: #bea966;
 	font-family: "Roboto", sans-serif;
-	text-align: left; /* ensure left alignment within popup */
+	text-align: left;
 }
 
-/* For custom select, show underline only on hover, not on focus */
 .select-container:focus-within::before {
 	height: 0;
 }
+
 .custom-select:focus-within::after {
 	visibility: hidden;
 	transform: scaleX(0);
 }
 
 .custom-select .select-label {
-	color: #bea966; /* placeholder tone */
+	color: #bea966;
 	display: block;
 	text-align: left;
 }
@@ -424,7 +423,7 @@ input:disabled {
 .select-dropdown-box {
 	background-color: rgba(8, 6, 21, 1);
 	position: relative;
-	padding: 0; /* remove gaps at top/bottom */
+	padding: 0;
 	color: white;
 }
 
@@ -442,20 +441,20 @@ input:disabled {
 }
 
 .select-option {
-	padding: 0.375em 0.5em; /* smaller padding */
+	padding: 0.375em 0.5em;
 	text-align: left;
 	white-space: nowrap;
 	cursor: url("icons/cursor.png"), auto !important;
-	font-size: 1em; /* smaller text */
+	font-size: 1em;
 }
 
 .select-option:hover {
-	background-color: rgba(64, 57, 45, 0.4); /* more transparent on hover */
+	background-color: rgba(64, 57, 45, 0.4);
 }
 
 .select-option.selected,
 .select-option.selected:hover {
-	background-color: #40392d; /* keep selected the same */
+	background-color: #40392d;
 }
 
 /* Loading Screen */
@@ -585,13 +584,16 @@ input:disabled {
 	.form-bg {
 		width: 100%;
 	}
+
 	.input {
 		width: 100%;
 	}
+
 	.input input {
 		width: 100%;
 		box-sizing: border-box;
 	}
+
 	.custom-select {
 		width: 100%;
 		box-sizing: border-box;
@@ -605,37 +607,56 @@ input:disabled {
 
 /* Reduce left-right padding for LinkPrompt */
 .popup-box.link-popup {
-	padding: 3em 3em; /* was 3em 6em */
+	padding: 3em 3em;
+	/* was 3em 6em */
 }
 
 /* Make LinkPrompt header gold and slightly smaller */
 .link-popup .mastery-rank {
-	font-size: 1.25em; /* smaller than default */
-	color: #bea966; /* gold */
-	padding-bottom: 16px; /* adjust per request */
+	font-size: 1.25em;
+	/* smaller than default */
+	color: #bea966;
+	/* gold */
+	padding-bottom: 16px;
+	/* adjust per request */
 }
 
 /* Reduce space between header and first form control */
 .popup-box.link-popup .input:first-of-type {
-	margin-top: 0.33em; /* was 1em */
+	margin-top: 0.33em;
+	/* was 1em */
+}
+
+/* Inline error box for LinkPrompt */
+.link-popup .error-box {
+	border: 1px solid #ff4d4f;
+	background-color: rgba(255, 77, 79, 0.12);
+	color: #ff8082;
+	padding: 0.5em 0.75em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	text-transform: none;
 }
 
 .link-popup .button-row {
 	display: flex;
 	justify-content: space-between;
 	gap: 1em;
-	flex-wrap: nowrap; /* keep in a row */
+	flex-wrap: nowrap;
 	margin-top: 1em;
 }
 
 .link-popup .button-row .button {
-	flex: 1 1 0; /* equal width buttons in a row */
-	margin: 0; /* override default center margins */
+	flex: 1 1 0;
+	/* equal width buttons in a row */
+	margin: 0;
+	/* override default center margins */
 	width: 100%;
 }
 
 .link-popup .button-row .button.center {
-	margin: 0; /* ensure not centered in flex row */
+	margin: 0;
+	/* ensure not centered in flex row */
 }
 
 .link-popup .button-row .button button {
@@ -649,14 +670,12 @@ input:disabled {
 	height: calc(100% + 2px);
 	right: -1px;
 	top: -1px;
-	background: linear-gradient(
-		60deg,
-		#f5e3ad,
-		#bea966,
-		#f5e3ad,
-		#f5e3ad,
-		#bea966
-	);
+	background: linear-gradient(60deg,
+			#f5e3ad,
+			#bea966,
+			#f5e3ad,
+			#f5e3ad,
+			#bea966);
 	z-index: -1;
 	animation: animatedgradient 3s ease alternate infinite;
 	background-size: 300% 300%;
@@ -868,12 +887,10 @@ input:disabled {
 		color: white;
 		font-weight: 400;
 		margin: 10px 10px 0;
-		background: linear-gradient(
-			90deg,
-			rgba(0, 0, 0, 0) 0%,
-			rgba(129, 107, 62, 1) 50%,
-			rgba(0, 0, 0, 0) 100%
-		);
+		background: linear-gradient(90deg,
+				rgba(0, 0, 0, 0) 0%,
+				rgba(129, 107, 62, 1) 50%,
+				rgba(0, 0, 0, 0) 100%);
 	}
 }
 
@@ -916,7 +933,7 @@ input:disabled {
 	padding-top: 5px;
 }
 
-.mastery-info > span {
+.mastery-info>span {
 	display: block;
 }
 
@@ -984,11 +1001,11 @@ input:disabled {
 }
 
 .item-tooltip {
-	& > :not(:last-child) {
+	&> :not(:last-child) {
 		margin-bottom: 1em;
 	}
 
-	& > span {
+	&>span {
 		display: block;
 	}
 }
@@ -1020,7 +1037,7 @@ input:disabled {
 }
 
 .relics {
-	& > span {
+	&>span {
 		display: block;
 		padding-left: 1em;
 	}
@@ -1068,4 +1085,3 @@ input:disabled {
 	width: 1em;
 	display: inline-block;
 }
-
