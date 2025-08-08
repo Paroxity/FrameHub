@@ -3,6 +3,7 @@ import { useStore } from "../../hooks/useStore";
 import { SHARED } from "../../utils/checklist-types";
 import Button from "../Button";
 import ConfirmationPrompt from "./ConfirmationPrompt";
+import LinkPrompt from "./LinkPrompt";
 
 function DangerZone() {
 	const {
@@ -13,7 +14,7 @@ function DangerZone() {
 		masterAllNodes,
 		masterAllJunctions
 	} = useStore(state => ({
-		readOnly: (state.type === SHARED || state.gameSyncId !== undefined),
+		readOnly: state.type === SHARED || state.gameSyncId !== undefined,
 		displayingNodes: state.displayingNodes,
 		displayingSteelPath: state.displayingSteelPath,
 		masterAllItems: state.masterAllItems,
@@ -28,6 +29,7 @@ function DangerZone() {
 		<>
 			<span className="danger-text">Danger zone</span>
 			<div className="danger">
+				<LinkPrompt />
 				<Button
 					centered
 					onClick={() => {

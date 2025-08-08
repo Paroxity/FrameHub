@@ -625,7 +625,8 @@ export const useStore = createWithEqualityFn(
 			set({ gameSyncId: accountId, gameSyncPlatform: platform });
 		},
 		enableGameSync: async (accountId, platform) => {
-			const gameProfile = await getGameProfile(accountId, platform);
+			const response = await getGameProfile(accountId, platform);
+			const gameProfile = response?.Results?.[0];
 			const docRef = get().getDocRef();
 			updateDoc(docRef, {
 				gameSyncId: accountId,

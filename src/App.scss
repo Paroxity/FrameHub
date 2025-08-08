@@ -125,6 +125,37 @@ button:hover::before {
 	height: 100%;
 }
 
+/* Styled select to match button */
+select {
+	font-family: "Roboto", sans-serif;
+	text-transform: uppercase;
+	color: #bea966;
+	font-weight: 700;
+	font-size: 1.25em;
+	display: inline-block;
+	position: relative;
+	background-color: rgba(245, 227, 173, 0.05);
+	border: 1px solid rgba(245, 227, 173, 0);
+	padding: 3px 10px;
+	transition: all 0.2s ease-out;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-image: none;
+}
+
+select:focus {
+	outline: none;
+}
+
+select:hover {
+	border: 1px solid rgba(245, 227, 173, 0.25);
+}
+
+select:disabled {
+	pointer-events: none;
+}
+
 .button {
 	position: relative;
 	width: fit-content;
@@ -204,7 +235,8 @@ button:hover::before {
 	margin-top: 1em;
 	width: auto;
 
-	button {
+	button,
+	select {
 		width: 100%;
 		height: 100%;
 	}
@@ -340,6 +372,92 @@ input:disabled {
 	pointer-events: none;
 }
 
+/* Custom Select */
+.custom-select {
+	background-color: rgba(245, 227, 173, 0.05);
+	border: 1px solid rgba(245, 227, 173, 0);
+	padding: 5px 0.75em 0.1em;
+	font-size: 1.25em;
+	cursor: url("icons/cursor.png"), auto !important;
+	color: #bea966; /* match placeholder styling */
+	font-family: "Roboto", sans-serif;
+	text-align: left; /* ensure left alignment within popup */
+}
+
+/* For custom select, show underline only on hover, not on focus */
+.select-container:focus-within::before {
+	height: 0;
+}
+.custom-select:focus-within::after {
+	visibility: hidden;
+	transform: scaleX(0);
+}
+
+.custom-select .select-label {
+	color: #bea966; /* placeholder tone */
+	display: block;
+	text-align: left;
+}
+
+.custom-select .select-arrow {
+	position: absolute;
+	right: 0.75em;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #bea966;
+	pointer-events: none;
+}
+
+.custom-select.disabled {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+.select-dropdown {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: calc(100% + 6px);
+	z-index: 10;
+}
+
+.select-dropdown-box {
+	background-color: rgba(8, 6, 21, 1);
+	position: relative;
+	padding: 0; /* remove gaps at top/bottom */
+	color: white;
+}
+
+.select-dropdown-box::before {
+	content: "";
+	position: absolute;
+	width: calc(100% + 2px);
+	height: calc(100% + 2px);
+	right: -1px;
+	top: -1px;
+	background: linear-gradient(60deg, #f5e3ad, #bea966, #f5e3ad, #f5e3ad, #bea966);
+	z-index: -1;
+	animation: animatedgradient 3s ease alternate infinite;
+	background-size: 300% 300%;
+}
+
+.select-option {
+	padding: 0.375em 0.5em; /* smaller padding */
+	text-align: left;
+	white-space: nowrap;
+	cursor: url("icons/cursor.png"), auto !important;
+	font-size: 1em; /* smaller text */
+}
+
+.select-option:hover {
+	background-color: rgba(64, 57, 45, 0.4); /* more transparent on hover */
+}
+
+.select-option.selected,
+.select-option.selected:hover {
+	background-color: #40392d; /* keep selected the same */
+}
+
 /* Loading Screen */
 .loading {
 	font-size: 35px;
@@ -462,6 +580,66 @@ input:disabled {
 	.input {
 		margin-top: 1em;
 	}
+
+	/* Make form inputs and custom select full-width in popups */
+	.form-bg {
+		width: 100%;
+	}
+	.input {
+		width: 100%;
+	}
+	.input input {
+		width: 100%;
+		box-sizing: border-box;
+	}
+	.custom-select {
+		width: 100%;
+		box-sizing: border-box;
+	}
+}
+
+/* LinkPrompt popup adjustments */
+.link-popup {
+	text-align: left;
+}
+
+/* Reduce left-right padding for LinkPrompt */
+.popup-box.link-popup {
+	padding: 3em 3em; /* was 3em 6em */
+}
+
+/* Make LinkPrompt header gold and slightly smaller */
+.link-popup .mastery-rank {
+	font-size: 1.25em; /* smaller than default */
+	color: #bea966; /* gold */
+	padding-bottom: 16px; /* adjust per request */
+}
+
+/* Reduce space between header and first form control */
+.popup-box.link-popup .input:first-of-type {
+	margin-top: 0.33em; /* was 1em */
+}
+
+.link-popup .button-row {
+	display: flex;
+	justify-content: space-between;
+	gap: 1em;
+	flex-wrap: nowrap; /* keep in a row */
+	margin-top: 1em;
+}
+
+.link-popup .button-row .button {
+	flex: 1 1 0; /* equal width buttons in a row */
+	margin: 0; /* override default center margins */
+	width: 100%;
+}
+
+.link-popup .button-row .button.center {
+	margin: 0; /* ensure not centered in flex row */
+}
+
+.link-popup .button-row .button button {
+	width: 100%;
 }
 
 .popup-box::before {
