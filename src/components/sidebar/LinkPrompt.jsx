@@ -11,16 +11,20 @@ function LinkPrompt() {
 	const [accountId, setAccountId] = useState("");
 	const [platform, setPlatform] = useState("pc");
 	const [error, setError] = useState("");
-	const confirmDisabled = !accountId || accountId.trim().length === 0;
+	const [loading, setLoading] = useState(false);
+	const confirmDisabled = !accountId || accountId.trim().length === 0 || loading;
 
 	async function onConfirm() {
 		setError("");
+		setLoading(true);
 		try {
 			await enableGameSync(accountId.trim(), platform);
 			setOpen(false);
 		} catch (e) {
 			// Show any error message inline without closing the popup
 			setError(e?.message || String(e));
+		} finally {
+			setLoading(false);
 		}
 	}
 
@@ -69,7 +73,7 @@ function LinkPrompt() {
 								centered
 								disabled={confirmDisabled}
 								onClick={onConfirm}>
-								Confirm
+								{loading ? <div className="spinner-small" /> : "Confirm"}
 							</Button>
 							<Button centered onClick={() => setOpen(false)}>
 								Cancel

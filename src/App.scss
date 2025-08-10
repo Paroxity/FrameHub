@@ -471,6 +471,17 @@ input:disabled {
 	animation: spin 0.4s ease-out infinite;
 }
 
+.spinner-small {
+	border: 2px solid transparent;
+	border-top: 2px solid #c9ba8f;
+	border-radius: 50%;
+	width: 16px;
+	height: 16px;
+	animation: spin 0.4s ease-out infinite;
+	display: inline-block;
+	margin: 0;
+}
+
 @keyframes spin {
 	100% {
 		transform: rotate(360deg);
