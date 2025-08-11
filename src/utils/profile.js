@@ -27,16 +27,25 @@ export async function getGameProfile(accountId, platform) {
 	if (!resp.ok) {
 		const status = resp.status;
 		let message;
-		if (status === 400) {
-			message =
-				"Invalid request. Ensure the Account ID is valid and the correct platform is selected.";
-		} else if (status === 409) {
-			message =
-				"Account not found, check your account ID and platform";
-		} else if (status >= 500) {
-			message = "Internal server error. Please try again later.";
-		} else {
-			message = `Request failed (${status}).`;
+		switch (status) {
+			case 400:
+				message =
+					"Invalid request. Ensure the Account ID is valid and the correct platform is selected.";
+				break;
+			case 403:
+				message = "We're experiencing issues getting profile data. Try again later.";
+				break;
+			case 409:
+				message =
+					"Account not found, check your account ID and platform";
+				break;
+			default:
+				if (status >= 500) {
+					message = "Internal server error. Please try again later.";
+				} else {
+					message = `Request failed (${status}).`;
+				}
+				break;
 		}
 		const error = new Error(message);
 		error.status = status;
