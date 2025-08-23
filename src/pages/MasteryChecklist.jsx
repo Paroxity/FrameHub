@@ -9,6 +9,7 @@ import FrameHubLogo from "../components/FrameHubLogo";
 import LoadingScreen from "../components/LoadingScreen";
 import Sidebar from "../components/sidebar/Sidebar";
 import UnloadWarning from "../components/sidebar/UnloadWarning";
+import Button from "../components/Button";
 import { useStore } from "../hooks/useStore";
 import { ANONYMOUS, AUTHENTICATED, SHARED } from "../utils/checklist-types";
 import { useParams } from "react-router-dom";
@@ -50,6 +51,7 @@ function MasteryChecklist(props) {
 	}));
 
 	const [dataLoading, setDataLoading] = useState(true);
+	const [syncError, setSyncError] = useState(false);
 	useEffect(() => {
 		setId(id);
 		setType(props.type);
@@ -98,9 +100,17 @@ function MasteryChecklist(props) {
 	}, [fetchData]);
 	useEffect(() => {
 		if (props.type !== SHARED && !dataLoading && !itemsLoading) {
-			gameSync();
+			const handleGameSync = async () => {
+				try {
+					await gameSync();
+				} catch (error) {
+					setSyncError(true);
+				}
+			};
 
-			const interval = setInterval(() => gameSync(), 5 * 60 * 1000);
+			handleGameSync();
+
+			const interval = setInterval(handleGameSync, 5 * 60 * 1000);
 			return () => clearInterval(interval);
 		}
 	}, [props.type, dataLoading, itemsLoading, gameSync]);
@@ -122,6 +132,16 @@ function MasteryChecklist(props) {
 					</>
 				)}
 			</div>
+			{syncError && (
+				<div className="popup show">
+					<div className="popup-box">
+						Recent stats failed to sync. Your last saved progress is still available.
+						<Button centered onClick={() => setSyncError(false)}>
+							Ok
+						</Button>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }
