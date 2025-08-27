@@ -4,39 +4,34 @@ import { SHARED } from "../../utils/checklist-types";
 import Button from "../Button";
 import ConfirmationPrompt from "./ConfirmationPrompt";
 import LinkPrompt from "./LinkPrompt";
-import { assignGroup } from "../../utils/hash";
 
 function DangerZone() {
 	const {
-		id,
-		type,
 		readOnly,
 		displayingNodes,
 		displayingSteelPath,
 		masterAllItems,
 		masterAllNodes,
-		masterAllJunctions
+		masterAllJunctions,
+		gameSyncExperiment,
 	} = useStore(state => ({
-		id: state.id,
-		type: state.type,
 		readOnly: state.type === SHARED || state.gameSyncId !== undefined,
 		displayingNodes: state.displayingNodes,
 		displayingSteelPath: state.displayingSteelPath,
 		masterAllItems: state.masterAllItems,
 		masterAllNodes: state.masterAllNodes,
-		masterAllJunctions: state.masterAllJunctions
+		masterAllJunctions: state.masterAllJunctions,
+		gameSyncExperiment: state.gameSyncExperiment
 	}));
 
 	const [confirmationCallback, setConfirmationCallback] = useState();
 	const [confirmationMessage, setConfirmationMessage] = useState("");
 
-	const showLinkPrompt = type !== SHARED && id && assignGroup(id, 100) < 10;
-
 	return readOnly ? null : (
 		<>
 			<span className="danger-text">Danger zone</span>
 			<div className="danger">
-				{showLinkPrompt && <LinkPrompt />}
+				{gameSyncExperiment && <LinkPrompt />}
 				<Button
 					centered
 					onClick={() => {

@@ -25,6 +25,7 @@ import { flattenedNodes, planetJunctionsMap } from "../utils/nodes";
 import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
 import { getGameProfile } from "../utils/profile";
+import { assignGroup } from "../utils/hash";
 
 export const useStore = createWithEqualityFn(
 	(set, get) => ({
@@ -660,6 +661,13 @@ export const useStore = createWithEqualityFn(
 				gameSyncPlatform: deleteField()
 			});
 			get().setGameSyncInfo();
+		},
+		gameSyncExperiment: false,
+		initGameSyncExperiment: () => {
+			set({
+				gameSyncExperiment:
+					get().type !== SHARED && assignGroup(get().id, 100) < 10
+			});
 		},
 
 		getDocRef: () => {

@@ -13,7 +13,6 @@ import Button from "../components/Button";
 import { useStore } from "../hooks/useStore";
 import { ANONYMOUS, AUTHENTICATED, SHARED } from "../utils/checklist-types";
 import { useParams } from "react-router-dom";
-import { assignGroup } from "../utils/hash";
 
 function MasteryChecklist(props) {
 	let { id } = useParams();
@@ -34,6 +33,8 @@ function MasteryChecklist(props) {
 		setHideFounders,
 		displayingNodes,
 		setGameSyncInfo,
+		gameSyncExperiment,
+		initGameSyncExperiment,
 		popupsDismissed,
 		setPopupsDismissed,
 		updateFirestore,
@@ -54,6 +55,8 @@ function MasteryChecklist(props) {
 		setHideFounders: state.setHideFounders,
 		displayingNodes: state.displayingNodes,
 		setGameSyncInfo: state.setGameSyncInfo,
+		gameSyncExperiment: state.gameSyncExperiment,
+		initGameSyncExperiment: state.initGameSyncExperiment,
 		popupsDismissed: state.popupsDismissed,
 		setPopupsDismissed: state.setPopupsDismissed,
 		updateFirestore: state.updateFirestore,
@@ -63,7 +66,6 @@ function MasteryChecklist(props) {
 
 	const [dataLoading, setDataLoading] = useState(true);
 	const [syncError, setSyncError] = useState(false);
-	const [showExperimentalPopup, setShowExperimentalPopup] = useState(false);
 	useEffect(() => {
 		setId(id);
 		setType(props.type);
@@ -99,6 +101,8 @@ function MasteryChecklist(props) {
 				setAccountLinkErrors(data?.accountLinkErrors ?? 0);
 
 				setDataLoading(false);
+
+				initGameSyncExperiment();
 			}
 		);
 	}, [id, props.type]); //eslint-disable-line
@@ -121,7 +125,7 @@ function MasteryChecklist(props) {
 					setSyncError(true);
 
 					// Increment account link errors for experimental users
-					if (id && assignGroup(id, 100) < 10) {
+					if (gameSyncExperiment) {
 						incrementAccountLinkErrors();
 					}
 				}
@@ -137,22 +141,14 @@ function MasteryChecklist(props) {
 		dataLoading,
 		itemsLoading,
 		gameSync,
-		id,
+		gameSyncExperiment,
 		incrementAccountLinkErrors,
 		updateFirestore
 	]);
 
-	useEffect(() => {
-		if (props.type !== SHARED && !dataLoading && id) {
-			const userGroup = assignGroup(id, 100);
-
-			if (userGroup < 10) {
-				if (!popupsDismissed.includes("experimental-account-link")) {
-					setShowExperimentalPopup(true);
-				}
-			}
-		}
-	}, [props.type, dataLoading, id, popupsDismissed]);
+	const showGameSyncExperimentPopup =
+		gameSyncExperiment &&
+		!popupsDismissed.includes("experimental-account-link");
 
 	return dataLoading || itemsLoading ? (
 		<LoadingScreen />
@@ -182,7 +178,7 @@ function MasteryChecklist(props) {
 					</div>
 				</div>
 			)}
-			{showExperimentalPopup && (
+			{showGameSyncExperimentPopup && (
 				<div className="popup show">
 					<div
 						className="popup-box link-popup"
@@ -218,7 +214,6 @@ function MasteryChecklist(props) {
 										updateFirestore({
 											popupsDismissed: updatedPopups
 										});
-										setShowExperimentalPopup(false);
 									}}>
 									Got it
 								</Button>
