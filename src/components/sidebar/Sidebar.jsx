@@ -15,9 +15,9 @@ import SidebarInputs from "./SidebarInputs";
 import Social from "./Social";
 
 function Sidebar() {
-	const { type, gameSyncId, gameSyncPlatform, disableGameSync } = useStore(state => ({
+	const { type, gameSyncUsername, gameSyncPlatform, disableGameSync } = useStore(state => ({
 		type: state.type,
-		gameSyncId: state.gameSyncId,
+		gameSyncUsername: state.gameSyncUsername,
 		gameSyncPlatform: state.gameSyncPlatform,
 		disableGameSync: state.disableGameSync
 	}));
@@ -38,11 +38,11 @@ function Sidebar() {
 				<MasteryRankInfo />
 				<SidebarInputs />
 				<SaveStatus />
-				{gameSyncId && (
+				{gameSyncUsername && (
 					<div style={{ marginTop: "0.5em", marginBottom: "0.5em" }}>
 						<div>
 							Linked to {String(gameSyncPlatform).toUpperCase()} account:
-							&nbsp;{gameSyncId}
+							&nbsp;{gameSyncUsername}
 						</div>
 						<Button centered onClick={requestUnlink}>Unlink Account</Button>
 					</div>
