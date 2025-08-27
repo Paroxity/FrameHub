@@ -6,18 +6,21 @@ import { useStore } from "../../hooks/useStore";
 
 function LinkPrompt() {
 	const enableGameSync = useStore(state => state.enableGameSync);
+	const backupMasteryData = useStore(state => state.backupMasteryData);
 
 	const [open, setOpen] = useState(false);
 	const [accountId, setAccountId] = useState("");
 	const [platform, setPlatform] = useState("pc");
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
-	const confirmDisabled = !accountId || accountId.trim().length === 0 || loading;
+	const confirmDisabled =
+		!accountId || accountId.trim().length === 0 || loading;
 
 	async function onConfirm() {
 		setError("");
 		setLoading(true);
 		try {
+			await backupMasteryData();
 			await enableGameSync(accountId.trim(), platform);
 			setOpen(false);
 		} catch (e) {
@@ -51,6 +54,25 @@ function LinkPrompt() {
 								if (error) setError("");
 							}}
 						/>
+						<div
+							style={{
+								fontSize: "14px",
+								textAlign: "left",
+								paddingBottom: "10px"
+							}}
+						>
+							<a
+								href="https://gist.github.com/DaPigGuy/18349a0fd5ad08502305a98f8b115c26"
+								target="_blank"
+								rel="noopener noreferrer"
+								style={{
+									color: "#bea966",
+									textDecoration: "underline"
+								}}
+							>
+								How to get Warframe account ID
+							</a>
+						</div>
 						<Select
 							centered
 							value={platform}
@@ -67,13 +89,20 @@ function LinkPrompt() {
 								{ value: "mobile", label: "Mobile" }
 							]}
 						/>
-						{error ? <div className="error-box">{error}</div> : null}
+						{error ? (
+							<div className="error-box">{error}</div>
+						) : null}
 						<div className="button-row">
 							<Button
 								centered
 								disabled={confirmDisabled}
-								onClick={onConfirm}>
-								{loading ? <div className="spinner-small" /> : "Confirm"}
+								onClick={onConfirm}
+							>
+								{loading ? (
+									<div className="spinner-small" />
+								) : (
+									"Confirm"
+								)}
 							</Button>
 							<Button centered onClick={() => setOpen(false)}>
 								Cancel

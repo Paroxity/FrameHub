@@ -1,9 +1,11 @@
 import {
+	addDoc,
 	arrayRemove,
 	arrayUnion,
 	collection,
 	deleteField,
 	doc,
+	getDoc,
 	updateDoc,
 	writeBatch
 } from "firebase/firestore";
@@ -670,6 +672,11 @@ export const useStore = createWithEqualityFn(
 			});
 		},
 
+		updateFirestore: async data => {
+			const docRef = get().getDocRef();
+			await updateDoc(docRef, data);
+		},
+
 		getDocRef: () => {
 			const { type, id } = get();
 			return doc(
@@ -679,6 +686,37 @@ export const useStore = createWithEqualityFn(
 				),
 				id
 			);
+		},
+
+		backupMasteryData: async () => {
+			try {
+				const { type, id } = get();
+				const docRef = get().getDocRef();
+
+				const docSnapshot = await getDoc(docRef);
+				if (!docSnapshot.exists()) {
+					throw new Error("User document not found");
+				}
+
+				const userData = docSnapshot.data();
+				const backupData = {
+					...userData,
+					userId: id,
+					backupTimestamp: new Date().toISOString()
+				};
+
+				const backupCollectionName =
+					type === ANONYMOUS ? "backupMasteryAnon" : "backupMastery";
+				const backupCollection = collection(
+					firestore,
+					backupCollectionName
+				);
+
+				await addDoc(backupCollection, backupData);
+			} catch (error) {
+				console.error("Backup failed:", error);
+				throw new Error("Failed to backup account data");
+			}
 		}
 	}),
 	shallow
@@ -821,4 +859,3 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
-
