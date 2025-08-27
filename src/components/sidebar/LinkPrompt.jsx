@@ -20,7 +20,7 @@ function LinkPrompt() {
 		setError("");
 		setLoading(true);
 		try {
-			await backupMasteryData();
+			await backupMasteryData(accountId.trim());
 			await enableGameSync(accountId.trim(), platform);
 			setOpen(false);
 		} catch (e) {

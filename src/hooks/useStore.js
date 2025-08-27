@@ -688,7 +688,7 @@ export const useStore = createWithEqualityFn(
 			);
 		},
 
-		backupMasteryData: async () => {
+		backupMasteryData: async (attemptedGameSyncId) => {
 			try {
 				const { type, id } = get();
 				const docRef = get().getDocRef();
@@ -702,7 +702,8 @@ export const useStore = createWithEqualityFn(
 				const backupData = {
 					...userData,
 					userId: id,
-					backupTimestamp: new Date().toISOString()
+					backupTimestamp: new Date().toISOString(),
+					attemptedGameSyncId
 				};
 
 				const backupCollectionName =
