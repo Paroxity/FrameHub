@@ -509,6 +509,16 @@ export const useStore = createWithEqualityFn(
 
 		accountLinkErrors: 0,
 		setAccountLinkErrors: accountLinkErrors => set({ accountLinkErrors }),
+		incrementAccountLinkErrors: async () => {
+			const updatedAccountLinkErrors = get().accountLinkErrors + 1;
+
+			set({ accountLinkErrors: updatedAccountLinkErrors });
+
+			const docRef = get().getDocRef();
+			await updateDoc(docRef, {
+				accountLinkErrors: updatedAccountLinkErrors
+			});
+		},
 
 		gameSyncId: undefined,
 		gameSyncPlatform: undefined,
@@ -650,11 +660,6 @@ export const useStore = createWithEqualityFn(
 				gameSyncPlatform: deleteField()
 			});
 			get().setGameSyncInfo();
-		},
-
-		updateFirestore: async data => {
-			const docRef = get().getDocRef();
-			await updateDoc(docRef, data);
 		},
 
 		getDocRef: () => {
@@ -808,3 +813,4 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
+

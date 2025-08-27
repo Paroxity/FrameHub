@@ -37,8 +37,8 @@ function MasteryChecklist(props) {
 		popupsDismissed,
 		setPopupsDismissed,
 		updateFirestore,
-		accountLinkErrors,
-		setAccountLinkErrors
+		setAccountLinkErrors,
+		incrementAccountLinkErrors
 	} = useStore(state => ({
 		setId: state.setId,
 		setType: state.setType,
@@ -57,8 +57,8 @@ function MasteryChecklist(props) {
 		popupsDismissed: state.popupsDismissed,
 		setPopupsDismissed: state.setPopupsDismissed,
 		updateFirestore: state.updateFirestore,
-		accountLinkErrors: state.accountLinkErrors,
-		setAccountLinkErrors: state.setAccountLinkErrors
+		setAccountLinkErrors: state.setAccountLinkErrors,
+		incrementAccountLinkErrors: state.incrementAccountLinkErrors
 	}));
 
 	const [dataLoading, setDataLoading] = useState(true);
@@ -122,9 +122,7 @@ function MasteryChecklist(props) {
 
 					// Increment account link errors for experimental users
 					if (id && assignGroup(id, 100) < 10) {
-						const newErrorCount = (accountLinkErrors || 0) + 1;
-						setAccountLinkErrors(newErrorCount);
-						updateFirestore({ accountLinkErrors: newErrorCount });
+						incrementAccountLinkErrors();
 					}
 				}
 			};
@@ -140,15 +138,13 @@ function MasteryChecklist(props) {
 		itemsLoading,
 		gameSync,
 		id,
-		accountLinkErrors,
-		setAccountLinkErrors,
+		incrementAccountLinkErrors,
 		updateFirestore
 	]);
 
 	useEffect(() => {
 		if (props.type !== SHARED && !dataLoading && id) {
 			const userGroup = assignGroup(id, 100);
-			console.log("Assigned group:", userGroup);
 
 			if (userGroup < 10) {
 				if (!popupsDismissed.includes("experimental-account-link")) {
@@ -190,26 +186,27 @@ function MasteryChecklist(props) {
 				<div className="popup show">
 					<div
 						className="popup-box link-popup"
-						style={{ maxWidth: "400px" }}
-					>
+						style={{ maxWidth: "400px" }}>
 						<div className="mastery-rank">
 							Warframe Account Linking Now Available
 						</div>
 						<div
-							style={{ lineHeight: "1.5", paddingBottom: "16px" }}
-						>
-							There's a new "Link Account" button in the sidebar
-							that allows you to link your Warframe account. This
-							is an experimental feature available to a subset of
-							our users. Accounts can be unlinked at any time.
+							style={{
+								lineHeight: "1.5",
+								paddingBottom: "16px"
+							}}>
+							There is now a new "Link Account" button in the
+							sidebar that allows you to link your Warframe
+							account. This is an experimental feature available
+							to a subset of our users. Accounts can be unlinked
+							at any time.
 						</div>
 						<div
 							className="button-row"
 							style={{
 								display: "flex",
 								justifyContent: "flex-end"
-							}}
-						>
+							}}>
 							<div style={{ width: "fit-content" }}>
 								<Button
 									onClick={() => {
@@ -222,8 +219,7 @@ function MasteryChecklist(props) {
 											popupsDismissed: updatedPopups
 										});
 										setShowExperimentalPopup(false);
-									}}
-								>
+									}}>
 									Got it
 								</Button>
 							</div>
@@ -241,3 +237,4 @@ MasteryChecklist.propTypes = {
 };
 
 export default MasteryChecklist;
+
