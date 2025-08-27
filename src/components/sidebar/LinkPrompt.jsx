@@ -45,7 +45,7 @@ function LinkPrompt() {
 				<div className="popup show">
 					<div
 						className="popup-box link-popup"
-						style={{ maxWidth: "300px" }}>
+						style={{ maxWidth: "400px" }}>
 						<div className="mastery-rank">Link your account</div>
 						<FormInput
 							type="text"
@@ -100,7 +100,22 @@ function LinkPrompt() {
 							stored for 28 days minimum.
 						</div>
 						{error ? (
-							<div className="error-box">{error}</div>
+							<div className="error-box">
+								{error}
+								<br />
+								<a
+									href="https://discord.gg/CNZUgwy"
+									target="_blank"
+									rel="noopener noreferrer"
+									style={{
+										color: "inherit",
+										textDecoration: "underline",
+										paddingTop: "8px",
+										display: "inline-block"
+									}}>
+									Report an issue on Discord
+								</a>
+							</div>
 						) : null}
 						<div className="button-row">
 							<Button
