@@ -1,7 +1,7 @@
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { firestore, auth } from "../App";
+import { firestore } from "../App";
 import Checklist from "../components/checklist/Checklist";
 import PlanetChecklist from "../components/checklist/planets/PlanetChecklist";
 import MissingIngredients from "../components/foundry/MissingIngredients";
@@ -134,7 +134,16 @@ function MasteryChecklist(props) {
 			const interval = setInterval(handleGameSync, 5 * 60 * 1000);
 			return () => clearInterval(interval);
 		}
-	}, [props.type, dataLoading, itemsLoading, gameSync]);
+	}, [
+		props.type,
+		dataLoading,
+		itemsLoading,
+		gameSync,
+		id,
+		accountLinkErrors,
+		setAccountLinkErrors,
+		updateFirestore
+	]);
 
 	useEffect(() => {
 		if (props.type !== SHARED && !dataLoading && id) {
