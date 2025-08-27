@@ -1,6 +1,10 @@
 const PROXY_URL = "https://proxy.framehub.app/?url=";
 
 export async function getGameProfile(accountId, platform) {
+	if (accountId.length !== 24 || !accountId.match(/^[0-9a-z]+$/)) {
+		throw new Error("Invalid Account ID");
+	}
+
 	let domainSuffix = "";
 	switch (platform) {
 		case "psn":
@@ -33,7 +37,8 @@ export async function getGameProfile(accountId, platform) {
 					"Invalid request. Ensure the Account ID is valid and the correct platform is selected.";
 				break;
 			case 403:
-				message = "We're experiencing issues getting profile data. Try again later.";
+				message =
+					"We're experiencing issues getting profile data. Try again later.";
 				break;
 			case 409:
 				message =
@@ -62,3 +67,4 @@ export async function getGameProfile(accountId, platform) {
 	}
 	return json;
 }
+
