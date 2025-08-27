@@ -1,7 +1,7 @@
 import Masonry from "react-masonry-css";
 import { useStore } from "../../../hooks/useStore";
 import nodes from "../../../resources/nodes.json";
-import { planetsWithJunctions } from "../../../utils/nodes";
+import { planetJunctionsMap } from "../../../utils/nodes";
 import Planet from "./Planet";
 
 function PlanetChecklist() {
@@ -14,7 +14,7 @@ function PlanetChecklist() {
 						state.displayingSteelPath ? "steelPath" : "starChart"
 					].has(id)
 				) ||
-				(planetsWithJunctions.includes(planet) &&
+				(planetJunctionsMap[planet] &&
 					!state[
 						(state.displayingSteelPath
 							? "steelPath"

@@ -1,9 +1,12 @@
 import {
+	addDoc,
 	arrayRemove,
 	arrayUnion,
 	collection,
 	deleteField,
 	doc,
+	getDoc,
+	updateDoc,
 	writeBatch
 } from "firebase/firestore";
 import { getMetadata, ref } from "firebase/storage";
@@ -17,11 +20,14 @@ import {
 	totalRailjackIntrinsics,
 	totalDrifterIntrinsics,
 	xpFromItem,
-	xpToMR
+	xpToMR,
+	itemLevelByXP
 } from "../utils/mastery-rank";
-import { flattenedNodes, planetsWithJunctions } from "../utils/nodes";
+import { flattenedNodes, planetJunctionsMap } from "../utils/nodes";
 import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
+import { getGameProfile } from "../utils/profile";
+import { assignGroup } from "../utils/hash";
 
 export const useStore = createWithEqualityFn(
 	(set, get) => ({
@@ -33,17 +39,9 @@ export const useStore = createWithEqualityFn(
 
 		unsavedChanges: [],
 		saveImmediate: () => {
-			const { type, id, unsavedChanges } = get();
+			const { getDocRef, type, unsavedChanges } = get();
 			if (type !== SHARED && unsavedChanges.length > 0) {
-				const docRef = doc(
-					collection(
-						firestore,
-						type === ANONYMOUS
-							? "anonymousMasteryData"
-							: "masteryData"
-					),
-					id
-				);
+				const docRef = getDocRef();
 				const batch = writeBatch(firestore);
 
 				batch.set(
@@ -223,7 +221,7 @@ export const useStore = createWithEqualityFn(
 			let itemsMasteredCount = 0;
 
 			let totalXP =
-				junctionsToXP(planetsWithJunctions.length * 2) +
+				junctionsToXP(Object.keys(planetJunctionsMap).length * 2) +
 				intrinsicsToXP(
 					totalRailjackIntrinsics + totalDrifterIntrinsics
 				);
@@ -331,6 +329,11 @@ export const useStore = createWithEqualityFn(
 			get().recalculateIngredients();
 		},
 		setPartiallyMasteredItem: (name, rank, maxRank) => {
+			const oldRank =
+				get().partiallyMasteredItems[name] ??
+				(get().itemsMastered.has(name) ? maxRank : 0);
+			if (rank === oldRank) return;
+
 			if (rank === maxRank) get().masterItem(name, true);
 			else if (get().itemsMastered.has(name))
 				get().masterItem(name, false);
@@ -390,7 +393,7 @@ export const useStore = createWithEqualityFn(
 		masterAllJunctions: (steelPath, mastered) =>
 			masterAll(
 				(steelPath ? "steelPath" : "starChart") + "Junctions",
-				planetsWithJunctions,
+				Object.keys(planetJunctionsMap),
 				mastered
 			),
 
@@ -502,7 +505,219 @@ export const useStore = createWithEqualityFn(
 			"railjackIntrinsics"
 		),
 		drifterIntrinsics: 0,
-		setDrifterIntrinsics: firestoreFieldSetter("drifterIntrinsics")
+		setDrifterIntrinsics: firestoreFieldSetter("drifterIntrinsics"),
+
+		popupsDismissed: [],
+		setPopupsDismissed: popupsDismissed => set({ popupsDismissed }),
+
+		accountLinkErrors: 0,
+		setAccountLinkErrors: accountLinkErrors => set({ accountLinkErrors }),
+		incrementAccountLinkErrors: async () => {
+			const updatedAccountLinkErrors = get().accountLinkErrors + 1;
+
+			set({ accountLinkErrors: updatedAccountLinkErrors });
+
+			const docRef = get().getDocRef();
+			await updateDoc(docRef, {
+				accountLinkErrors: updatedAccountLinkErrors
+			});
+		},
+
+		gameSyncId: undefined,
+		gameSyncPlatform: undefined,
+		gameSyncUsername: undefined,
+		gameSync: async prefetchedProfile => {
+			const {
+				gameSyncId: accountId,
+				gameSyncPlatform: platform,
+				flattenedItems,
+				partiallyMasteredItems,
+				setPartiallyMasteredItem,
+				itemsMastered,
+				setRailjackIntrinsics,
+				setDrifterIntrinsics,
+				starChart,
+				starChartJunctions,
+				steelPath,
+				steelPathJunctions,
+				masterNode,
+				masterJunction
+			} = get();
+			if (!accountId) return;
+
+			const gameProfile =
+				prefetchedProfile ??
+				(await getGameProfile(accountId, platform))?.Results?.[0];
+			if (
+				!gameProfile?.LoadOutInventory?.XPInfo?.[0].ItemType ||
+				!gameProfile?.LoadOutInventory?.XPInfo?.[0].XP ||
+				!gameProfile?.Missions?.[0]?.Tag
+			)
+				return;
+
+			set({
+				gameSyncUsername: gameProfile.DisplayName.slice(
+					0,
+					gameProfile.DisplayName.length - 1
+				)
+			});
+
+			const gameProfileItemsXP = new Map();
+			const gameProfileMissions = new Map();
+			gameProfile.LoadOutInventory.XPInfo.forEach(({ ItemType, XP }) => {
+				gameProfileItemsXP.set(ItemType, XP);
+			});
+			gameProfile.Missions.forEach(m => {
+				gameProfileMissions.set(m.Tag, m.Tier ?? 0);
+			});
+
+			Object.entries(flattenedItems).forEach(([itemName, item]) => {
+				const currentPartialMastery = itemsMastered.has(itemName)
+					? (item.maxLvl ?? 30)
+					: (partiallyMasteredItems[itemName] ?? 0);
+				const gameLevel = itemLevelByXP(
+					item,
+					item.type,
+					gameProfileItemsXP.get(item.id) ?? 0
+				);
+
+				if (currentPartialMastery !== gameLevel)
+					setPartiallyMasteredItem(
+						itemName,
+						gameLevel,
+						item.maxLvl ?? 30
+					);
+			});
+
+			Object.keys(flattenedNodes).forEach(node => {
+				const hasStarChart = starChart.has(node);
+				const hasStarChartInGame = gameProfileMissions.has(node);
+				if (hasStarChart !== hasStarChartInGame)
+					masterNode(node, false, hasStarChartInGame);
+
+				const hasSteelPath = steelPath.has(node);
+				const hasSteelPathInGame = gameProfileMissions.get(node) === 1;
+				if (hasSteelPath !== hasSteelPathInGame)
+					masterNode(node, true, hasSteelPathInGame);
+			});
+
+			Object.entries(planetJunctionsMap).forEach(
+				([planet, junctionNode]) => {
+					const hasStarChart = starChartJunctions.has(planet);
+					const hasStarChartInGame =
+						gameProfileMissions.has(junctionNode);
+					if (hasStarChart !== hasStarChartInGame)
+						masterJunction(planet, false, hasStarChartInGame);
+
+					const hasSteelPath = steelPathJunctions.has(planet);
+					const hasSteelPathInGame =
+						gameProfileMissions.get(junctionNode) === 1;
+					if (hasSteelPath !== hasSteelPathInGame)
+						masterJunction(planet, true, hasSteelPathInGame);
+				}
+			);
+
+			const intrinsics = gameProfile.PlayerSkills;
+			setRailjackIntrinsics(
+				[
+					"LPS_COMMAND",
+					"LPS_ENGINEERING",
+					"LPS_GUNNERY",
+					"LPS_PILOTING",
+					"LPS_TACTICAL"
+				].reduce((railjackIntrinsics, key) => {
+					return railjackIntrinsics + (intrinsics?.[key] ?? 0);
+				}, 0)
+			);
+			setDrifterIntrinsics(
+				[
+					"LPS_DRIFT_COMBAT",
+					"LPS_DRIFT_ENDURANCE",
+					"LPS_DRIFT_OPPORTUNITY",
+					"LPS_DRIFT_RIDING"
+				].reduce((railjackIntrinsics, key) => {
+					return railjackIntrinsics + (intrinsics?.[key] ?? 0);
+				}, 0)
+			);
+		},
+		setGameSyncInfo: (accountId, platform) => {
+			set({ gameSyncId: accountId, gameSyncPlatform: platform });
+		},
+		enableGameSync: async (accountId, platform) => {
+			const response = await getGameProfile(accountId, platform);
+			const gameProfile = response?.Results?.[0];
+			const docRef = get().getDocRef();
+			updateDoc(docRef, {
+				gameSyncId: accountId,
+				gameSyncPlatform: platform
+			});
+			get().setGameSyncInfo(accountId, platform);
+			get().gameSync(gameProfile);
+		},
+		disableGameSync: () => {
+			if (!get().gameSyncId) return;
+
+			const docRef = get().getDocRef();
+			updateDoc(docRef, {
+				gameSyncId: deleteField(),
+				gameSyncPlatform: deleteField()
+			});
+			get().setGameSyncInfo();
+		},
+		gameSyncExperiment: false,
+		initGameSyncExperiment: () => {
+			set({
+				gameSyncExperiment:
+					get().type !== SHARED && assignGroup(get().id, 100) < 10
+			});
+		},
+
+		updateFirestore: async data => {
+			const docRef = get().getDocRef();
+			await updateDoc(docRef, data);
+		},
+
+		getDocRef: () => {
+			const { type, id } = get();
+			return doc(
+				collection(
+					firestore,
+					type === ANONYMOUS ? "anonymousMasteryData" : "masteryData"
+				),
+				id
+			);
+		},
+
+		backupMasteryData: async () => {
+			try {
+				const { type, id } = get();
+				const docRef = get().getDocRef();
+
+				const docSnapshot = await getDoc(docRef);
+				if (!docSnapshot.exists()) {
+					throw new Error("User document not found");
+				}
+
+				const userData = docSnapshot.data();
+				const backupData = {
+					...userData,
+					userId: id,
+					backupTimestamp: new Date().toISOString()
+				};
+
+				const backupCollectionName =
+					type === ANONYMOUS ? "backupMasteryAnon" : "backupMastery";
+				const backupCollection = collection(
+					firestore,
+					backupCollectionName
+				);
+
+				await addDoc(backupCollection, backupData);
+			} catch (error) {
+				console.error("Backup failed:", error);
+				throw new Error("Failed to backup account data");
+			}
+		}
 	}),
 	shallow
 );
@@ -597,6 +812,9 @@ function setMastered(key, mastered) {
 function master(key, id, mastered) {
 	set(state =>
 		produce(state, draftState => {
+			const previouslyMastered = draftState[key].has(id);
+			if (previouslyMastered === mastered) return;
+
 			if (mastered) {
 				draftState[key].add(id);
 			} else {
@@ -641,4 +859,3 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
-

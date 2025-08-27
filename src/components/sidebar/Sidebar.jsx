@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useStore } from "../../hooks/useStore";
 import placeholderIcon from "../../icons/placeholder-icon.svg";
 import { ANONYMOUS, AUTHENTICATED } from "../../utils/checklist-types";
+import Button from "../Button";
+import ConfirmationPrompt from "./ConfirmationPrompt";
 import DangerZone from "./DangerZone";
 import ExitButton from "./ExitButton";
 import LogoutButton from "./LogoutButton";
@@ -13,8 +15,22 @@ import SidebarInputs from "./SidebarInputs";
 import Social from "./Social";
 
 function Sidebar() {
-	const type = useStore(state => state.type);
+	const { type, gameSyncUsername, gameSyncPlatform, disableGameSync } = useStore(state => ({
+		type: state.type,
+		gameSyncUsername: state.gameSyncUsername,
+		gameSyncPlatform: state.gameSyncPlatform,
+		disableGameSync: state.disableGameSync
+	}));
 	const [toggled, setToggled] = useState(false);
+	const [unlinkCb, setUnlinkCb] = useState();
+	const [unlinkMsg, setUnlinkMsg] = useState("");
+
+	function requestUnlink() {
+		setUnlinkCb(() => disableGameSync);
+		setUnlinkMsg(
+			"Are you sure you want to unlink your account? This will stop syncing with your in-game profile."
+		);
+	}
 
 	return (
 		<>
@@ -22,6 +38,15 @@ function Sidebar() {
 				<MasteryRankInfo />
 				<SidebarInputs />
 				<SaveStatus />
+				{gameSyncUsername && (
+					<div style={{ marginTop: "0.5em", marginBottom: "0.5em" }}>
+						<div>
+							Linked to {String(gameSyncPlatform).toUpperCase()} account:
+							&nbsp;{gameSyncUsername}
+						</div>
+						<Button centered onClick={requestUnlink}>Unlink Account</Button>
+					</div>
+				)}
 				{type === ANONYMOUS && (
 					<div>Remember to bookmark this URL.</div>
 				)}
@@ -39,9 +64,13 @@ function Sidebar() {
 				}}
 				alt="menu"
 			/>
+			<ConfirmationPrompt
+				message={unlinkMsg}
+				callback={unlinkCb}
+				close={() => setUnlinkCb(undefined)}
+			/>
 		</>
 	);
 }
 
 export default Sidebar;
-

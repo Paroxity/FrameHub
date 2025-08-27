@@ -9,6 +9,7 @@ import FrameHubLogo from "../components/FrameHubLogo";
 import LoadingScreen from "../components/LoadingScreen";
 import Sidebar from "../components/sidebar/Sidebar";
 import UnloadWarning from "../components/sidebar/UnloadWarning";
+import Button from "../components/Button";
 import { useStore } from "../hooks/useStore";
 import { ANONYMOUS, AUTHENTICATED, SHARED } from "../utils/checklist-types";
 import { useParams } from "react-router-dom";
@@ -30,7 +31,15 @@ function MasteryChecklist(props) {
 		setHideMastered,
 		setHidePrime,
 		setHideFounders,
-		displayingNodes
+		displayingNodes,
+		setGameSyncInfo,
+		gameSyncExperiment,
+		initGameSyncExperiment,
+		popupsDismissed,
+		setPopupsDismissed,
+		updateFirestore,
+		setAccountLinkErrors,
+		incrementAccountLinkErrors
 	} = useStore(state => ({
 		setId: state.setId,
 		setType: state.setType,
@@ -44,10 +53,19 @@ function MasteryChecklist(props) {
 		setHideMastered: state.setHideMastered,
 		setHidePrime: state.setHidePrime,
 		setHideFounders: state.setHideFounders,
-		displayingNodes: state.displayingNodes
+		displayingNodes: state.displayingNodes,
+		setGameSyncInfo: state.setGameSyncInfo,
+		gameSyncExperiment: state.gameSyncExperiment,
+		initGameSyncExperiment: state.initGameSyncExperiment,
+		popupsDismissed: state.popupsDismissed,
+		setPopupsDismissed: state.setPopupsDismissed,
+		updateFirestore: state.updateFirestore,
+		setAccountLinkErrors: state.setAccountLinkErrors,
+		incrementAccountLinkErrors: state.incrementAccountLinkErrors
 	}));
 
 	const [dataLoading, setDataLoading] = useState(true);
+	const [syncError, setSyncError] = useState(false);
 	useEffect(() => {
 		setId(id);
 		setType(props.type);
@@ -78,20 +96,59 @@ function MasteryChecklist(props) {
 				setNodesMastered(data?.steelPath ?? [], true);
 				setJunctionsMastered(data?.starChartJunctions ?? [], false);
 				setJunctionsMastered(data?.steelPathJunctions ?? [], true);
+				setGameSyncInfo(data?.gameSyncId, data?.gameSyncPlatform);
+				setPopupsDismissed(data?.popupsDismissed ?? []);
+				setAccountLinkErrors(data?.accountLinkErrors ?? 0);
 
 				setDataLoading(false);
+
+				initGameSyncExperiment();
 			}
 		);
 	}, [id, props.type]); //eslint-disable-line
 
-	const { items, fetchData } = useStore(state => ({
+	const { items, fetchData, gameSync } = useStore(state => ({
 		items: state.items,
-		fetchData: state.fetchData
+		fetchData: state.fetchData,
+		gameSync: state.gameSync
 	}));
 	const itemsLoading = Object.keys(items).length === 0;
 	useEffect(() => {
 		fetchData();
-	}, []); //eslint-disable-line
+	}, [fetchData]);
+	useEffect(() => {
+		if (props.type !== SHARED && !dataLoading && !itemsLoading) {
+			const handleGameSync = async () => {
+				try {
+					await gameSync();
+				} catch (error) {
+					setSyncError(true);
+
+					// Increment account link errors for experimental users
+					if (gameSyncExperiment) {
+						incrementAccountLinkErrors();
+					}
+				}
+			};
+
+			handleGameSync();
+
+			const interval = setInterval(handleGameSync, 5 * 60 * 1000);
+			return () => clearInterval(interval);
+		}
+	}, [
+		props.type,
+		dataLoading,
+		itemsLoading,
+		gameSync,
+		gameSyncExperiment,
+		incrementAccountLinkErrors,
+		updateFirestore
+	]);
+
+	const showGameSyncExperimentPopup =
+		gameSyncExperiment &&
+		!popupsDismissed.includes("experimental-account-link");
 
 	return dataLoading || itemsLoading ? (
 		<LoadingScreen />
@@ -110,6 +167,61 @@ function MasteryChecklist(props) {
 					</>
 				)}
 			</div>
+			{syncError && (
+				<div className="popup show">
+					<div className="popup-box">
+						Recent stats failed to sync. Your last saved progress is
+						still available.
+						<Button centered onClick={() => setSyncError(false)}>
+							Ok
+						</Button>
+					</div>
+				</div>
+			)}
+			{showGameSyncExperimentPopup && (
+				<div className="popup show">
+					<div
+						className="popup-box link-popup"
+						style={{ maxWidth: "400px" }}>
+						<div className="mastery-rank">
+							Warframe Account Linking Now Available
+						</div>
+						<div
+							style={{
+								lineHeight: "1.5",
+								paddingBottom: "16px"
+							}}>
+							There is now a new "Link Account" button in the
+							sidebar that allows you to link your Warframe
+							account. This is an experimental feature available
+							to a subset of our users. Accounts can be unlinked
+							at any time.
+						</div>
+						<div
+							className="button-row"
+							style={{
+								display: "flex",
+								justifyContent: "flex-end"
+							}}>
+							<div style={{ width: "fit-content" }}>
+								<Button
+									onClick={() => {
+										const updatedPopups = [
+											...popupsDismissed,
+											"experimental-account-link"
+										];
+										setPopupsDismissed(updatedPopups);
+										updateFirestore({
+											popupsDismissed: updatedPopups
+										});
+									}}>
+									Got it
+								</Button>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

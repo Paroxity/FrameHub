@@ -15,21 +15,21 @@ export const flattenedNodes = Object.entries(nodes).reduce(
 	{}
 );
 
-export const planetsWithJunctions = [
-	"Venus",
-	"Mercury",
-	"Mars",
-	"Phobos",
-	"Ceres",
-	"Jupiter",
-	"Europa",
-	"Saturn",
-	"Uranus",
-	"Neptune",
-	"Pluto",
-	"Eris",
-	"Sedna"
-];
+export const planetJunctionsMap = {
+	"Venus": "EarthToVenusJunction",
+	"Mercury": "VenusToMercuryJunction",
+	"Mars": "EarthToMarsJunction",
+	"Phobos": "MarsToPhobosJunction",
+	"Ceres": "MarsToCeresJunction",
+	"Jupiter": "CeresToJupiterJunction",
+	"Europa": "JupiterToEuropaJunction",
+	"Saturn": "JupiterToSaturnJunction",
+	"Uranus": "SaturnToUranusJunction",
+	"Neptune": "UranusToNeptuneJunction",
+	"Pluto": "NeptuneToPlutoJunction",
+	"Eris": "PlutoToErisJunction",
+	"Sedna": "PlutoToSednaJunction"
+};
 
 export const missionIndexMap = [
 	"Assasination",
