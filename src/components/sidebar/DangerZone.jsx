@@ -4,9 +4,12 @@ import { SHARED } from "../../utils/checklist-types";
 import Button from "../Button";
 import ConfirmationPrompt from "./ConfirmationPrompt";
 import LinkPrompt from "./LinkPrompt";
+import { assignGroup } from "../../utils/hash";
 
 function DangerZone() {
 	const {
+		id,
+		type,
 		readOnly,
 		displayingNodes,
 		displayingSteelPath,
@@ -14,6 +17,8 @@ function DangerZone() {
 		masterAllNodes,
 		masterAllJunctions
 	} = useStore(state => ({
+		id: state.id,
+		type: state.type,
 		readOnly: state.type === SHARED || state.gameSyncId !== undefined,
 		displayingNodes: state.displayingNodes,
 		displayingSteelPath: state.displayingSteelPath,
@@ -25,11 +30,13 @@ function DangerZone() {
 	const [confirmationCallback, setConfirmationCallback] = useState();
 	const [confirmationMessage, setConfirmationMessage] = useState("");
 
+	const showLinkPrompt = type !== SHARED && id && assignGroup(id, 100) < 10;
+
 	return readOnly ? null : (
 		<>
 			<span className="danger-text">Danger zone</span>
 			<div className="danger">
-				<LinkPrompt />
+				{showLinkPrompt && <LinkPrompt />}
 				<Button
 					centered
 					onClick={() => {
@@ -53,7 +60,8 @@ function DangerZone() {
 								"Are you sure you would like to master all items?"
 							);
 						}
-					}}>
+					}}
+				>
 					Master All {displayingNodes ? "Nodes" : "Items"}
 				</Button>
 				<Button
@@ -77,7 +85,8 @@ function DangerZone() {
 								"Are you sure you would like to reset all items?"
 							);
 						}
-					}}>
+					}}
+				>
 					Reset {displayingNodes ? "Nodes" : "Items"}
 				</Button>
 			</div>

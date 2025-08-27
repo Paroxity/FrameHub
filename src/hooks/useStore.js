@@ -504,6 +504,12 @@ export const useStore = createWithEqualityFn(
 		drifterIntrinsics: 0,
 		setDrifterIntrinsics: firestoreFieldSetter("drifterIntrinsics"),
 
+		popupsDismissed: [],
+		setPopupsDismissed: popupsDismissed => set({ popupsDismissed }),
+
+		accountLinkErrors: 0,
+		setAccountLinkErrors: accountLinkErrors => set({ accountLinkErrors }),
+
 		gameSyncId: undefined,
 		gameSyncPlatform: undefined,
 		gameSyncUsername: undefined,
@@ -646,6 +652,11 @@ export const useStore = createWithEqualityFn(
 			get().setGameSyncInfo();
 		},
 
+		updateFirestore: async data => {
+			const docRef = get().getDocRef();
+			await updateDoc(docRef, data);
+		},
+
 		getDocRef: () => {
 			const { type, id } = get();
 			return doc(
@@ -680,7 +691,7 @@ global.framehub = {
 	masterNode: (id, steelPath, mastered) =>
 		get().masterNode(id, steelPath, mastered),
 	masterJunction: (id, steelPath, mastered) =>
-		get().masterJunction(id, steelPath, mastered),
+		get().masterJunction(id, steelPath, mastered)
 };
 
 function firestoreFieldSetter(key, stateKey = key) {
@@ -797,4 +808,3 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
-
