@@ -62,7 +62,7 @@ function LinkPrompt() {
 							}}
 						>
 							<a
-								href="https://gist.github.com/DaPigGuy/18349a0fd5ad08502305a98f8b115c26"
+								href="https://gist.github.com/DaPigGuy/18349a0fd5ad08502305a98f8b115c26#obtaining-your-warframe-account-id"
 								target="_blank"
 								rel="noopener noreferrer"
 								style={{
