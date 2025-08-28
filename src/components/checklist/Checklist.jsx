@@ -1,18 +1,14 @@
 import Masonry from "react-masonry-css";
 import { useStore } from "../../hooks/useStore";
-import { foundersItems, itemIsPrime } from "../../utils/items";
 import Category from "./Category";
+import { isItemFiltered } from "../../utils/item-filter";
 
 function Checklist() {
 	const visibleColumns = useStore(state =>
 		Object.keys(state.items).filter(category => {
 			return (
-				!state.hideMastered ||
-				!Object.keys(state.items[category]).every(
-					item =>
-						state.itemsMastered.has(item) ||
-						(state.hideFounders && foundersItems.includes(item)) ||
-						(state.hidePrime && itemIsPrime(item))
+				Object.entries(state.items[category]).some(
+					([itemName, item]) => !isItemFiltered(itemName, item, state)
 				)
 			);
 		})

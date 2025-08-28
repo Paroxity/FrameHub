@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useStore } from "../../hooks/useStore";
 import checkmark from "../../icons/checkmark.svg";
 import { SHARED } from "../../utils/checklist-types";
-import { foundersItems, itemShape, itemIsPrime } from "../../utils/items";
+import { itemShape } from "../../utils/items";
 import Button from "../Button";
 import PaginatedTooltip from "../PaginatedTooltip";
 import ItemGeneralInfoTooltip from "./ItemGeneralInfoTooltip";
 import ItemRelicTooltip from "./ItemRelicTooltip";
+import { isItemFiltered } from "../../utils/item-filter";
 
 function CategoryItem({ name, item }) {
 	const {
@@ -20,20 +21,17 @@ function CategoryItem({ name, item }) {
 		setPartiallyMasteredItem,
 		hidden
 	} = useStore(state => ({
-		readOnly: (state.type === SHARED || state.gameSyncId !== undefined),
+		readOnly: state.type === SHARED || state.gameSyncId !== undefined,
 		masterItem: state.masterItem,
 		mastered: state.itemsMastered.has(name),
 		masteryRankLocked: (item.mr || 0) > state.masteryRank,
 		partialRank: state.partiallyMasteredItems[name],
 		setPartiallyMasteredItem: state.setPartiallyMasteredItem,
-		hidden:
-			(state.hideMastered && state.itemsMastered.has(name)) ||
-			(state.hideFounders &&
-				foundersItems.includes(name) &&
-				!state.itemsMastered.has(name)) ||
-			(state.hidePrime &&
-				itemIsPrime(name) &&
-				!state.itemsMastered.has(name))
+		hidden: isItemFiltered(
+			name,
+			item,
+			state
+		)
 	}));
 	const [rankSelectToggled, setRankSelectToggled] = useState(false);
 

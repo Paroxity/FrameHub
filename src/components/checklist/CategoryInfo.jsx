@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import { useStore } from "../../hooks/useStore";
-import { foundersItems, itemIsPrime } from "../../utils/items";
 import { xpFromItem } from "../../utils/mastery-rank";
 import BaseCategoryInfo from "./BaseCategoryInfo";
+import { isItemFiltered } from "../../utils/item-filter";
 
 const fancyCategoryNames = {
 	WF: "Warframe",
@@ -42,9 +42,12 @@ function CategoryItem({ name }) {
 	let totalXP = 0;
 	Object.entries(categoryItems).forEach(([itemName, item]) => {
 		if (
-			!itemsMastered.has(itemName) &&
-			((hideFounders && foundersItems.includes(itemName)) ||
-				(hidePrime && itemIsPrime(itemName)))
+			isItemFiltered(itemName, item, {
+				itemsMastered,
+				hideMastered: false,
+				hideFounders,
+				hidePrime
+			})
 		)
 			return;
 
