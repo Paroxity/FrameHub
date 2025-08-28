@@ -96,7 +96,7 @@ function MasteryChecklist(props) {
 				setNodesMastered(data?.steelPath ?? [], true);
 				setJunctionsMastered(data?.starChartJunctions ?? [], false);
 				setJunctionsMastered(data?.steelPathJunctions ?? [], true);
-				setGameSyncInfo(data?.gameSyncId, data?.gameSyncPlatform);
+				setGameSyncInfo(data?.gameSyncUsername, data?.gameSyncId, data?.gameSyncPlatform);
 				setPopupsDismissed(data?.popupsDismissed ?? []);
 				setAccountLinkErrors(data?.accountLinkErrors ?? 0);
 

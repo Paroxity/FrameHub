@@ -528,6 +528,7 @@ export const useStore = createWithEqualityFn(
 		gameSyncUsername: undefined,
 		gameSync: async prefetchedProfile => {
 			const {
+				gameSyncUsername,
 				gameSyncId: accountId,
 				gameSyncPlatform: platform,
 				flattenedItems,
@@ -541,7 +542,8 @@ export const useStore = createWithEqualityFn(
 				steelPath,
 				steelPathJunctions,
 				masterNode,
-				masterJunction
+				masterJunction,
+				updateFirestore
 			} = get();
 			if (!accountId) return;
 
@@ -555,12 +557,16 @@ export const useStore = createWithEqualityFn(
 			)
 				return;
 
-			set({
-				gameSyncUsername: gameProfile.DisplayName.slice(
-					0,
-					gameProfile.DisplayName.length - 1
-				)
-			});
+			const accountUsername = gameProfile.DisplayName.slice(
+				0,
+				gameProfile.DisplayName.length - 1
+			);
+			if (accountUsername !== gameSyncUsername) {
+				set({ gameSyncUsername: accountUsername });
+				updateFirestore({
+					gameSyncUsername: accountUsername
+				});
+			}
 
 			const gameProfileItemsXP = new Map();
 			const gameProfileMissions = new Map();
@@ -640,18 +646,27 @@ export const useStore = createWithEqualityFn(
 				}, 0)
 			);
 		},
-		setGameSyncInfo: (accountId, platform) => {
-			set({ gameSyncId: accountId, gameSyncPlatform: platform });
+		setGameSyncInfo: (accountUsername, accountId, platform) => {
+			set({
+				gameSyncUsername: accountUsername,
+				gameSyncId: accountId,
+				gameSyncPlatform: platform
+			});
 		},
 		enableGameSync: async (accountId, platform) => {
 			const response = await getGameProfile(accountId, platform);
 			const gameProfile = response?.Results?.[0];
-			const docRef = get().getDocRef();
-			updateDoc(docRef, {
+			const accountUsername = gameProfile.DisplayName.slice(
+				0,
+				gameProfile.DisplayName.length - 1
+			);
+
+			get().updateFirestore({
+				gameSyncUsername: accountUsername,
 				gameSyncId: accountId,
 				gameSyncPlatform: platform
 			});
-			get().setGameSyncInfo(accountId, platform);
+			get().setGameSyncInfo(accountUsername, accountId, platform);
 			get().gameSync(gameProfile);
 		},
 		disableGameSync: () => {
@@ -659,6 +674,7 @@ export const useStore = createWithEqualityFn(
 
 			const docRef = get().getDocRef();
 			updateDoc(docRef, {
+				gameSyncUsername: deleteField(),
 				gameSyncId: deleteField(),
 				gameSyncPlatform: deleteField()
 			});
@@ -688,7 +704,7 @@ export const useStore = createWithEqualityFn(
 			);
 		},
 
-		backupMasteryData: async (attemptedGameSyncId) => {
+		backupMasteryData: async attemptedGameSyncId => {
 			try {
 				const { type, id } = get();
 				const docRef = get().getDocRef();
@@ -860,3 +876,4 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
+
