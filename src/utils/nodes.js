@@ -28,7 +28,7 @@ export const planetJunctionsMap = {
 	"Neptune": "UranusToNeptuneJunction",
 	"Pluto": "NeptuneToPlutoJunction",
 	"Eris": "PlutoToErisJunction",
-	"Sedna": "PlutoToSednaJunction"
+	"Sedna": "ErisToSednaJunction"
 };
 
 export const missionIndexMap = [
