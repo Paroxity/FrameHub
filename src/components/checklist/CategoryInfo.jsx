@@ -20,53 +20,47 @@ const fancyCategoryNames = {
 };
 
 function CategoryItem({ name }) {
-	const {
-		itemsMastered,
-		partiallyMasteredItems,
-		categoryItems,
-		hideFounders,
-		hidePrime
-	} = useStore(state => ({
-		itemsMastered: state.itemsMastered,
-		partiallyMasteredItems: state.partiallyMasteredItems,
-		categoryItems: state.items[name],
-		hideFounders: state.hideFounders,
-		hidePrime: state.hidePrime
-	}));
+	const { masteredCount, masteredXP, totalCount, totalXP } = useStore(
+		state => {
+			const { itemsMastered, partiallyMasteredItems } = state;
+			const categoryItems = state.items[name];
 
-	let masteredCount = 0;
-	let masteredXP = 0;
-	// There is an extra "Amp" item in the amp category in the
-	// in-game profile.
-	let totalCount = name === "AMP" ? 1 : 0;
-	let totalXP = 0;
-	Object.entries(categoryItems).forEach(([itemName, item]) => {
-		if (
-			isItemFiltered(itemName, item, {
-				itemsMastered,
-				hideMastered: false,
-				hideFounders,
-				hidePrime
-			})
-		)
-			return;
+			let masteredCount = 0;
+			let masteredXP = 0;
+			// There is an extra "Amp" item in the amp category in the
+			// in-game profile.
+			let totalCount = name === "AMP" ? 1 : 0;
+			let totalXP = 0;
 
-		totalCount++;
-		totalXP += xpFromItem(item, name);
-		if (itemsMastered.has(itemName)) {
-			masteredCount++;
-			masteredXP += xpFromItem(item, name);
-		} else if (partiallyMasteredItems[itemName]) {
-			masteredXP += xpFromItem(
-				item,
-				name,
-				partiallyMasteredItems[itemName]
-			);
+			Object.entries(categoryItems).forEach(([itemName, item]) => {
+				if (
+					isItemFiltered(itemName, item, {
+						...state,
+						hideMastered: false
+					})
+				)
+					return;
+
+				totalCount++;
+				totalXP += xpFromItem(item, name);
+				if (itemsMastered.has(itemName)) {
+					masteredCount++;
+					masteredXP += xpFromItem(item, name);
+				} else if (partiallyMasteredItems[itemName]) {
+					masteredXP += xpFromItem(
+						item,
+						name,
+						partiallyMasteredItems[itemName]
+					);
+				}
+			});
+
+			// Assume the ghost "Amp" item is mastered if there are any mastered amps.
+			if (name === "AMP" && masteredCount > 0) masteredCount++;
+
+			return { masteredCount, masteredXP, totalCount, totalXP };
 		}
-	});
-
-	// Assume the ghost "Amp" item is mastered if there are any mastered amps.
-	if (name === "AMP" && masteredCount > 0) masteredCount++;
+	);
 
 	return (
 		<BaseCategoryInfo
