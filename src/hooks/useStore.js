@@ -26,7 +26,7 @@ import {
 import { flattenedNodes, planetJunctionsMap } from "../utils/nodes";
 import { createWithEqualityFn } from "zustand/traditional";
 import { shallow } from "zustand/shallow";
-import { getGameProfile } from "../utils/profile";
+import { getGameProfile, getUsernameFromProfile } from "../utils/profile";
 import { assignGroup } from "../utils/hash";
 
 export const useStore = createWithEqualityFn(
@@ -557,10 +557,7 @@ export const useStore = createWithEqualityFn(
 			)
 				return;
 
-			const accountUsername = gameProfile.DisplayName.slice(
-				0,
-				gameProfile.DisplayName.length - 1
-			);
+			const accountUsername = getUsernameFromProfile(gameProfile);
 			if (accountUsername !== gameSyncUsername) {
 				set({ gameSyncUsername: accountUsername });
 				updateFirestore({
@@ -656,10 +653,7 @@ export const useStore = createWithEqualityFn(
 		enableGameSync: async (accountId, platform) => {
 			const response = await getGameProfile(accountId, platform);
 			const gameProfile = response?.Results?.[0];
-			const accountUsername = gameProfile.DisplayName.slice(
-				0,
-				gameProfile.DisplayName.length - 1
-			);
+			const accountUsername = getUsernameFromProfile(gameProfile);
 
 			get().updateFirestore({
 				gameSyncUsername: accountUsername,

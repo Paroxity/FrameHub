@@ -68,3 +68,13 @@ export async function getGameProfile(accountId, platform) {
 	return json;
 }
 
+export function getUsernameFromProfile(profile) {
+	if (profile.PlatformNames) {
+		// If the profile is linked to an account from a different platform,
+		// there is a platform icon character appended to the username.
+		return profile.DisplayName.slice(0, profile.DisplayName.length - 1);
+	}
+
+	return profile.DisplayName;
+}
+
