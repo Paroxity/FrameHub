@@ -14,7 +14,6 @@ import { isItemFiltered } from "../../utils/item-filter";
 function CategoryItem({ name, item }) {
 	const {
 		readOnly,
-		masterItem,
 		mastered,
 		masteryRankLocked,
 		partialRank,
@@ -27,11 +26,7 @@ function CategoryItem({ name, item }) {
 		masteryRankLocked: (item.mr || 0) > state.masteryRank,
 		partialRank: state.partiallyMasteredItems[name],
 		setPartiallyMasteredItem: state.setPartiallyMasteredItem,
-		hidden: isItemFiltered(
-			name,
-			item,
-			state
-		)
+		hidden: isItemFiltered(name, item, state)
 	}));
 	const [rankSelectToggled, setRankSelectToggled] = useState(false);
 
@@ -84,21 +79,19 @@ function CategoryItem({ name, item }) {
 									item.wiki ||
 										`https://wiki.warframe.com/w/${name}`
 								);
-							} else {
-								if (!readOnly) {
-									if (item.maxLvl)
-										setRankSelectToggled(
-											!rankSelectToggled
-										);
-									else masterItem(name, !mastered);
+							} else if (!readOnly) {
+								if (item.maxLvl) {
+									setRankSelectToggled(!rankSelectToggled);
+								} else {
+									setPartiallyMasteredItem(name, mastered ? 0 : 30, 30);
 								}
 							}
 						}}>
 						{name +
-							((item.maxLvl || 30) !== 30
+							(partialRank
 								? ` [${
 										(partialRank ? partialRank + "/" : "") +
-										item.maxLvl
+										(item.maxLvl ?? 30)
 									}]`
 								: "")}
 						{mastered && (
