@@ -83,17 +83,20 @@ function CategoryItem({ name, item }) {
 								if (item.maxLvl) {
 									setRankSelectToggled(!rankSelectToggled);
 								} else {
-									setPartiallyMasteredItem(name, mastered ? 0 : 30, 30);
+									setPartiallyMasteredItem(
+										name,
+										mastered ? 0 : 30,
+										30
+									);
 								}
 							}
 						}}>
 						{name +
 							(partialRank
-								? ` [${
-										(partialRank ? partialRank + "/" : "") +
-										(item.maxLvl ?? 30)
-									}]`
-								: "")}
+								? ` [${partialRank}/${item.maxLvl ?? 30}]`
+								: item.maxLvl
+									? ` [${item.maxLvl}]`
+									: "")}
 						{mastered && (
 							<img src={checkmark} className="checkmark" alt="" />
 						)}
