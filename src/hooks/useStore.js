@@ -678,7 +678,7 @@ export const useStore = createWithEqualityFn(
 		initGameSyncExperiment: () => {
 			set({
 				gameSyncExperiment:
-					get().type !== SHARED && assignGroup(get().id, 100) < 10
+					get().type !== SHARED && assignGroup(get().id, 100) < 2
 			});
 		},
 
@@ -870,4 +870,3 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
-
