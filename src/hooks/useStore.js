@@ -11,23 +11,23 @@ import {
 } from "firebase/firestore";
 import { getMetadata, ref } from "firebase/storage";
 import { produce } from "immer";
+import { shallow } from "zustand/shallow";
+import { createWithEqualityFn } from "zustand/traditional";
 import { firestore, storage } from "../App";
 import { ANONYMOUS, SHARED } from "../utils/checklist-types";
+import { assignGroup } from "../utils/hash";
 import { foundersItems, SCHEMA_VERSION } from "../utils/items";
 import {
 	intrinsicsToXP,
+	itemLevelByXP,
 	junctionsToXP,
-	totalRailjackIntrinsics,
 	totalDrifterIntrinsics,
+	totalRailjackIntrinsics,
 	xpFromItem,
-	xpToMR,
-	itemLevelByXP
+	xpToMR
 } from "../utils/mastery-rank";
 import { flattenedNodes, planetJunctionsMap } from "../utils/nodes";
-import { createWithEqualityFn } from "zustand/traditional";
-import { shallow } from "zustand/shallow";
 import { getGameProfile, getUsernameFromProfile } from "../utils/profile";
-import { assignGroup } from "../utils/hash";
 
 export const useStore = createWithEqualityFn(
 	(set, get) => ({
@@ -705,7 +705,7 @@ export const useStore = createWithEqualityFn(
 
 				const docSnapshot = await getDoc(docRef);
 				if (!docSnapshot.exists()) {
-					throw new Error("User document not found");
+					return;
 				}
 
 				const userData = docSnapshot.data();
