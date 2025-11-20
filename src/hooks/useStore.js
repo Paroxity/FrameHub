@@ -15,7 +15,6 @@ import { shallow } from "zustand/shallow";
 import { createWithEqualityFn } from "zustand/traditional";
 import { firestore, storage } from "../App";
 import { ANONYMOUS, SHARED } from "../utils/checklist-types";
-import { assignGroup } from "../utils/hash";
 import { foundersItems, SCHEMA_VERSION } from "../utils/items";
 import {
 	intrinsicsToXP,
@@ -644,11 +643,12 @@ export const useStore = createWithEqualityFn(
 			);
 		},
 		setGameSyncInfo: (accountUsername, accountId, platform) => {
-			set({
-				gameSyncUsername: accountUsername,
-				gameSyncId: accountId,
-				gameSyncPlatform: platform
-			});
+			// Disabled Game Sync feature due to API rate limiting
+			// set({
+			// 	gameSyncUsername: accountUsername,
+			// 	gameSyncId: accountId,
+			// 	gameSyncPlatform: platform
+			// });
 		},
 		enableGameSync: async (accountId, platform) => {
 			const response = await getGameProfile(accountId, platform);
@@ -676,10 +676,11 @@ export const useStore = createWithEqualityFn(
 		},
 		gameSyncExperiment: false,
 		initGameSyncExperiment: () => {
-			set({
-				gameSyncExperiment:
-					get().type !== SHARED && assignGroup(get().id, 100) < 2
-			});
+			// Disabled Game Sync feature due to API rate limiting
+			// set({
+			// 	gameSyncExperiment:
+			// 		get().type !== SHARED && assignGroup(get().id, 100) < 2
+			// });
 		},
 
 		updateFirestore: async data => {
@@ -870,3 +871,4 @@ function markMasteryChange(draftState, key, id, mastered) {
 		});
 	}
 }
+
