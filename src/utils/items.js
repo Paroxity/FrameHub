@@ -19,7 +19,7 @@ export function getComponentImageUrl(id) {
 	);
 }
 
-export const relicTiers = ["Lith", "Meso", "Neo", "Axi", "Requiem"];
+export const relicTiers = ["Lith", "Meso", "Neo", "Axi", "Requiem", "Vanguard"];
 export const relicRarity = ["Common", "Uncommon", "Rare"];
 
 export const itemShape = {
