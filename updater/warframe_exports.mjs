@@ -5,7 +5,7 @@ const CONTENT_URL = "https://content.warframe.com";
 const ORIGIN_URL =
 	process.env.WARFRAME_ORIGIN_PROXY ?? "https://origin.warframe.com";
 
-let endpoints;
+let endpointsPromise;
 
 function parseDamagedJSON(json) {
 	return JSON.parse(json.replace(/\\\"/g, "'").replace(/\n|\r|\\/g, ""));
@@ -28,15 +28,17 @@ async function fetchEndpoints() {
 		);
 	}
 
-	endpoints = lzma
+	return lzma
 		.decompress(Buffer.from(await response.arrayBuffer()))
 		.split("\n");
 }
 
 export async function fetchEndpoint(endpoint) {
-	if (!endpoints) {
-		await fetchEndpoints();
+	if (!endpointsPromise) {
+		endpointsPromise = fetchEndpoints();
 	}
+
+	const endpoints = await endpointsPromise;
 
 	return parseDamagedJSON(
 		await (
