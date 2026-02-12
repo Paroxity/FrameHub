@@ -74,7 +74,9 @@ export const missionIndexMap = [
 	undefined,
 	"Legacyte Harvest",
 	"Shrine Defense",
-	"Faceoff"
+	"Faceoff",
+	"Descendia",
+	"Perita Rebellion"
 ];
 
 export const factionIndexMap = [

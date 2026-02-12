@@ -2548,5 +2548,43 @@
 				70
 			]
 		}
+	},
+	"Dark Refractory": {
+		"SolNode250": {
+			"name": "The Perita Rebellion: Hunhullus",
+			"type": 44,
+			"faction": 3,
+			"lvl": [
+				65,
+				70
+			]
+		},
+		"SolNode251": {
+			"name": "The Perita Rebellion: Dactolyst",
+			"type": 44,
+			"faction": 3,
+			"lvl": [
+				65,
+				70
+			]
+		},
+		"SolNode252": {
+			"name": "The Perita Rebellion: Vanguard",
+			"type": 44,
+			"faction": 3,
+			"lvl": [
+				65,
+				70
+			]
+		},
+		"SolNode256": {
+			"name": "The Descendia",
+			"type": 43,
+			"faction": 3,
+			"lvl": [
+				86,
+				86
+			]
+		}
 	}
 }

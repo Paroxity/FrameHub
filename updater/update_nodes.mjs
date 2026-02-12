@@ -27,7 +27,8 @@ const newNodes = {
 	Zariman: {},
 	Duviri: {},
 	Void: {},
-	"Höllvania": {}
+	Höllvania: {},
+	"Dark Refractory": {}
 };
 
 // ExportRegions has incorrect node names for Höllvania
@@ -40,22 +41,53 @@ const hollvaniaNodeNames = {
 	"SolNode855": "Lower Vehrvod",
 	"SolNode856": "Victory Plaza",
 	"SolNode857": "Vehrvod District",
+	"SolNode858": "Solstice Square"
 }
 
+// ExportRegions names for The Descendia/The Perita Rebellion nodes aren't great
+const darkRefactoryNodeNames = {
+	"SolNode250": "The Perita Rebellion: Hunhullus",
+	"SolNode251": "The Perita Rebellion: Dactolyst",
+	"SolNode252": "The Perita Rebellion: Vanguard",
+	"SolNode256": "The Descendia"
+};
+
 rawNodes.forEach(rawNode => {
-	if (!newNodes[rawNode.systemName]) {
-		throw new Error("Unknown Planet: " + rawNode.systemName);
+	let planetName = rawNode.systemName;
+	let nodeName = rawNode.name;
+	const nodeId = rawNode.uniqueName;
+
+	if (planetName === "Dark Refractory, Deimos") {
+		planetName = "Dark Refractory";
+
+		// Filter out the Descendia checkpoint nodes
+		if (
+			rawNode.uniqueName === "SolNode253" ||
+			rawNode.uniqueName === "SolNode254" ||
+			rawNode.uniqueName === "SolNode255"
+		) {
+			return;
+		}
+
+		nodeName = darkRefactoryNodeNames[nodeId];
 	}
-	if (!existingNodes[rawNode.systemName]?.[rawNode.uniqueName]) {
+	if (planetName === "Höllvania") {
+		nodeName = hollvaniaNodeNames[nodeId];
+	}
+
+	if (!newNodes[planetName]) {
+		throw new Error("Unknown Planet: " + planetName);
+	}
+	if (!existingNodes[planetName]?.[nodeId]) {
 		console.log("New Node: " + JSON.stringify(rawNode));
 	}
 
-	newNodes[rawNode.systemName][rawNode.uniqueName] = {
-		name: hollvaniaNodeNames[rawNode.uniqueName] ?? rawNode.name,
+	newNodes[planetName][nodeId] = {
+		name: nodeName,
 		type: rawNode.missionIndex,
 		faction: rawNode.factionIndex,
 		lvl: [rawNode.minEnemyLevel, rawNode.maxEnemyLevel],
-		xp: existingNodes[rawNode.systemName]?.[rawNode.uniqueName]?.xp
+		xp: existingNodes[planetName]?.[nodeId]?.xp
 	};
 });
 
