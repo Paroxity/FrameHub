@@ -737,7 +737,7 @@ export const useStore = createWithEqualityFn(
 const get = () => useStore.getState();
 const set = value => useStore.setState(value);
 
-global.framehub = {
+globalThis.framehub = {
 	getItems: () => get().items,
 	getFlattenedItems: () => get().flattenedItems,
 	masterItem: (name, mastered) => get().masterItem(name, mastered),
