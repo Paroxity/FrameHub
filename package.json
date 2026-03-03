@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"dependencies": {
 		"classnames": "^2.5.1",
-		"firebase": "^12.10.0",
+		"firebase": "^11.2.0",
 		"immer": "^11.1.4",
 		"lua-json": "^1.0.1",
 		"prop-types": "^15.8.1",
