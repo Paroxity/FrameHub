@@ -32,7 +32,7 @@ function ItemGeneralInfoTooltip({ item, itemName }) {
 					)}
 				</div>
 			) : (
-				<span className="item-uncraftable">
+				<div className="item-uncraftable">
 					{item.baro ? (
 						<>
 							Purchase from Baro Ki'Teer for{" "}
@@ -54,7 +54,7 @@ function ItemGeneralInfoTooltip({ item, itemName }) {
 					) : (
 						(item.description ?? "Unknown Acquisition")
 					)}
-				</span>
+				</div>
 			)}
 			<GluedComponents className="item-info" separator=" - ">
 				{recipe?.components && (
@@ -77,7 +77,7 @@ function ItemGeneralInfoTooltip({ item, itemName }) {
 				)}
 				{item.mr && <span>{`Mastery Rank ${item.mr}`}</span>}
 			</GluedComponents>
-			<span>{isMacOS ? "Cmd" : "Ctrl"} + Left Click for Wiki</span>
+			<div>{isMacOS ? "Cmd" : "Ctrl"} + Left Click for Wiki</div>
 		</div>
 	);
 }
