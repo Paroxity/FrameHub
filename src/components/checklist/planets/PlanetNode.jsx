@@ -8,7 +8,7 @@ import Button from "../../Button";
 import PaginatedTooltip from "../../PaginatedTooltip";
 import PlanetInfoTooltip from "./PlanetInfoTooltip";
 
-function PlanetNode({ id, node }) {
+function PlanetNode({ id, planet, node }) {
 	const { readOnly, displayingSteelPath, masterNode, mastered, hidden } =
 		useStore(state => ({
 			readOnly: (state.type === SHARED || state.gameSyncId !== undefined),
@@ -29,7 +29,7 @@ function PlanetNode({ id, node }) {
 		<PaginatedTooltip
 			content={
 				<>
-					<PlanetInfoTooltip node={node} />
+					<PlanetInfoTooltip planet={planet} node={node} />
 				</>
 			}>
 			<div
@@ -55,6 +55,7 @@ function PlanetNode({ id, node }) {
 
 PlanetNode.propTypes = {
 	id: PropTypes.string.isRequired,
+	planet: PropTypes.string.isRequired,
 	node: PropTypes.shape(nodeShape).isRequired
 };
 

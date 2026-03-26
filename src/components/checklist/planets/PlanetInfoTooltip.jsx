@@ -19,7 +19,7 @@ const factionsGlyphName = {
 	Tenno: ""
 };
 
-function PlanetInfoTooltip({ node }) {
+function PlanetInfoTooltip({ planet, node }) {
 	const factionGlyph = factionsGlyphName[factionIndexMap[node.faction]];
 
 	return (
@@ -42,6 +42,7 @@ function PlanetInfoTooltip({ node }) {
 }
 
 PlanetInfoTooltip.propTypes = {
+	planet: PropTypes.string.isRequired,
 	node: PropTypes.shape(nodeShape).isRequired
 };
 

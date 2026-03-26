@@ -37,7 +37,7 @@ function Planet({ name }) {
 						<PlanetJunction planet={name} />
 					)}
 					{Object.entries(planetNodes).map(([id, node]) => {
-						return <PlanetNode key={id} id={id} node={node} />;
+						return <PlanetNode key={id} id={id} planet={name} node={node} />;
 					})}
 				</>
 			)}
