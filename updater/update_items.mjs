@@ -72,7 +72,8 @@ const SISTER_WEAPONS = [
 	"Tenet Plinx",
 	"Tenet Envoy",
 	"Tenet Diplos",
-	"Tenet Spirex"
+	"Tenet Spirex",
+	"Tenet Quanta"
 ];
 const HOLOKEY_WEAPONS = [
 	"Tenet Agendus",
