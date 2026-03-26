@@ -64,10 +64,10 @@ function SidebarInputs() {
 				onChange={setRailjackIntrinsics}
 				tooltipTitle="Railjack Intrinsics"
 				tooltipContent={
-					<>
-						<p>Max of 10 per intrinsics class</p>
-						<p>Maximum Value: {totalRailjackIntrinsics}</p>
-					</>
+					<div className="item-tooltip">
+						<div>Max of 10 per intrinsics class</div>
+						<div>Maximum Value: {totalRailjackIntrinsics}</div>
+					</div>
 				}
 			/>
 			<NumberInput
@@ -79,10 +79,10 @@ function SidebarInputs() {
 				onChange={setDrifterIntrinsics}
 				tooltipTitle="Drifter Intrinsics"
 				tooltipContent={
-					<>
-						<p>Max of 10 per intrinsics class</p>
-						<p>Maximum Value: {totalDrifterIntrinsics}</p>
-					</>
+					<div className="item-tooltip">
+						<div>Max of 10 per intrinsics class</div>
+						<div>Maximum Value: {totalDrifterIntrinsics}</div>
+					</div>
 				}
 			/>
 			<LabeledToggle
