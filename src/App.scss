@@ -1085,10 +1085,12 @@ input:disabled {
 }
 
 .mission-info {
-	margin-bottom: 2em;
+	display: flex;
+	align-items: center;
 }
 
 .faction-icon {
-	width: 1em;
-	display: inline-block;
+	width: 1.25em;
+	margin-left: 0.25em;
+	margin-right: 0.125em;
 }
