@@ -5,22 +5,23 @@ import {
 	nodeShape
 } from "../../../utils/nodes";
 import { PaginatedTooltipTitle } from "../../PaginatedTooltip";
+import { getComponentImageUrl } from "../../../utils/items";
 
 const factionsGlyphName = {
-	Grineer: "grineer-glyph-0232a16adc.png",
-	Corpus: "corpus-glyph-b06a192ad6.png",
-	Infested: "infestation-glyph-73b7bcff9f.png",
-	Corrupted: "orokin-glyph-7450d4cdd6.png",
+	Grineer: "/Lotus/Types/StoreItems/AvatarImages/Factions/GlyphFactionGrineer",
+	Corpus: "/Lotus/Types/StoreItems/AvatarImages/Factions/GlyphFactionCorpus",
+	Infested: "/Lotus/Types/StoreItems/AvatarImages/Factions/GlyphFactionInfested",
+	Corrupted: "/Lotus/Types/StoreItems/AvatarImages/Factions/GlyphFactionOrokin",
 	Sentient: "",
-	Murmur: "murmur-glyph-1f38d5ee0b.png",
-	Scaldra: "scaldra-glyph-576f39c5a3.png",
-	Techrot: "techrot-glyph-217caea674.png",
+	Murmur: "/Lotus/Types/StoreItems/AvatarImages/Factions/GlyphFactionMurmur",
+	Scaldra: "/Lotus/Types/StoreItems/AvatarImages/Factions/GlyphFactionScaldra",
+	Techrot: "/Lotus/Types/StoreItems/AvatarImages/Factions/GlyphFactionTechrot",
 	Duviri: "",
 	Tenno: "",
 
-	"Kuva Grineer": "kuva-glyph-45551657e2.png",
-	"Infested Deimos": "infested-deimos-glyph-3479ee333b.png",
-	"Corpus Amalgam": "amalgam-glyph-6b4af31e25.png"
+	"Kuva Grineer": "/Lotus/Types/StoreItems/AvatarImages/Factions/GlyphFactionKuva",
+	"Infested Deimos": "/Lotus/Types/StoreItems/AvatarImages/Factions/GlyphFactionDeimos",
+	"Corpus Amalgam": "/Lotus/Types/StoreItems/AvatarImages/Factions/GlyphFactionAmalgam"
 };
 
 function PlanetInfoTooltip({ planet, node }) {
@@ -61,7 +62,7 @@ function PlanetInfoTooltip({ planet, node }) {
 				{factionGlyph && (
 					<img
 						className="faction-icon"
-						src={`https://cdn.warframestat.us/img/${factionGlyph}`}
+						src={getComponentImageUrl(factionGlyph, 64)}
 						alt=""
 					/>
 				)}

@@ -11,9 +11,13 @@ export function itemIsPrime(name) {
 	);
 }
 
-export function getComponentImageUrl(id) {
+export function getComponentImageUrl(id, size = 32) {
 	return (
-		"https://cdn.jsdelivr.net/gh/Aericio/warframe-exports-data/image/32x32/" +
+		"https://cdn.jsdelivr.net/gh/Aericio/warframe-exports-data/image/" +
+		size +
+		"x" +
+		size +
+		"/" +
 		id.slice(1).replaceAll("/", ".") +
 		".png"
 	);
