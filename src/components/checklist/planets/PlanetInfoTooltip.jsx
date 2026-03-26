@@ -51,11 +51,13 @@ function PlanetInfoTooltip({ planet, node }) {
 
 	const factionGlyph = factionsGlyphName[refinedFaction];
 
+	const [minLevel, maxLevel] = node.lvl;
+
 	return (
 		<div className="item-tooltip">
 			<PaginatedTooltipTitle title="General Information" />
 			<span className="mission-info">
-				Level {node.lvl.join("-")}{" "}
+				Level {minLevel === maxLevel ? minLevel : `${minLevel}-${maxLevel}`}{" "}
 				{factionGlyph && (
 					<img
 						className="faction-icon"
