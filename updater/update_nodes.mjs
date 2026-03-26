@@ -33,23 +33,24 @@ const newNodes = {
 
 // ExportRegions has incorrect node names for Höllvania
 const hollvaniaNodeNames = {
-	"SolNode850": "Köbinn West",
-	"SolNode851": "Mischta Ramparts",
-	"SolNode852": "Old Konderuk",
-	"SolNode853": "Mausoleum East",
-	"SolNode854": "Rhu Manor",
-	"SolNode855": "Lower Vehrvod",
-	"SolNode856": "Victory Plaza",
-	"SolNode857": "Vehrvod District",
-	"SolNode858": "Solstice Square"
-}
+	SolNode850: "Köbinn West",
+	SolNode851: "Mischta Ramparts",
+	SolNode852: "Old Konderuk",
+	SolNode853: "Mausoleum East",
+	SolNode854: "Rhu Manor",
+	SolNode855: "Lower Vehrvod",
+	SolNode856: "Victory Plaza",
+	SolNode857: "Vehrvod District",
+	SolNode858: "Solstice Square"
+};
 
 // ExportRegions names for The Descendia/The Perita Rebellion nodes aren't great
 const darkRefactoryNodeNames = {
-	"SolNode250": "The Perita Rebellion: Hunhullus",
-	"SolNode251": "The Perita Rebellion: Dactolyst",
-	"SolNode252": "The Perita Rebellion: Vanguard",
-	"SolNode256": "The Descendia"
+	SolNode250: "The Perita Rebellion: Hunhullus",
+	SolNode251: "The Perita Rebellion: Dactolyst",
+	SolNode252: "The Perita Rebellion: Vanguard",
+	SolNode257: "The Perita Rebellion: The Guilty",
+	SolNode256: "The Descendia"
 };
 
 rawNodes.forEach(rawNode => {

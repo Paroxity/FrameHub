@@ -76,7 +76,8 @@ export const missionIndexMap = [
 	"Shrine Defense",
 	"Faceoff",
 	"Descendia",
-	"Perita Rebellion"
+	"Perita Rebellion",
+	"Follie's Hunt"
 ];
 
 export const factionIndexMap = [
@@ -90,7 +91,8 @@ export const factionIndexMap = [
 	"Murmur",
 	"Scaldra",
 	"Techrot",
-	"Duviri"
+	"Duviri",
+	"Tenno"
 ];
 
 export const nodeShape = {

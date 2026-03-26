@@ -297,6 +297,16 @@
 				18
 			]
 		},
+		"SolNode239": {
+			"name": "Vesper Relay",
+			"type": 45,
+			"faction": 11,
+			"lvl": [
+				35,
+				45
+			],
+			"xp": 50
+		},
 		"SolNode902": {
 			"name": "Montes",
 			"type": 1,
@@ -2584,6 +2594,15 @@
 			"lvl": [
 				86,
 				86
+			]
+		},
+		"SolNode257": {
+			"name": "The Perita Rebellion: The Guilty",
+			"type": 44,
+			"faction": 3,
+			"lvl": [
+				165,
+				170
 			]
 		}
 	}
