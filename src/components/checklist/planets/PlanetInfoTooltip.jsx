@@ -16,11 +16,40 @@ const factionsGlyphName = {
 	Scaldra: "scaldra-glyph-576f39c5a3.png",
 	Techrot: "techrot-glyph-217caea674.png",
 	Duviri: "",
-	Tenno: ""
+	Tenno: "",
+
+	"Kuva Grineer": "kuva-glyph-45551657e2.png",
+	"Infested Deimos": "infested-deimos-glyph-3479ee333b.png",
+	"Corpus Amalgam": "amalgam-glyph-6b4af31e25.png"
 };
 
 function PlanetInfoTooltip({ planet, node }) {
-	const factionGlyph = factionsGlyphName[factionIndexMap[node.faction]];
+	const faction = factionIndexMap[node.faction];
+
+	// Use a more specific faction term if possible, e.g. Kuva Grineer rather than Grineer
+	let refinedFaction = faction;
+	switch (planet) {
+		case "Kuva Fortress":
+			refinedFaction = "Kuva Grineer";
+			break;
+		case "Deimos":
+			if (node.name === "Cambion Drift") {
+				refinedFaction = "Infested Deimos";
+			}
+			break;
+		case "Jupiter":
+			// Exclude the Dark Sector, Corpus Ship, and Corpus Archwing nodes
+			if (
+				faction === "Corpus" &&
+				node.name !== "Galilea" &&
+				node.name !== "Adrastea"
+			) {
+				refinedFaction = "Corpus Amalgam";
+			}
+			break;
+	}
+
+	const factionGlyph = factionsGlyphName[refinedFaction];
 
 	return (
 		<div className="item-tooltip">
@@ -34,7 +63,7 @@ function PlanetInfoTooltip({ planet, node }) {
 						alt=""
 					/>
 				)}
-				{factionIndexMap[node.faction]} {missionIndexMap[node.type]}
+				{refinedFaction} {missionIndexMap[node.type]}
 			</span>
 			<span>{node.xp ?? 0} XP</span>
 		</div>
