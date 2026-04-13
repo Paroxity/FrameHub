@@ -522,14 +522,8 @@ export const useStore = createWithEqualityFn(
 			});
 		},
 
-		gameSyncId: undefined,
-		gameSyncPlatform: undefined,
-		gameSyncUsername: undefined,
-		gameSync: async prefetchedProfile => {
+		importFromGameProfile: gameProfile => {
 			const {
-				gameSyncUsername,
-				gameSyncId: accountId,
-				gameSyncPlatform: platform,
 				flattenedItems,
 				partiallyMasteredItems,
 				setPartiallyMasteredItem,
@@ -541,28 +535,8 @@ export const useStore = createWithEqualityFn(
 				steelPath,
 				steelPathJunctions,
 				masterNode,
-				masterJunction,
-				updateFirestore
+				masterJunction
 			} = get();
-			if (!accountId) return;
-
-			const gameProfile =
-				prefetchedProfile ??
-				(await getGameProfile(accountId, platform))?.Results?.[0];
-			if (
-				!gameProfile?.LoadOutInventory?.XPInfo?.[0].ItemType ||
-				!gameProfile?.LoadOutInventory?.XPInfo?.[0].XP ||
-				!gameProfile?.Missions?.[0]?.Tag
-			)
-				return;
-
-			const accountUsername = getUsernameFromProfile(gameProfile);
-			if (accountUsername !== gameSyncUsername) {
-				set({ gameSyncUsername: accountUsername });
-				updateFirestore({
-					gameSyncUsername: accountUsername
-				});
-			}
 
 			const gameProfileItemsXP = new Map();
 			const gameProfileMissions = new Map();
@@ -641,6 +615,40 @@ export const useStore = createWithEqualityFn(
 					return railjackIntrinsics + (intrinsics?.[key] ?? 0);
 				}, 0)
 			);
+		},
+
+		gameSyncId: undefined,
+		gameSyncPlatform: undefined,
+		gameSyncUsername: undefined,
+		gameSync: async prefetchedProfile => {
+			const {
+				importFromGameProfile,
+				gameSyncUsername,
+				gameSyncId: accountId,
+				gameSyncPlatform: platform,
+				updateFirestore
+			} = get();
+			if (!accountId) return;
+
+			const gameProfile =
+				prefetchedProfile ??
+				(await getGameProfile(accountId, platform))?.Results?.[0];
+			if (
+				!gameProfile?.LoadOutInventory?.XPInfo?.[0].ItemType ||
+				!gameProfile?.LoadOutInventory?.XPInfo?.[0].XP ||
+				!gameProfile?.Missions?.[0]?.Tag
+			)
+				return;
+
+			const accountUsername = getUsernameFromProfile(gameProfile);
+			if (accountUsername !== gameSyncUsername) {
+				set({ gameSyncUsername: accountUsername });
+				updateFirestore({
+					gameSyncUsername: accountUsername
+				});
+			}
+
+			importFromGameProfile(gameProfile);
 		},
 		setGameSyncInfo: (accountUsername, accountId, platform) => {
 			// Disabled Game Sync feature due to API rate limiting
@@ -754,7 +762,10 @@ globalThis.framehub = {
 	masterNode: (id, steelPath, mastered) =>
 		get().masterNode(id, steelPath, mastered),
 	masterJunction: (id, steelPath, mastered) =>
-		get().masterJunction(id, steelPath, mastered)
+		get().masterJunction(id, steelPath, mastered),
+
+	importFromGameProfile: gameProfile =>
+		get().importFromGameProfile(gameProfile)
 };
 
 function firestoreFieldSetter(key, stateKey = key) {
