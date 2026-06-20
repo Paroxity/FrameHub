@@ -33,13 +33,12 @@ function ItemRelicTooltip({ item, name }) {
 														gap: "4px"
 													}}>
 													<img
-														src={`https://cdn.warframestat.us/img/${relicTiers
-															.find(tier =>
+														src={`https://cdn.warframestat.us/img/Relic${relicTiers.find(
+															tier =>
 																relicName.startsWith(
 																	tier
 																)
-															)
-															.toLowerCase()}-radiant.png`}
+														)}C.png`}
 														alt=""
 														width="24px"
 													/>
@@ -70,3 +69,4 @@ ItemRelicTooltip.propTypes = {
 };
 
 export default ItemRelicTooltip;
+
