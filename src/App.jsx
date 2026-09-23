@@ -18,7 +18,7 @@ import MasteryChecklist from "./pages/MasteryChecklist";
 import { ANONYMOUS, AUTHENTICATED, SHARED } from "./utils/checklist-types";
 
 const framehubFirebase = initializeApp({
-	apiKey: "AIzaSyBMGwuSb8vwSboz8DiPimsCu4KRfXkx-C4",
+	apiKey: import.meta.env.VITE_FRAMEHUB_FIREBASE_API_KEY,
 	authDomain: "framehub-f9cfb.firebaseapp.com",
 	projectId: "framehub-f9cfb",
 	storageBucket: "framehub-f9cfb.appspot.com",
@@ -28,7 +28,7 @@ const framehubFirebase = initializeApp({
 });
 const paroxityFirebase = initializeApp(
 	{
-		apiKey: "AIzaSyC30ZiFA2z0WXcIQzRxB0Q3FW9hYjSMD1k",
+		apiKey: import.meta.env.VITE_PAROXITY_FIREBASE_API_KEY,
 		authDomain: "paroxity-adfa8.firebaseapp.com",
 		databaseURL: "https://paroxity-adfa8.firebaseio.com",
 		projectId: "paroxity-adfa8",
