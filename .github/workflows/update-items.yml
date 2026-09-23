@@ -5,24 +5,25 @@ on:
       - main
   schedule:
     - cron: "*/20 * * * *"
+  workflow_dispatch:
 jobs:
   update_and_upload:
     if: (github.event_name != 'push' || !contains(github.event.head_commit.message, 'dependabot')) && !contains(github.event.head_commit.message, 'ci skip')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
       - name: Cache pnpm Modules
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.local/share/pnpm/store
           key: pnpm-cache-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
             pnpm-cache-
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 9.0.0
           run_install: true
@@ -36,17 +37,17 @@ jobs:
           WARFRAME_ORIGIN_PROXY: ${{ secrets.WARFRAME_ORIGIN_PROXY }}
           X_PROXY_TOKEN: ${{ secrets.X_PROXY_TOKEN }}
       - name: Authenticate Firebase
-        uses: 'google-github-actions/auth@v2'
+        uses: 'google-github-actions/auth@v3'
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
       - name: Upload items.json to Firebase
-        uses: google-github-actions/upload-cloud-storage@v2
+        uses: google-github-actions/upload-cloud-storage@v3
         if: steps.update_items.outputs.updated == 'true'
         with:
           path: items.json
           destination: framehub-f9cfb.appspot.com
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: steps.update_items.outputs.updated == 'true'
         with:
           name: items.json
